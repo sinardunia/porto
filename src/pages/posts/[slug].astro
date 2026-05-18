@@ -72,6 +72,8 @@ const otherPosts = (await getCollection("posts"))
           <img
             src={otherPost.data.image}
             alt={otherPost.data.title}
+            loading="lazy"
+            decoding="async"
             class="w-16 h-16 object-cover rounded-md"
           />
             <p class="text-lg my-auto font-medium text-text-light dark:text-neutral-100">

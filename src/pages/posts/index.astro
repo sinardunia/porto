@@ -81,6 +81,7 @@ for (const year in postsByYear) {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
         }
       });
     });
@@ -142,6 +143,8 @@ for (const year in postsByYear) {
                         <img
                           src={post.data.image}
                           alt={post.data.title}
+                          loading="lazy"
+                          decoding="async"
                           class="w-16 h-16 object-cover rounded-md"
                         />
                       )}

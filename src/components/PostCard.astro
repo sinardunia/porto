@@ -28,6 +28,8 @@ const { title, publishedAt, description, slug, image } = Astro.props;
     <img
       src={image}
       alt={title}
+      loading="lazy"
+      decoding="async"
       class="w-16 h-16 object-cover rounded-md"
     />
   )}
