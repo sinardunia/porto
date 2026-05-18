@@ -15,6 +15,11 @@ export interface Props {
 }
 
 const { title } = Astro.props;
+const bodyClasses = [
+  "mx-auto flex min-h-screen max-w-[872px] flex-col gap-9",
+  "bg-primary-light text-text-light dark:bg-neutral-950 dark:text-neutral-400",
+  "px-6 md:px-10 py-6 md:py-16 transition-colors duration-300",
+];
 ---
 
 <!DOCTYPE html>
@@ -22,11 +27,7 @@ const { title } = Astro.props;
   <head>
     <SEOTags title={title} />
   </head>
-  <body
-    class="mx-auto flex min-h-screen max-w-[872px] flex-col gap-9
-      bg-primary-light text-text-light dark:bg-neutral-950 dark:text-neutral-400
-      px-6 md:px-10 py-6 md:py-16 transition-colors duration-300"
-  >
+  <body class:list={bodyClasses}>
     <!-- Konten -->
     <div class="w-full max-w-3xl mx-auto">
       <Header />
@@ -65,58 +66,65 @@ const { title } = Astro.props;
       initTheme();
     </script>
 
-<script is:inline>
-  document.addEventListener("DOMContentLoaded", () => {
-    const audio = document.getElementById("button-sound");
-    let isPlaying = false;
+    <script is:inline>
+      document.addEventListener("DOMContentLoaded", () => {
+        const audio = document.getElementById("button-sound");
+        let isPlaying = false;
 
-    const isInternalLink = (href) =>
-      href && href.startsWith("/") && !href.startsWith("//");
+        const isInternalLink = (href) =>
+          href && href.startsWith("/") && !href.startsWith("//");
 
-    const playClickSound = () => {
-      if (!audio || isPlaying) return;
-      isPlaying = true;
-      const cloned = audio.cloneNode();
-      cloned.volume = 1;
-      cloned.play().catch(() => {}).finally(() => {
-        cloned.onended = () => (isPlaying = false);
-        setTimeout(() => (isPlaying = false), 300);
-      });
-    };
+        const resetPlayingState = () => {
+          isPlaying = false;
+        };
 
-    document.body.addEventListener("click", (e) => {
-      const el = e.target.closest("button, a");
-      if (!el) return;
+        const playClickSound = () => {
+          if (!audio || isPlaying) return;
 
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          isPlaying = true;
+          const sound = audio.cloneNode();
+          sound.volume = 1;
+          sound.play().catch(() => {}).finally(() => {
+            sound.onended = resetPlayingState;
+            setTimeout(resetPlayingState, 300);
+          });
+        };
 
-      if (el.tagName === "A") {
-        const href = el.getAttribute("href");
-        if (isInternalLink(href)) {
-          e.preventDefault();
+        document.body.addEventListener("click", (event) => {
+          const target = event.target.closest("button, a");
+          if (!target) return;
+
+          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+          if (target.tagName !== "A") {
+            playClickSound();
+            return;
+          }
+
+          const href = target.getAttribute("href");
+          if (!isInternalLink(href)) {
+            playClickSound();
+            return;
+          }
+
+          event.preventDefault();
           playClickSound();
           setTimeout(() => {
             window.location.href = href;
           }, 100); // kasih delay agar suara sempat main
-        } else {
-          // external, jangan halangi navigasi
-          playClickSound();
-        }
-      } else {
-        playClickSound();
-      }
-    });
+        });
 
-    const unlockAudio = () => {
-      audio.play().catch(() => {}).finally(() => {
-        audio.pause();
-        audio.currentTime = 0;
+        const unlockAudio = () => {
+          audio.play().catch(() => {}).finally(() => {
+            audio.pause();
+            audio.currentTime = 0;
+          });
+          document.removeEventListener("click", unlockAudio);
+        };
+
+        document.addEventListener("click", unlockAudio, { once: true });
       });
-      document.removeEventListener("click", unlockAudio);
-    };
-    document.addEventListener("click", unlockAudio, { once: true });
-  });
-</script>
+    </script>
 
   </body>
 </html>

@@ -7,6 +7,12 @@ import PostCard from "@/components/PostCard.astro";
 import Link from "@/components/shared/Link.astro";
 
 const posts = await getCollection("posts");
+const latestPosts = posts
+  .sort((firstPost, secondPost) =>
+    new Date(secondPost.data.publishedAt).getTime() -
+    new Date(firstPost.data.publishedAt).getTime()
+  )
+  .slice(0, 2);
 ---
 
 <style>
@@ -32,23 +38,20 @@ const posts = await getCollection("posts");
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const mainElement = document.querySelector("main");
-  if (mainElement) {
-    mainElement.classList.add("fade-in");
-  }
-  
-  const elements = document.querySelectorAll(".reveal");
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
+  document.addEventListener("DOMContentLoaded", () => {
+    const mainElement = document.querySelector("main");
+    const revealElements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
     });
+
+    mainElement?.classList.add("fade-in");
+    revealElements.forEach((element) => observer.observe(element));
   });
-  
-  elements.forEach((el) => observer.observe(el));
-});
 </script>
 
 <Layout>
@@ -89,25 +92,22 @@ document.addEventListener("DOMContentLoaded", () => {
         <h3 class="text-lg font-medium text-text-light dark:text-neutral-100">Latest posts</h3>
         <Link href="/posts" label="See all posts" isUnderline target="_self" class="transition-transform hover:scale-105" />
       </header>
-      {posts.length === 0 && (
+      {latestPosts.length === 0 && (
         <p class="text-muted-light dark:text-neutral-400">Soon, stay connected 👀...</p>
       )}
       <section class="flex flex-col gap-4 md:flex-row md:flex-wrap">
-        {posts.length !== 0 && 
-          posts
-            .sort((a, b) => new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime())
-            .slice(0, 2) 
-            .map((post) => (
-              <div class="flex flex-col md:flex-row md:max-w-[500px] gap-4 reveal">
-                <PostCard
-                  publishedAt={post.data.publishedAt}
-                  title={post.data.title}
-                  description={post.data.description}
-                  slug={post.slug}
-                  image={post.data.image}
-                />
-              </div>
-            ))}
+        {latestPosts.length !== 0 &&
+          latestPosts.map((post) => (
+            <div class="flex flex-col md:flex-row md:max-w-[500px] gap-4 reveal">
+              <PostCard
+                publishedAt={post.data.publishedAt}
+                title={post.data.title}
+                description={post.data.description}
+                slug={post.slug}
+                image={post.data.image}
+              />
+            </div>
+          ))}
       </section>
     </article>
     <Cookie /> 

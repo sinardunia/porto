@@ -5,27 +5,30 @@ import formatDate from "@/utils/formatDate";
 import { estimateReadTime } from "@/utils/estimateRead";
 
 const posts = await getCollection("posts");
+type PostsByYearAndCategory = Record<number, Record<string, typeof posts>>;
 
 // Grup post terlebih dahulu berdasarkan tahun, lalu di dalam tiap tahun berdasarkan kategori.
-const groupedByYear = posts.reduce((acc, post) => {
-  const year = new Date(post.data.publishedAt).getFullYear();
-  if (!acc[year]) acc[year] = {};
+const postsByYear = posts.reduce((postsByYear, post) => {
+  const publishedYear = new Date(post.data.publishedAt).getFullYear();
   const category = post.data.category;
-  if (!acc[year][category]) acc[year][category] = [];
-  acc[year][category].push(post);
-  return acc;
-}, {} as Record<number, Record<string, typeof posts>>);
+
+  if (!postsByYear[publishedYear]) postsByYear[publishedYear] = {};
+  if (!postsByYear[publishedYear][category]) postsByYear[publishedYear][category] = [];
+
+  postsByYear[publishedYear][category].push(post);
+  return postsByYear;
+}, {} as PostsByYearAndCategory);
 
 // Urutkan tahun dari terbaru ke terlama.
-const sortedYears = Object.keys(groupedByYear)
+const sortedYears = Object.keys(postsByYear)
   .map(Number)
   .sort((a, b) => b - a);
 
 // Untuk tiap tahun, urutkan kategori secara alfabetis.
-for (const year in groupedByYear) {
-  groupedByYear[year] = Object.fromEntries(
-    Object.entries(groupedByYear[year]).sort(([catA], [catB]) =>
-      catA.localeCompare(catB)
+for (const year in postsByYear) {
+  postsByYear[year] = Object.fromEntries(
+    Object.entries(postsByYear[year]).sort(([firstCategory], [secondCategory]) =>
+      firstCategory.localeCompare(secondCategory)
     )
   );
 }
@@ -72,17 +75,18 @@ for (const year in groupedByYear) {
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const elements = document.querySelectorAll(".reveal");
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
+  document.addEventListener("DOMContentLoaded", () => {
+    const revealElements = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
     });
+
+    revealElements.forEach((element) => observer.observe(element));
   });
-  elements.forEach((el) => observer.observe(el));
-});
 </script>
 
 <Layout title="Fujitime - All Posts">
@@ -112,14 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
           {year}
         </h2>
 
-        {Object.keys(groupedByYear[year]).map((category) => (
+        {Object.keys(postsByYear[year]).map((category) => (
           <div class="relative z-10 mt-8">
             <h4 class="text-lg font-semibold text-gray-800 dark:text-neutral-200">
               {category}
             </h4>
             <article class="flex flex-col gap-4">
-              {groupedByYear[year][category].map((post) => {
-                const readTime = estimateReadTime(post.body || '');
+              {postsByYear[year][category].map((post) => {
+                const readTime = estimateReadTime(post.body || "");
                 return (
                   <a
                     class="group flex flex-col gap-2 border-t border-border-light dark:border-neutral-700 py-4 transition-all hover:text-accent-light dark:hover:text-neutral-100 reveal relative z-10"
