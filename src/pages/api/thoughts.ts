@@ -50,20 +50,28 @@ export const POST: APIRoute = async ({ request }) => {
     const formData = await request.formData();
     const content = cleanText(formData.get("content"), 5000);
     const imageAlt = cleanText(formData.get("imageAlt"), 300);
-    const image = formData.get("image");
+    const images = formData
+      .getAll("image")
+      .filter((image): image is File => image instanceof File && image.size > 0)
+      .slice(0, 6);
 
     if (!content) {
       return json({ message: "Thought content is required." }, 400);
     }
 
-    let imageUrl: string | null = null;
+    const uploadedImages: { image_url: string; image_alt: string | null; position: number }[] = [];
 
-    if (image instanceof File && image.size > 0) {
+    for (const [position, image] of images.entries()) {
       const imageError = validateImageFile(image);
       if (imageError) return json({ message: imageError }, 400);
 
       try {
-        imageUrl = await uploadImage(image);
+        const imageUrl = await uploadImage(image);
+        uploadedImages.push({
+          image_url: imageUrl,
+          image_alt: imageAlt || null,
+          position,
+        });
       } catch (error) {
         console.error("Thought image upload failed:", error instanceof Error ? error.message : error);
         return json({ message: "Image upload failed." }, 502);
@@ -76,8 +84,8 @@ export const POST: APIRoute = async ({ request }) => {
         .from("thoughts")
         .insert({
           content,
-          image_url: imageUrl,
-          image_alt: imageAlt || null,
+          image_url: uploadedImages[0]?.image_url || null,
+          image_alt: uploadedImages[0]?.image_alt || null,
           is_published: true,
         })
         .select("id")
@@ -89,6 +97,21 @@ export const POST: APIRoute = async ({ request }) => {
     if (error) {
       console.error("Thought insert failed:", error.message);
       return json({ message: "Thought insert failed." }, 500);
+    }
+
+    if (uploadedImages.length > 0) {
+      const { error: imageInsertError } = await withTimeout(
+        supabase
+          .from("thought_images")
+          .insert(uploadedImages.map((image) => ({ ...image, thought_id: data.id }))),
+        10000,
+        "Thought images insert"
+      );
+
+      if (imageInsertError) {
+        console.error("Thought image metadata insert failed:", imageInsertError.message);
+        return json({ message: "Thought saved, but image metadata insert failed." }, 500);
+      }
     }
 
     return json({ id: data.id, message: "Thought published." }, 201);

@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import BlogListItem from "@/components/blog/BlogListItem.astro";
 import { createSupabaseClient } from "@/lib/supabase";
+import { withTimeout } from "@/lib/security";
 import type { BlogPostSummary } from "@/types/blog";
 
 export const prerender = false;
@@ -9,12 +10,25 @@ export const prerender = false;
 const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
   try {
     const supabase = createSupabaseClient();
-    const { data, error } = await supabase
+    const cursor = Astro.url.searchParams.get("before");
+    const search = Astro.url.searchParams.get("q")?.trim();
+    let query = supabase
       .from("blog_posts")
       .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
       .eq("is_published", true)
+      .is("deleted_at", null)
       .order("created_at", { ascending: false })
       .limit(50);
+
+    if (cursor) {
+      query = query.lt("created_at", cursor);
+    }
+
+    if (search) {
+      query = query.textSearch("content", search, { type: "websearch" });
+    }
+
+    const { data, error } = await withTimeout(query, 10000, "Blog posts fetch");
 
     if (error) {
       console.warn("Unable to load blog posts:", error.message);
@@ -32,6 +46,14 @@ const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
 };
 
 const posts = await getBlogPosts();
+const query = Astro.url.searchParams.get("q")?.trim() || "";
+const lastPost = posts.at(-1);
+const olderUrl = lastPost
+  ? `/posts?${new URLSearchParams({
+      ...(query ? { q: query } : {}),
+      before: lastPost.created_at,
+    }).toString()}`
+  : null;
 ---
 
 <Layout title="Blog - Fuji Halim Rabani">
@@ -45,6 +67,19 @@ const posts = await getBlogPosts();
       </p>
     </header>
 
+    <form action="/posts" method="get" class="flex gap-2">
+      <input
+        type="search"
+        name="q"
+        value={query}
+        placeholder="Search blog"
+        class="min-w-0 flex-1 rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-sm text-neutral-800 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+      />
+      <button type="submit" class="rounded-lg border border-border-light px-4 py-3 text-sm text-neutral-500 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100">
+        Search
+      </button>
+    </form>
+
     {posts.length > 0 ? (
       <section aria-label="Blog posts" class="flex flex-col">
         {posts.map((post) => <BlogListItem post={post} />)}
@@ -55,6 +90,12 @@ const posts = await getBlogPosts();
           Belum ada blog post dari Supabase di sini. Tulisan lama masih aman di file Markdown sampai dipindahkan pelan-pelan.
         </p>
       </section>
+    )}
+
+    {olderUrl && (
+      <a href={olderUrl} class="self-start rounded-lg border border-border-light px-4 py-3 text-sm text-neutral-500 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100">
+        Load older blog posts
+      </a>
     )}
   </main>
 </Layout>

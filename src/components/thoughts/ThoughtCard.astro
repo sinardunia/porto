@@ -6,6 +6,11 @@ type Props = {
 };
 
 const { thought } = Astro.props;
+const images = thought.thought_images?.length
+  ? thought.thought_images
+  : thought.image_url
+    ? [{ id: thought.id, image_url: thought.image_url, image_alt: thought.image_alt, position: 0 }]
+    : [];
 const createdAt = new Date(thought.created_at);
 const formattedDate = Number.isNaN(createdAt.getTime()) ? thought.created_at : [
   new Intl.DateTimeFormat("en-US", {
@@ -27,14 +32,28 @@ const formattedDate = Number.isNaN(createdAt.getTime()) ? thought.created_at : [
     {thought.content}
   </p>
 
-  {thought.image_url && (
-    <img
-      src={thought.image_url}
-      alt={thought.image_alt || ""}
-      loading="lazy"
-      decoding="async"
-      class="mt-5 h-auto max-h-[520px] w-full rounded-xl object-contain opacity-95"
-    />
+  {images.length > 0 && (
+    <div class:list={[
+      "mt-5 grid gap-2",
+      images.length === 1 ? "grid-cols-1" : "grid-cols-2",
+      images.length >= 3 ? "sm:grid-cols-3" : "",
+    ]}>
+      {images.map((image) => (
+        <button type="button" class="thought-image-button rounded-xl text-left focus:outline-none focus:ring-2 focus:ring-neutral-300" data-image-url={image.image_url} data-image-alt={image.image_alt || ""}>
+          <img
+            src={image.image_url}
+            alt={image.image_alt || ""}
+            loading="lazy"
+            decoding="async"
+            sizes={images.length === 1 ? "(min-width: 768px) 672px, 100vw" : "(min-width: 768px) 320px, 50vw"}
+            class:list={[
+              "h-auto w-full rounded-xl object-contain opacity-95",
+              images.length === 1 ? "max-h-[560px]" : "max-h-[340px]",
+            ]}
+          />
+        </button>
+      ))}
+    </div>
   )}
 
   <time

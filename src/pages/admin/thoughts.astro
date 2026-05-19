@@ -82,6 +82,26 @@ export const prerender = false;
     secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
   }
 
+  const draftKey = "thought_admin_draft";
+  const contentInput = form instanceof HTMLFormElement ? form.elements.namedItem("content") : null;
+  const imageAltInput = form instanceof HTMLFormElement ? form.elements.namedItem("imageAlt") : null;
+
+  const restoreDraft = () => {
+    const draft = JSON.parse(localStorage.getItem(draftKey) || "{}");
+    if (contentInput instanceof HTMLTextAreaElement && typeof draft.content === "string") contentInput.value = draft.content;
+    if (imageAltInput instanceof HTMLInputElement && typeof draft.imageAlt === "string") imageAltInput.value = draft.imageAlt;
+  };
+
+  const saveDraft = () => {
+    localStorage.setItem(draftKey, JSON.stringify({
+      content: contentInput instanceof HTMLTextAreaElement ? contentInput.value : "",
+      imageAlt: imageAltInput instanceof HTMLInputElement ? imageAltInput.value : "",
+    }));
+  };
+
+  restoreDraft();
+  form?.addEventListener("input", saveDraft);
+
   const submitThought = async () => {
     if (!(form instanceof HTMLFormElement)) return;
     if (!(secretInput instanceof HTMLInputElement)) return;
@@ -118,6 +138,7 @@ export const prerender = false;
       }
 
       form.reset();
+      localStorage.removeItem(draftKey);
       secretInput.value = adminSecret;
       if (status) status.textContent = "Published. It should appear on /thoughts now.";
     } catch (error) {

@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { createSupabaseClient } from "@/lib/supabase";
 import { SITE_URL } from "@/data/config";
-import { sanitizeRenderedHtml, withTimeout } from "@/lib/security";
+import { withTimeout } from "@/lib/security";
 
 export const prerender = false;
 
@@ -18,38 +18,38 @@ export const GET: APIRoute = async () => {
     const supabase = createSupabaseClient();
     const { data, error } = await withTimeout(
       supabase
-        .from("blog_posts")
-        .select("slug, title, excerpt, created_at")
+        .from("thoughts")
+        .select("id, content, created_at")
         .eq("is_published", true)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
-        .limit(25),
+        .limit(50),
       10000,
-      "RSS blog posts fetch"
+      "RSS thoughts fetch"
     );
 
     if (error) throw error;
 
-    const items = (data ?? []).map((post) => {
-      const url = new URL(`/posts/${post.slug}`, SITE_URL).toString();
-      const description = sanitizeRenderedHtml(escapeXml(post.excerpt || ""));
+    const items = (data ?? []).map((thought) => {
+      const url = new URL(`/thoughts#${thought.id}`, SITE_URL).toString();
+      const title = new Date(thought.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
       return `
         <item>
-          <title>${escapeXml(post.title)}</title>
+          <title>${escapeXml(title)}</title>
           <link>${url}</link>
           <guid>${url}</guid>
-          <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
-          <description>${description}</description>
+          <pubDate>${new Date(thought.created_at).toUTCString()}</pubDate>
+          <description>${escapeXml(thought.content)}</description>
         </item>`;
     }).join("");
 
     const xml = `<?xml version="1.0" encoding="UTF-8" ?>
       <rss version="2.0">
         <channel>
-          <title>Fuji Halim Rabani</title>
-          <link>${SITE_URL}</link>
-          <description>A quiet personal archive.</description>
+          <title>Fuji Halim Rabani — Thoughts</title>
+          <link>${new URL("/thoughts", SITE_URL).toString()}</link>
+          <description>Small notes from a quiet personal archive.</description>
           ${items}
         </channel>
       </rss>`;
@@ -61,7 +61,7 @@ export const GET: APIRoute = async () => {
       },
     });
   } catch (error) {
-    console.error("RSS generation failed:", error instanceof Error ? error.message : error);
+    console.error("Thoughts RSS generation failed:", error instanceof Error ? error.message : error);
     return new Response("", {
       status: 500,
       headers: {
