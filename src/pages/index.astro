@@ -1,17 +1,42 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
-import PostCard from "@/components/PostCard.astro";
+import BlogListItem from "@/components/blog/BlogListItem.astro";
 import Link from "@/components/shared/Link.astro";
+import { createSupabaseClient } from "@/lib/supabase";
+import { withTimeout } from "@/lib/security";
+import type { BlogPostSummary } from "@/types/blog";
 
-const posts = await getCollection("posts");
-const latestPosts = posts
-  .sort((firstPost, secondPost) =>
-    new Date(secondPost.data.publishedAt).getTime() -
-    new Date(firstPost.data.publishedAt).getTime()
-  )
-  .slice(0, 2);
+const getLatestPosts = async (): Promise<BlogPostSummary[]> => {
+  try {
+    const supabase = createSupabaseClient();
+    const { data, error } = await withTimeout(
+      supabase
+        .from("blog_posts")
+        .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false })
+        .limit(2),
+      10000,
+      "Latest blog posts fetch"
+    );
+
+    if (error) {
+      console.warn("Unable to load latest blog posts:", error.message);
+      return [];
+    }
+
+    return data ?? [];
+  } catch (error) {
+    console.warn(
+      "Unable to load latest blog posts:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+    return [];
+  }
+};
+
+const latestPosts = await getLatestPosts();
 ---
 
 <style>
@@ -90,7 +115,7 @@ const latestPosts = posts
     <article class="flex flex-col gap-8 reveal">
       <header class="flex w-full justify-between gap-2">
         <h3 class="text-lg font-medium text-text-light dark:text-neutral-100">Latest posts</h3>
-        <Link href="/posts" label="See all posts" isUnderline target="_self" class="transition-transform hover:scale-105" />
+        <Link href="/blog" label="See all posts" isUnderline target="_self" class="transition-transform hover:scale-105" />
       </header>
       {latestPosts.length === 0 && (
         <p class="text-muted-light dark:text-neutral-400">Soon, stay connected 👀...</p>
@@ -99,13 +124,7 @@ const latestPosts = posts
         {latestPosts.length !== 0 &&
           latestPosts.map((post) => (
             <div class="flex flex-col md:flex-row md:max-w-[500px] gap-4 reveal">
-              <PostCard
-                publishedAt={post.data.publishedAt}
-                title={post.data.title}
-                description={post.data.description}
-                slug={post.slug}
-                image={post.data.image}
-              />
+              <BlogListItem post={post} basePath="/blog" />
             </div>
           ))}
       </section>

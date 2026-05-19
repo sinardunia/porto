@@ -7,30 +7,40 @@ import type { BlogPostSummary } from "@/types/blog";
 
 export const prerender = false;
 
+const normalizeSearch = (value: string) =>
+  value.trim().toLowerCase();
+
+const matchesSearch = (post: BlogPostSummary, search: string) => {
+  const normalizedSearch = normalizeSearch(search);
+  if (!normalizedSearch) return true;
+
+  return [post.title, post.excerpt, post.slug]
+    .filter(Boolean)
+    .some((value) => value?.toLowerCase().includes(normalizedSearch));
+};
+
 const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
   try {
     const supabase = createSupabaseClient();
     const search = Astro.url.searchParams.get("q")?.trim();
-    let query = supabase
-      .from("blog_posts")
-      .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
-      .eq("is_published", true)
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    if (search) {
-      const safeSearch = search.replaceAll(",", " ");
-      query = query.or(`title.ilike.%${safeSearch}%,excerpt.ilike.%${safeSearch}%,content.ilike.%${safeSearch}%`);
-    }
-
-    const { data, error } = await withTimeout(query, 10000, "Blog posts fetch");
+    const { data, error } = await withTimeout(
+      supabase
+        .from("blog_posts")
+        .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false })
+        .limit(50),
+      10000,
+      "Blog posts fetch"
+    );
 
     if (error) {
       console.warn("Unable to load blog posts:", error.message);
       return [];
     }
 
-    return data ?? [];
+    const posts = data ?? [];
+    return search ? posts.filter((post) => matchesSearch(post, search)) : posts;
   } catch (error) {
     console.warn(
       "Unable to load blog posts:",
