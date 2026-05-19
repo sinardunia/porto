@@ -2,7 +2,7 @@ export const json = (
   body: Record<string, unknown>,
   status = 200
 ) =>
-  new Response(JSON.stringify(body, null, 2), {
+  new Response(JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json",
@@ -12,42 +12,34 @@ export const json = (
 
 export const getBearerToken = (request: Request) => {
   const authorization =
-    request.headers.get("authorization") ||
     request.headers.get("Authorization");
 
-  console.log("AUTH HEADER:", authorization);
-
   if (!authorization?.startsWith("Bearer ")) {
-    console.log("INVALID AUTH FORMAT");
     return null;
   }
 
-  const token = authorization
+  return authorization
     .slice("Bearer ".length)
     .trim();
-
-  console.log("TOKEN:", token);
-
-  return token;
 };
 
 export const verifyAdminSecret = (
   request: Request
 ) => {
   const expectedSecret =
-    import.meta.env.THOUGHTS_ADMIN_SECRET;
+    process.env.THOUGHTS_ADMIN_SECRET;
 
   const providedSecret =
     getBearerToken(request);
 
-  console.log("EXPECTED SECRET:", expectedSecret);
-  console.log("PROVIDED SECRET:", providedSecret);
-
   if (!expectedSecret) {
-    console.log("ENV NOT FOUND");
+    console.error(
+      "THOUGHTS_ADMIN_SECRET is missing."
+    );
 
     return {
       ok: false as const,
+
       response: json(
         {
           message:
@@ -60,32 +52,23 @@ export const verifyAdminSecret = (
 
   if (
     !providedSecret ||
-    providedSecret.trim() !==
-      expectedSecret.trim()
+    providedSecret !== expectedSecret
   ) {
-    console.log("SECRET MISMATCH");
+    console.warn(
+      "Failed admin auth attempt."
+    );
 
     return {
       ok: false as const,
+
       response: json(
         {
           message: "Unauthorized.",
-          expectedSecret,
-          providedSecret,
-          authHeader:
-            request.headers.get(
-              "authorization"
-            ) ||
-            request.headers.get(
-              "Authorization"
-            ),
         },
         401
       ),
     };
   }
-
-  console.log("AUTH SUCCESS");
 
   return {
     ok: true as const,
