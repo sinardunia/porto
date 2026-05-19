@@ -1,10 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
-import vercel from "@astrojs/vercel/serverless";
-import dotenv from "dotenv";
-
-dotenv.config();
+import vercel from "@astrojs/vercel";
 
 export default defineConfig({
   output: "server",
@@ -15,15 +12,4 @@ export default defineConfig({
     tailwind(),
     sitemap(),
   ],
-
-  site: process.env.SITE_URL,
-
-  markdown: {
-    syntaxHighlight: "shiki",
-
-    shikiConfig: {
-      theme: "nord",
-      wrap: false,
-    },
-  },
 });

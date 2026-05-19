@@ -4,17 +4,27 @@ export const json = (
 ) =>
   new Response(JSON.stringify(body), {
     status,
+
     headers: {
       "Content-Type": "application/json",
       "Cache-Control": "no-store",
     },
   });
 
-export const getBearerToken = (request: Request) => {
+export const getBearerToken = (
+  request: Request
+) => {
   const authorization =
-    request.headers.get("Authorization");
+    request.headers.get(
+      "Authorization"
+    );
 
-  if (!authorization?.startsWith("Bearer ")) {
+  if (
+    !authorization ||
+    !authorization.startsWith(
+      "Bearer "
+    )
+  ) {
     return null;
   }
 
@@ -27,10 +37,31 @@ export const verifyAdminSecret = (
   request: Request
 ) => {
   const expectedSecret =
-    process.env.THOUGHTS_ADMIN_SECRET;
+    process.env
+      .THOUGHTS_ADMIN_SECRET?.trim();
 
   const providedSecret =
-    getBearerToken(request);
+    getBearerToken(
+      request
+    )?.trim();
+
+  console.log(
+    "[ADMIN AUTH]",
+    {
+      hasExpectedSecret:
+        Boolean(expectedSecret),
+
+      expectedLength:
+        expectedSecret?.length,
+
+      providedLength:
+        providedSecret?.length,
+
+      match:
+        expectedSecret ===
+        providedSecret,
+    }
+  );
 
   if (!expectedSecret) {
     console.error(
@@ -52,7 +83,8 @@ export const verifyAdminSecret = (
 
   if (
     !providedSecret ||
-    providedSecret !== expectedSecret
+    providedSecret !==
+      expectedSecret
   ) {
     console.warn(
       "Failed admin auth attempt."
@@ -63,7 +95,8 @@ export const verifyAdminSecret = (
 
       response: json(
         {
-          message: "Unauthorized.",
+          message:
+            "Unauthorized.",
         },
         401
       ),
