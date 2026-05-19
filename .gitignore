@@ -1,6 +1,7 @@
 # build output
 dist/
 .vercel/
+archive-export/
 
 # generated types
 .astro/

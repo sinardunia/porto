@@ -2,6 +2,7 @@
 import { marked } from "marked";
 import Layout from "@/layouts/Layout.astro";
 import { createSupabaseClient } from "@/lib/supabase";
+import { sanitizeRenderedHtml, withTimeout } from "@/lib/security";
 import type { BlogPost } from "@/types/blog";
 
 export const prerender = false;
@@ -13,12 +14,16 @@ const getBlogPost = async (): Promise<BlogPost | null> => {
 
   try {
     const supabase = createSupabaseClient();
-    const { data, error } = await supabase
-      .from("blog_posts")
-      .select("id, slug, title, excerpt, content, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
-      .eq("slug", slug)
-      .eq("is_published", true)
-      .single();
+    const { data, error } = await withTimeout(
+      supabase
+        .from("blog_posts")
+        .select("id, slug, title, excerpt, content, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+        .eq("slug", slug)
+        .eq("is_published", true)
+        .single(),
+      10000,
+      "Blog post fetch"
+    );
 
     if (error) {
       console.warn("Unable to load blog post:", error.message);
@@ -49,7 +54,7 @@ const formattedDate = createdAt && !Number.isNaN(createdAt.getTime())
       year: "numeric",
     }).format(createdAt)
   : post?.created_at;
-const renderedContent = post ? await marked.parse(post.content) : "";
+const renderedContent = post ? sanitizeRenderedHtml(await marked.parse(post.content)) : "";
 ---
 
 <Layout title={post ? `${post.title} - Fuji Halim Rabani` : "Blog Post Not Found - Fuji Halim Rabani"}>

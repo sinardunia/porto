@@ -15,7 +15,7 @@ export const prerender = false;
       </p>
     </header>
 
-    <form id="blog-form" class="flex flex-col gap-5">
+    <form id="blog-form" action="javascript:void(0)" method="dialog" onsubmit="return false" class="flex flex-col gap-5">
       <label class="flex flex-col gap-2">
         <span class="text-sm text-neutral-500 dark:text-neutral-400">Admin secret</span>
         <input id="admin-secret" type="password" autocomplete="current-password" required class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100" />
@@ -56,7 +56,7 @@ export const prerender = false;
         Publish now
       </label>
 
-      <button id="publish-button" type="submit" class="rounded-lg bg-neutral-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300">
+      <button id="publish-button" type="button" class="rounded-lg bg-neutral-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300">
         Save blog post
       </button>
 
@@ -75,9 +75,7 @@ export const prerender = false;
     secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
   }
 
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
+  const submitBlogPost = async () => {
     if (!(form instanceof HTMLFormElement)) return;
     if (!(secretInput instanceof HTMLInputElement)) return;
 
@@ -125,5 +123,14 @@ export const prerender = false;
         publishButton.textContent = "Save blog post";
       }
     }
+  };
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    void submitBlogPost();
+  });
+
+  publishButton?.addEventListener("click", () => {
+    void submitBlogPost();
   });
 </script>

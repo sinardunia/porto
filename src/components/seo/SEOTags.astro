@@ -22,6 +22,7 @@ const DEFAULT_TITLE_PAGE = "Fuji Halim Rabani - Personal Website";
 const DEFAULT_DESCRIPTION_PAGE =
   "Hi, I'm Fuji aka Waltahh";
 const DEFAULT_URL_SITE = SITE_URL;
+const canonicalUrl = new URL(Astro.url.pathname, DEFAULT_URL_SITE).toString();
 
 const openGraph = {
   title: og?.title || DEFAULT_TITLE_PAGE,
@@ -58,6 +59,8 @@ const openGraph = {
       link: [
         { rel: "icon", href: "/favicon.svg" },
         { rel: "sitemap", href: "/sitemap.xml" },
+        { rel: "canonical", href: canonicalUrl },
+        { rel: "alternate", type: "application/rss+xml", href: "/rss.xml" },
       ],
       meta: [
         { name: "viewport", content: "width=device-width, initial-scale=1" },

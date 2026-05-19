@@ -1,39 +1,18 @@
 import type { APIRoute } from "astro";
+import { json, verifyAdminSecret } from "@/lib/api";
 import { createSupabaseAdminClient } from "@/lib/supabase";
+import { cleanText, normalizeImageExtension, validateImageFile, withTimeout } from "@/lib/security";
 
 export const prerender = false;
 
 const THOUGHT_IMAGES_BUCKET = "thought-images";
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-
-const json = (body: Record<string, unknown>, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-
-const getBearerToken = (request: Request) => {
-  const authorization = request.headers.get("Authorization");
-  if (!authorization?.startsWith("Bearer ")) return null;
-  return authorization.slice("Bearer ".length).trim();
-};
-
-const getFileExtension = (file: File) => {
-  const extension = file.name.split(".").pop()?.toLowerCase();
-  if (extension) return extension.replace(/[^a-z0-9]/g, "");
-
-  const mimeExtension = file.type.split("/").pop()?.toLowerCase();
-  return mimeExtension?.replace(/[^a-z0-9]/g, "") || "jpg";
-};
 
 const getStoragePath = (file: File) => {
   const now = new Date();
   const year = now.getUTCFullYear();
   const month = String(now.getUTCMonth() + 1).padStart(2, "0");
   const id = crypto.randomUUID();
-  const extension = getFileExtension(file);
+  const extension = normalizeImageExtension(file);
 
   return `thoughts/${year}/${month}/${id}.${extension}`;
 };
@@ -43,12 +22,16 @@ const uploadImage = async (file: File) => {
   const path = getStoragePath(file);
   const buffer = await file.arrayBuffer();
 
-  const { error } = await supabase.storage
-    .from(THOUGHT_IMAGES_BUCKET)
-    .upload(path, buffer, {
-      contentType: file.type || "image/jpeg",
-      upsert: false,
-    });
+  const { error } = await withTimeout(
+    supabase.storage
+      .from(THOUGHT_IMAGES_BUCKET)
+      .upload(path, buffer, {
+        contentType: file.type,
+        upsert: false,
+      }),
+    15000,
+    "Thought image upload"
+  );
 
   if (error) throw new Error(`Image upload failed: ${error.message}`);
 
@@ -61,20 +44,12 @@ const uploadImage = async (file: File) => {
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    const expectedSecret = import.meta.env.THOUGHTS_ADMIN_SECRET;
-    const providedSecret = getBearerToken(request);
-
-    if (!expectedSecret) {
-      return json({ message: "THOUGHTS_ADMIN_SECRET is not configured." }, 500);
-    }
-
-    if (!providedSecret || providedSecret !== expectedSecret) {
-      return json({ message: "Unauthorized." }, 401);
-    }
+    const auth = verifyAdminSecret(request);
+    if (!auth.ok) return auth.response;
 
     const formData = await request.formData();
-    const content = String(formData.get("content") || "").trim();
-    const imageAlt = String(formData.get("imageAlt") || "").trim();
+    const content = cleanText(formData.get("content"), 5000);
+    const imageAlt = cleanText(formData.get("imageAlt"), 300);
     const image = formData.get("image");
 
     if (!content) {
@@ -84,41 +59,42 @@ export const POST: APIRoute = async ({ request }) => {
     let imageUrl: string | null = null;
 
     if (image instanceof File && image.size > 0) {
-      if (!image.type.startsWith("image/")) {
-        return json({ message: "Uploaded file must be an image." }, 400);
-      }
+      const imageError = validateImageFile(image);
+      if (imageError) return json({ message: imageError }, 400);
 
-      if (image.size > MAX_IMAGE_SIZE) {
-        return json({ message: "Image must be smaller than 5MB." }, 400);
+      try {
+        imageUrl = await uploadImage(image);
+      } catch (error) {
+        console.error("Thought image upload failed:", error instanceof Error ? error.message : error);
+        return json({ message: "Image upload failed." }, 502);
       }
-
-      imageUrl = await uploadImage(image);
     }
 
     const supabase = createSupabaseAdminClient();
-    const { data, error } = await supabase
-      .from("thoughts")
-      .insert({
-        content,
-        image_url: imageUrl,
-        image_alt: imageAlt || null,
-        is_published: true,
-      })
-      .select("id")
-      .single();
+    const { data, error } = await withTimeout(
+      supabase
+        .from("thoughts")
+        .insert({
+          content,
+          image_url: imageUrl,
+          image_alt: imageAlt || null,
+          is_published: true,
+        })
+        .select("id")
+        .single(),
+      10000,
+      "Thought insert"
+    );
 
     if (error) {
-      return json({ message: `Thought insert failed: ${error.message}` }, 500);
+      console.error("Thought insert failed:", error.message);
+      return json({ message: "Thought insert failed." }, 500);
     }
 
     return json({ id: data.id, message: "Thought published." }, 201);
   } catch (error) {
-    return json(
-      {
-        message: error instanceof Error ? error.message : "Failed to publish thought.",
-      },
-      500
-    );
+    console.error("Failed to publish thought:", error instanceof Error ? error.message : error);
+    return json({ message: "Failed to publish thought." }, 500);
   }
 };
 

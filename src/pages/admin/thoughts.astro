@@ -15,7 +15,7 @@ export const prerender = false;
       </p>
     </header>
 
-    <form id="thought-form" class="flex flex-col gap-5">
+    <form id="thought-form" action="javascript:void(0)" method="dialog" onsubmit="return false" class="flex flex-col gap-5">
       <label class="flex flex-col gap-2">
         <span class="text-sm text-muted-light dark:text-neutral-400">Admin secret</span>
         <input
@@ -61,7 +61,7 @@ export const prerender = false;
 
       <button
         id="publish-button"
-        type="submit"
+        type="button"
         class="rounded-lg bg-text-light px-5 py-3 text-sm font-medium text-primary-light transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300"
       >
         Publish
@@ -82,9 +82,7 @@ export const prerender = false;
     secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
   }
 
-  form?.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
+  const submitThought = async () => {
     if (!(form instanceof HTMLFormElement)) return;
     if (!(secretInput instanceof HTMLInputElement)) return;
 
@@ -132,5 +130,14 @@ export const prerender = false;
         publishButton.textContent = "Publish";
       }
     }
+  };
+
+  form?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    void submitThought();
+  });
+
+  publishButton?.addEventListener("click", () => {
+    void submitThought();
   });
 </script>

@@ -46,6 +46,9 @@ create policy "Public can read published thoughts"
 on thoughts
 for select
 using (is_published = true);
+
+create index if not exists thoughts_created_at_idx
+on thoughts(created_at desc);
 ```
 
 This intentionally does not include likes, views, reactions, comments, tags, mood fields, followers, or analytics fields.
