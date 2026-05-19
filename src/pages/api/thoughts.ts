@@ -1,11 +1,20 @@
 import type { APIRoute } from "astro";
 import { json, verifyAdminSecret } from "@/lib/api";
 import { createSupabaseAdminClient } from "@/lib/supabase";
-import { cleanText, normalizeImageExtension, validateImageFile, withTimeout } from "@/lib/security";
+import {
+  cleanText,
+  normalizeImageExtension,
+  validateImageFile,
+  withTimeout,
+} from "@/lib/security";
 
 export const prerender = false;
 
 const THOUGHT_IMAGES_BUCKET = "thought-images";
+
+/* -------------------------
+   STORAGE
+-------------------------- */
 
 const getStoragePath = (file: File) => {
   const now = new Date();
@@ -23,17 +32,17 @@ const uploadImage = async (file: File) => {
   const buffer = await file.arrayBuffer();
 
   const { error } = await withTimeout(
-    supabase.storage
-      .from(THOUGHT_IMAGES_BUCKET)
-      .upload(path, buffer, {
-        contentType: file.type,
-        upsert: false,
-      }),
+    supabase.storage.from(THOUGHT_IMAGES_BUCKET).upload(path, buffer, {
+      contentType: file.type,
+      upsert: false,
+    }),
     15000,
     "Thought image upload"
   );
 
-  if (error) throw new Error(`Image upload failed: ${error.message}`);
+  if (error) {
+    throw new Error(`Image upload failed: ${error.message}`);
+  }
 
   const { data } = supabase.storage
     .from(THOUGHT_IMAGES_BUCKET)
@@ -42,24 +51,49 @@ const uploadImage = async (file: File) => {
   return data.publicUrl;
 };
 
+/* -------------------------
+   GET (SAFE DEBUG)
+-------------------------- */
+
+export const GET: APIRoute = async () => {
+  return json({
+    message: "Thoughts API running",
+    method: "GET enabled",
+  });
+};
+
+/* -------------------------
+   POST
+-------------------------- */
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
     if (!auth.ok) return auth.response;
 
     const formData = await request.formData();
+
     const content = cleanText(formData.get("content"), 5000);
     const imageAlt = cleanText(formData.get("imageAlt"), 300);
+
     const images = formData
       .getAll("image")
-      .filter((image): image is File => image instanceof File && image.size > 0)
+      .filter((img): img is File => img instanceof File && img.size > 0)
       .slice(0, 6);
 
     if (!content) {
       return json({ message: "Thought content is required." }, 400);
     }
 
-    const uploadedImages: { image_url: string; image_alt: string | null; position: number }[] = [];
+    /* -------------------------
+       UPLOAD IMAGES
+    -------------------------- */
+
+    const uploadedImages: {
+      image_url: string;
+      image_alt: string | null;
+      position: number;
+    }[] = [];
 
     for (const [position, image] of images.entries()) {
       const imageError = validateImageFile(image);
@@ -67,18 +101,24 @@ export const POST: APIRoute = async ({ request }) => {
 
       try {
         const imageUrl = await uploadImage(image);
+
         uploadedImages.push({
           image_url: imageUrl,
           image_alt: imageAlt || null,
           position,
         });
       } catch (error) {
-        console.error("Thought image upload failed:", error instanceof Error ? error.message : error);
+        console.error("Thought image upload failed:", error);
         return json({ message: "Image upload failed." }, 502);
       }
     }
 
+    /* -------------------------
+       INSERT THOUGHT
+    -------------------------- */
+
     const supabase = createSupabaseAdminClient();
+
     const { data, error } = await withTimeout(
       supabase
         .from("thoughts")
@@ -99,27 +139,43 @@ export const POST: APIRoute = async ({ request }) => {
       return json({ message: "Thought insert failed." }, 500);
     }
 
+    /* -------------------------
+       INSERT IMAGE METADATA
+    -------------------------- */
+
     if (uploadedImages.length > 0) {
       const { error: imageInsertError } = await withTimeout(
-        supabase
-          .from("thought_images")
-          .insert(uploadedImages.map((image) => ({ ...image, thought_id: data.id }))),
+        supabase.from("thought_images").insert(
+          uploadedImages.map((img) => ({
+            ...img,
+            thought_id: data.id,
+          }))
+        ),
         10000,
         "Thought images insert"
       );
 
       if (imageInsertError) {
-        console.error("Thought image metadata insert failed:", imageInsertError.message);
-        return json({ message: "Thought saved, but image metadata insert failed." }, 500);
+        console.error(
+          "Thought image metadata insert failed:",
+          imageInsertError.message
+        );
+
+        return json({
+          message: "Thought saved but image metadata failed.",
+        }, 500);
       }
     }
 
-    return json({ id: data.id, message: "Thought published." }, 201);
+    return json(
+      {
+        id: data.id,
+        message: "Thought published.",
+      },
+      201
+    );
   } catch (error) {
-    console.error("Failed to publish thought:", error instanceof Error ? error.message : error);
-    return json({ message: "Failed to publish thought." }, 500);
+    console.error("Failed to publish thought:", error);
+    return json({ message: "Server error." }, 500);
   }
 };
-
-export const ALL: APIRoute = async () =>
-  json({ message: "Method not allowed." }, 405);

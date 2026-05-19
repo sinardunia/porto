@@ -7,35 +7,37 @@ import type { BlogPostSummary } from "@/types/blog";
 
 export const prerender = false;
 
+const matchesSearch = (post: BlogPostSummary, search: string) => {
+  const normalizedSearch = search.trim().toLowerCase();
+  if (!normalizedSearch) return true;
+
+  return [post.title, post.excerpt, post.slug]
+    .filter(Boolean)
+    .some((value) => value?.toLowerCase().includes(normalizedSearch));
+};
+
 const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
   try {
     const supabase = createSupabaseClient();
-    const cursor = Astro.url.searchParams.get("before");
     const search = Astro.url.searchParams.get("q")?.trim();
-    let query = supabase
-      .from("blog_posts")
-      .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
-      .eq("is_published", true)
-      .is("deleted_at", null)
-      .order("created_at", { ascending: false })
-      .limit(50);
-
-    if (cursor) {
-      query = query.lt("created_at", cursor);
-    }
-
-    if (search) {
-      query = query.textSearch("content", search, { type: "websearch" });
-    }
-
-    const { data, error } = await withTimeout(query, 10000, "Blog posts fetch");
+    const { data, error } = await withTimeout(
+      supabase
+        .from("blog_posts")
+        .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false })
+        .limit(50),
+      10000,
+      "Blog posts fetch"
+    );
 
     if (error) {
       console.warn("Unable to load blog posts:", error.message);
       return [];
     }
 
-    return data ?? [];
+    const posts = data ?? [];
+    return search ? posts.filter((post) => matchesSearch(post, search)) : posts;
   } catch (error) {
     console.warn(
       "Unable to load blog posts:",
@@ -47,13 +49,6 @@ const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
 
 const posts = await getBlogPosts();
 const query = Astro.url.searchParams.get("q")?.trim() || "";
-const lastPost = posts.at(-1);
-const olderUrl = lastPost
-  ? `/posts?${new URLSearchParams({
-      ...(query ? { q: query } : {}),
-      before: lastPost.created_at,
-    }).toString()}`
-  : null;
 ---
 
 <Layout title="Blog - Fuji Halim Rabani">
@@ -87,15 +82,9 @@ const olderUrl = lastPost
     ) : (
       <section class="border-l border-border-light pl-5 dark:border-neutral-800">
         <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-500">
-          Belum ada blog post dari Supabase di sini. Tulisan lama masih aman di file Markdown sampai dipindahkan pelan-pelan.
+          {query ? "Tidak ada blog post yang cocok." : "Belum ada blog post dari Supabase di sini."}
         </p>
       </section>
-    )}
-
-    {olderUrl && (
-      <a href={olderUrl} class="self-start rounded-lg border border-border-light px-4 py-3 text-sm text-neutral-500 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100">
-        Load older blog posts
-      </a>
     )}
   </main>
 </Layout>

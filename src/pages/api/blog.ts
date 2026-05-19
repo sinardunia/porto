@@ -1,11 +1,21 @@
 import type { APIRoute } from "astro";
 import { json, verifyAdminSecret } from "@/lib/api";
 import { createSupabaseAdminClient } from "@/lib/supabase";
-import { cleanText, normalizeImageExtension, normalizeSlug, validateImageFile, withTimeout } from "@/lib/security";
+import {
+  cleanText,
+  normalizeImageExtension,
+  normalizeSlug,
+  validateImageFile,
+  withTimeout,
+} from "@/lib/security";
 
 export const prerender = false;
 
 const BLOG_IMAGES_BUCKET = "blog-images";
+
+/* ---------------------------
+   STORAGE HELPERS
+---------------------------- */
 
 const getStoragePath = (file: File) => {
   const now = new Date();
@@ -23,17 +33,17 @@ const uploadCoverImage = async (file: File) => {
   const buffer = await file.arrayBuffer();
 
   const { error } = await withTimeout(
-    supabase.storage
-      .from(BLOG_IMAGES_BUCKET)
-      .upload(path, buffer, {
-        contentType: file.type,
-        upsert: false,
-      }),
+    supabase.storage.from(BLOG_IMAGES_BUCKET).upload(path, buffer, {
+      contentType: file.type,
+      upsert: false,
+    }),
     15000,
     "Blog cover image upload"
   );
 
-  if (error) throw new Error(`Cover image upload failed: ${error.message}`);
+  if (error) {
+    throw new Error(`Cover image upload failed: ${error.message}`);
+  }
 
   const { data } = supabase.storage
     .from(BLOG_IMAGES_BUCKET)
@@ -42,12 +52,28 @@ const uploadCoverImage = async (file: File) => {
   return data.publicUrl;
 };
 
+/* ---------------------------
+   GET (SAFE DEBUG / LIST CHECK)
+---------------------------- */
+
+export const GET: APIRoute = async () => {
+  return json({
+    message: "Blog API is running",
+    method: "GET enabled",
+  });
+};
+
+/* ---------------------------
+   POST (CREATE BLOG)
+---------------------------- */
+
 export const POST: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
     if (!auth.ok) return auth.response;
 
     const formData = await request.formData();
+
     const title = cleanText(formData.get("title"), 180);
     const slug = normalizeSlug(cleanText(formData.get("slug"), 160));
     const excerpt = cleanText(formData.get("excerpt"), 500);
@@ -56,17 +82,9 @@ export const POST: APIRoute = async ({ request }) => {
     const coverImage = formData.get("coverImage");
     const isPublished = formData.get("isPublished") === "on";
 
-    if (!title) {
-      return json({ message: "Title is required." }, 400);
-    }
-
-    if (!slug) {
-      return json({ message: "Slug is required." }, 400);
-    }
-
-    if (!content) {
-      return json({ message: "Blog post content is required." }, 400);
-    }
+    if (!title) return json({ message: "Title is required." }, 400);
+    if (!slug) return json({ message: "Slug is required." }, 400);
+    if (!content) return json({ message: "Blog post content is required." }, 400);
 
     let coverImageUrl: string | null = null;
 
@@ -77,12 +95,13 @@ export const POST: APIRoute = async ({ request }) => {
       try {
         coverImageUrl = await uploadCoverImage(coverImage);
       } catch (error) {
-        console.error("Blog cover image upload failed:", error instanceof Error ? error.message : error);
+        console.error("Cover upload failed:", error);
         return json({ message: "Cover image upload failed." }, 502);
       }
     }
 
     const supabase = createSupabaseAdminClient();
+
     const { data, error } = await withTimeout(
       supabase
         .from("blog_posts")
@@ -102,11 +121,13 @@ export const POST: APIRoute = async ({ request }) => {
     );
 
     if (error) {
-      console.error("Blog post insert failed:", error.message);
+      console.error("Insert failed:", error.message);
+
       if (error.code === "23505") {
-        return json({ message: "A blog post with this slug already exists." }, 409);
+        return json({ message: "Slug already exists." }, 409);
       }
-      return json({ message: "Blog post insert failed." }, 500);
+
+      return json({ message: "Blog insert failed." }, 500);
     }
 
     return json(
@@ -114,15 +135,14 @@ export const POST: APIRoute = async ({ request }) => {
         id: data.id,
         slug: data.slug,
         isPublished: data.is_published,
-        message: data.is_published ? "Blog post published." : "Blog post saved as draft.",
+        message: data.is_published
+          ? "Blog published."
+          : "Saved as draft.",
       },
       201
     );
   } catch (error) {
-    console.error("Failed to save blog post:", error instanceof Error ? error.message : error);
-    return json({ message: "Failed to save blog post." }, 500);
+    console.error("Unexpected error:", error);
+    return json({ message: "Server error." }, 500);
   }
 };
-
-export const ALL: APIRoute = async () =>
-  json({ message: "Method not allowed." }, 405);
