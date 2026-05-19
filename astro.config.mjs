@@ -8,8 +8,14 @@ export default defineConfig({
 
   adapter: vercel(),
 
+  security: {
+    checkOrigin: false,
+  },
+
   integrations: [
     tailwind(),
     sitemap(),
   ],
+
+  site: process.env.SITE_URL,
 });
