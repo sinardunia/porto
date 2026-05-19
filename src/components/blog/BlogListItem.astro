@@ -1,0 +1,47 @@
+---
+import type { BlogPostSummary } from "@/types/blog";
+
+type Props = {
+  post: BlogPostSummary;
+};
+
+const { post } = Astro.props;
+const createdAt = new Date(post.created_at);
+const formattedDate = Number.isNaN(createdAt.getTime())
+  ? post.created_at
+  : new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format(createdAt);
+---
+
+<a href={`/posts/${post.slug}`} class="group block border-b border-border-light/70 py-7 dark:border-neutral-800/80">
+  <article class="flex gap-5">
+    <div class="min-w-0 flex-1">
+      <h2 class="text-xl font-semibold leading-8 text-neutral-900 group-hover:text-neutral-700 dark:text-neutral-100 dark:group-hover:text-neutral-300">
+        {post.title}
+      </h2>
+
+      {post.excerpt && (
+        <p class="mt-2 line-clamp-3 text-sm leading-7 text-neutral-500 dark:text-neutral-400">
+          {post.excerpt}
+        </p>
+      )}
+
+      <time datetime={post.created_at} class="mt-3 block text-xs text-neutral-400 dark:text-neutral-600">
+        {formattedDate}
+      </time>
+    </div>
+
+    {post.cover_image_url && (
+      <img
+        src={post.cover_image_url}
+        alt={post.cover_image_alt || ""}
+        loading="lazy"
+        decoding="async"
+        class="mt-1 h-20 w-20 shrink-0 rounded-lg object-cover opacity-90 sm:h-24 sm:w-24"
+      />
+    )}
+  </article>
+</a>

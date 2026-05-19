@@ -8,7 +8,7 @@ This setup is only for short personal thoughts. Long-form blog posts stay in Ast
 
 ## Required environment variables
 
-Add these to your local `.env` file and to your Netlify environment variables:
+Add these to your local `.env` file and to your Vercel environment variables:
 
 ```txt
 SUPABASE_URL=your_supabase_project_url
@@ -191,7 +191,7 @@ Use your `THOUGHTS_ADMIN_SECRET` as the admin secret when posting.
 
 ## Production testing flow
 
-1. Add all required env vars in Netlify.
+1. Add all required env vars in Vercel.
 2. Deploy the site.
 3. Open `/admin/thoughts` on your phone.
 4. Post a text-only thought first.
@@ -199,4 +199,4 @@ Use your `THOUGHTS_ADMIN_SECRET` as the admin secret when posting.
 6. Post another thought with an image.
 7. Confirm the image appears on `/thoughts`.
 
-If posting works but `/thoughts` does not update, check that `/thoughts` is being handled by the Netlify SSR function and that `export const prerender = false` is still present.
+If posting works but `/thoughts` does not update, check that `/thoughts` is being handled by the Vercel SSR function and that `export const prerender = false` is still present.

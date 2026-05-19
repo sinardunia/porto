@@ -1,166 +1,103 @@
 ---
-import { CollectionEntry, getCollection } from "astro:content";
+import { marked } from "marked";
 import Layout from "@/layouts/Layout.astro";
-import formatDate from "@/utils/formatDate";
+import { createSupabaseClient } from "@/lib/supabase";
+import type { BlogPost } from "@/types/blog";
 
-export async function getStaticPaths() {
-  const posts = await getCollection("posts");
+export const prerender = false;
 
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: { post },
-  }));
-}
+const { slug } = Astro.params;
 
-type Props = {
-  post: CollectionEntry<"posts">;
+const getBlogPost = async (): Promise<BlogPost | null> => {
+  if (!slug) return null;
+
+  try {
+    const supabase = createSupabaseClient();
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("id, slug, title, excerpt, content, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+      .eq("slug", slug)
+      .eq("is_published", true)
+      .single();
+
+    if (error) {
+      console.warn("Unable to load blog post:", error.message);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.warn(
+      "Unable to load blog post:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+    return null;
+  }
 };
 
-const { post } = Astro.props;
-const { Content } = await post.render();
-const otherPosts = (await getCollection("posts"))
-  .filter((p) => p.slug !== post.slug)
-  .slice(0, 3);
+const post = await getBlogPost();
+
+if (!post) {
+  Astro.response.status = 404;
+}
+
+const createdAt = post ? new Date(post.created_at) : null;
+const formattedDate = createdAt && !Number.isNaN(createdAt.getTime())
+  ? new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format(createdAt)
+  : post?.created_at;
+const renderedContent = post ? await marked.parse(post.content) : "";
 ---
 
-<Layout title={post.data.title}>
-  <main class="post mx-auto flex w-full max-w-prose flex-col gap-8">
-    <!-- Header -->
-    <header class="mb-4">
-      <h1 class="text-2xl font-bold text-text-light dark:text-neutral-100 mb-2">
-        {post.data.title}
-      </h1>
-      <div class="flex items-center gap-2 text-muted-light dark:text-neutral-400 text-sm">
-        <time datetime={post.data.publishedAt.toISOString()}>
-          {formatDate(post.data.publishedAt)}
-        </time>
-      </div>
-      <p class="italic text-muted-light dark:text-neutral-400 mt-2">{post.data.description}</p>
-    </header>
+<Layout title={post ? `${post.title} - Fuji Halim Rabani` : "Blog Post Not Found - Fuji Halim Rabani"}>
+  {post ? (
+    <main class="post mx-auto flex w-full max-w-[44rem] flex-col gap-8 pb-24">
+      <header class="flex flex-col gap-4">
+        <a href="/posts" class="text-sm text-neutral-500 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300">
+          ← Blog
+        </a>
 
-    <!-- Post Content -->
-    <article class="prose prose-slate dark:prose-invert max-w-none">
-      <Content />
-    </article>
+        <div class="flex flex-col gap-3">
+          <h1 class="text-3xl font-semibold leading-tight tracking-tight text-neutral-900 dark:text-neutral-100">
+            {post.title}
+          </h1>
 
-    <div class="flex mt-8">
-      <a 
-        href="/posts" 
-        class="flex gap-2 px-4 py-2 border border-border-light dark:border-neutral-700 
-        bg-secondary-light dark:bg-neutral-900 text-text-light dark:text-neutral-100 
-        rounded-lg  transition-all duration-300"
-      >
-      <svg width="20" height="20" fill="currentColor">
-        <path d="M10 3l-7 7 7 7m-7-7h14"></path>
-      </svg>
-        Back
-      </a>
-    </div>
+          {post.excerpt && (
+            <p class="text-[0.98rem] leading-8 text-neutral-500 dark:text-neutral-400">
+              {post.excerpt}
+            </p>
+          )}
 
-    <!-- Rekomendasi Post Lainnya -->
-    <section class="mt-12">
-      <h2 class="text-xl font-semibold text-text-light dark:text-neutral-100">Baca Juga Tulisan Lainnya:</h2>
-      <div class="grid gap-4 mt-4">
-        {otherPosts.slice(0, 5).map((otherPost) => (
-          <a 
-          href={`/posts/${otherPost.slug}`} 
-          class="flex flex-col gap-2 p-4 border border-border-light dark:border-neutral-700 
-          bg-secondary-light dark:bg-neutral-900 rounded-md transition-all duration-300 
-          hover:-translate-y-1 hover:shadow-md dark:hover:shadow-none"
-          >
-            <div class="flex gap-2">
+          <time datetime={post.created_at} class="text-xs text-neutral-400 dark:text-neutral-600">
+            {formattedDate}
+          </time>
+        </div>
+
+        {post.cover_image_url && (
           <img
-            src={otherPost.data.image}
-            alt={otherPost.data.title}
+            src={post.cover_image_url}
+            alt={post.cover_image_alt || ""}
+            class="h-auto max-h-[520px] w-full rounded-xl object-contain opacity-95"
             loading="lazy"
             decoding="async"
-            class="w-16 h-16 object-cover rounded-md"
           />
-            <p class="text-lg my-auto font-medium text-text-light dark:text-neutral-100">
-              {otherPost.data.title}
-            </p>
-            </div>
-            <p class="text-sm text-muted-light dark:text-neutral-400">
-              {formatDate(otherPost.data.publishedAt)}
-            </p>
-          </a>
-        ))}
-      </div>
-    </section>
+        )}
+      </header>
 
-    <!-- Utterances Comments -->
-    <div id="comments" class="mt-8"></div>
-  </main>
+      <article class="prose prose-slate max-w-none dark:prose-invert prose-p:leading-8 prose-p:text-neutral-700 dark:prose-p:text-neutral-300 prose-headings:font-semibold prose-headings:tracking-tight" set:html={renderedContent} />
+    </main>
+  ) : (
+    <main class="mx-auto flex w-full max-w-[42rem] flex-col gap-4 pb-24">
+      <h1 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">Blog post not found</h1>
+      <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-400">
+        Tulisan ini belum ada, belum dipublikasikan, atau belum dipindahkan ke Supabase.
+      </p>
+      <a href="/posts" class="text-sm text-neutral-500 hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300">
+        ← Back to blog
+      </a>
+    </main>
+  )}
 </Layout>
-
-<!-- Script untuk Utterances -->
-<script>
-  function loadUtterances() {
-    const commentContainer = document.getElementById("comments");
-
-    if (!commentContainer) return;
-    if (document.querySelector("script[src='https://utteranc.es/client.js']")) return;
-
-    const script = document.createElement("script");
-    script.src = "https://utteranc.es/client.js";
-    script.setAttribute("repo", "fujitime/porto"); // Ganti dengan repo GitHub-mu
-    script.setAttribute("issue-term", "pathname");
-    script.setAttribute("crossorigin", "anonymous");
-    script.async = true;
-
-    // Deteksi mode gelap atau terang
-    const theme = document.documentElement.classList.contains("dark") ? "icy-dark" : "boxy-light";
-    script.setAttribute("theme", theme);
-
-    commentContainer.appendChild(script);
-  }
-
-  function updateUtterancesTheme() {
-    const iframe = document.querySelector(".utterances-frame");
-    if (!iframe) return;
-
-    const newTheme = document.documentElement.classList.contains("dark") ? "icy-dark" : "boxy-light";
-    const message = {
-      type: "set-theme",
-      theme: newTheme
-    };
-
-    // Type assertion: pastikan elemen adalah HTMLIFrameElement
-    (iframe as HTMLIFrameElement).contentWindow?.postMessage(message, "https://utteranc.es");
-  }
-
-  document.addEventListener("astro:after-swap", loadUtterances);
-  window.addEventListener("load", loadUtterances);
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", updateUtterancesTheme);
-</script>
-
-
-<style is:global>
-  .post h1, .post h2, .post h3, .post h4 {
-    color: theme('colors.text.light');
-  }
-
-  .dark .post h1, .dark .post h2, .dark .post h3, .dark .post h4 {
-    color: theme('colors.neutral.100');
-  }
-
-  .post a {
-    color: theme('colors.accent.light');
-    text-decoration: underline;
-  }
-
-  .dark .post a {
-    color: theme('colors.orange.500');
-  }
-
-  .post pre {
-    background-color: theme('colors.secondary.light');
-    border-radius: 0.375rem;
-    padding: 1rem;
-    overflow-x: auto;
-  }
-
-  .dark .post pre {
-    background-color: theme('colors.neutral.900');
-  }
-</style>
