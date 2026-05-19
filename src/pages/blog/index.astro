@@ -1,0 +1,92 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import BlogListItem from "@/components/blog/BlogListItem.astro";
+import { createSupabaseClient } from "@/lib/supabase";
+import { withTimeout } from "@/lib/security";
+import type { BlogPostSummary } from "@/types/blog";
+
+export const prerender = false;
+
+const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
+  try {
+    const supabase = createSupabaseClient();
+    const search = Astro.url.searchParams.get("q")?.trim();
+    let query = supabase
+      .from("blog_posts")
+      .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(50);
+
+    if (search) {
+      const safeSearch = search.replaceAll(",", " ");
+      query = query.or(`title.ilike.%${safeSearch}%,excerpt.ilike.%${safeSearch}%,content.ilike.%${safeSearch}%`);
+    }
+
+    const { data, error } = await withTimeout(query, 10000, "Blog posts fetch");
+
+    if (error) {
+      console.warn("Unable to load blog posts:", error.message);
+      return [];
+    }
+
+    return data ?? [];
+  } catch (error) {
+    console.warn(
+      "Unable to load blog posts:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+    return [];
+  }
+};
+
+const posts = await getBlogPosts();
+const query = Astro.url.searchParams.get("q")?.trim() || "";
+const shouldUseCarousel = posts.length > 6;
+---
+
+<Layout title="Blog - Fuji Halim Rabani">
+  <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-10 pb-24">
+    <header class="flex flex-col gap-3">
+      <h1 class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        Blog
+      </h1>
+      <p class="max-w-2xl text-[0.95rem] leading-8 text-neutral-500 dark:text-neutral-400">
+        Tulisan yang lebih pelan; tempat pikiran dirapikan setelah cukup lama tinggal di kepala.
+      </p>
+    </header>
+
+    <form action="/blog" method="get" class="flex flex-col gap-2 rounded-2xl border border-border-light/70 bg-secondary-light/60 p-3 dark:border-neutral-800 dark:bg-neutral-900/50 sm:flex-row">
+      <input
+        type="search"
+        name="q"
+        value={query}
+        placeholder="Cari tulisan..."
+        class="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2 text-sm text-neutral-800 outline-none placeholder:text-neutral-400 dark:text-neutral-100"
+      />
+      <button type="submit" class="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300">
+        Search
+      </button>
+    </form>
+
+    {posts.length > 0 ? (
+      <section aria-label="Blog posts" class:list={[
+        shouldUseCarousel
+          ? "-mx-6 flex snap-x gap-4 overflow-x-auto px-6 pb-4 md:-mx-10 md:px-10"
+          : "flex flex-col",
+      ]}>
+        {posts.map((post) => (
+          <div class={shouldUseCarousel ? "w-[82vw] max-w-[24rem] shrink-0 snap-start sm:w-[22rem]" : ""}>
+            <BlogListItem post={post} basePath="/blog" />
+          </div>
+        ))}
+      </section>
+    ) : (
+      <section class="border-l border-border-light pl-5 dark:border-neutral-800">
+        <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-500">
+          {query ? "Tidak ada blog post yang cocok." : "Belum ada blog post dari Supabase di sini."}
+        </p>
+      </section>
+    )}
+  </main>
+</Layout>

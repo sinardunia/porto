@@ -3,9 +3,10 @@ import type { BlogPostSummary } from "@/types/blog";
 
 type Props = {
   post: BlogPostSummary;
+  basePath?: string;
 };
 
-const { post } = Astro.props;
+const { post, basePath = "/posts" } = Astro.props;
 const createdAt = new Date(post.created_at);
 const formattedDate = Number.isNaN(createdAt.getTime())
   ? post.created_at
@@ -16,7 +17,7 @@ const formattedDate = Number.isNaN(createdAt.getTime())
     }).format(createdAt);
 ---
 
-<a href={`/posts/${post.slug}`} class="group block border-b border-border-light/70 py-7 dark:border-neutral-800/80">
+<a href={`${basePath}/${post.slug}`} class="group block border-b border-border-light/70 py-7 dark:border-neutral-800/80">
   <article class="flex gap-5">
     <div class="min-w-0 flex-1">
       <h2 class="text-xl font-semibold leading-8 text-neutral-900 group-hover:text-neutral-700 dark:text-neutral-100 dark:group-hover:text-neutral-300">

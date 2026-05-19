@@ -15,7 +15,7 @@ export const prerender = false;
       </p>
     </header>
 
-    <form id="blog-form" action="javascript:void(0)" method="dialog" onsubmit="return false" class="flex flex-col gap-5">
+    <form id="blog-form" class="flex flex-col gap-5">
       <label class="flex flex-col gap-2">
         <span class="text-sm text-neutral-500 dark:text-neutral-400">Admin secret</span>
         <input id="admin-secret" type="password" autocomplete="current-password" required class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100" />
@@ -127,10 +127,13 @@ export const prerender = false;
 
   form?.addEventListener("submit", (event) => {
     event.preventDefault();
+    event.stopPropagation();
     void submitBlogPost();
   });
 
-  publishButton?.addEventListener("click", () => {
+  publishButton?.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     void submitBlogPost();
   });
 </script>
