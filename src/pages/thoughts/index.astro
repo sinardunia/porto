@@ -49,12 +49,7 @@ const getThoughts = async (): Promise<Thought[]> => {
 const thoughts = await getThoughts();
 const query = Astro.url.searchParams.get("q")?.trim() || "";
 const lastThought = thoughts.at(-1);
-const olderUrl = lastThought
-  ? `/thoughts?${new URLSearchParams({
-      ...(query ? { q: query } : {}),
-      before: lastThought.created_at,
-    }).toString()}`
-  : null;
+
 const groupedThoughts = thoughts.reduce<{ month: string; thoughts: Thought[] }[]>((groups, thought) => {
   const date = new Date(thought.created_at);
   const month = Number.isNaN(date.getTime())
@@ -117,11 +112,7 @@ const groupedThoughts = thoughts.reduce<{ month: string; thoughts: Thought[] }[]
       </section>
     )}
 
-    {olderUrl && (
-      <a href={olderUrl} class="self-start rounded-lg border border-border-light px-4 py-3 text-sm text-neutral-500 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100">
-        Load older thoughts
-      </a>
-    )}
+    
   </main>
 </Layout>
 
