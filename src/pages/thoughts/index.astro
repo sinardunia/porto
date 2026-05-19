@@ -1,0 +1,60 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ThoughtCard from "@/components/thoughts/ThoughtCard.astro";
+import { createSupabaseClient } from "@/lib/supabase";
+import type { Thought } from "@/types/thoughts";
+
+export const prerender = false;
+
+const getThoughts = async (): Promise<Thought[]> => {
+  try {
+    const supabase = createSupabaseClient();
+    const { data, error } = await supabase
+      .from("thoughts")
+      .select("id, content, image_url, image_alt, created_at")
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(30);
+
+    if (error) {
+      console.warn("Unable to load thoughts:", error.message);
+      return [];
+    }
+
+    return data ?? [];
+  } catch (error) {
+    console.warn(
+      "Unable to load thoughts:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
+    return [];
+  }
+};
+
+const thoughts = await getThoughts();
+---
+
+<Layout title="Thoughts - Fuji Halim Rabani">
+  <main class="mx-auto flex w-full max-w-[42rem] flex-col gap-11 pb-24">
+    <header class="flex flex-col gap-3 pt-1">
+      <h1 class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        Thoughts
+      </h1>
+      <p class="max-w-2xl text-[0.95rem] leading-8 text-neutral-500 dark:text-neutral-400">
+        Catatan kecil, potongan hari, dan hal-hal random yang kusimpan sebelum hilang.
+      </p>
+    </header>
+
+    {thoughts.length > 0 ? (
+      <section class="flex flex-col gap-10" aria-label="Thoughts archive">
+        {thoughts.map((thought) => <ThoughtCard thought={thought} />)}
+      </section>
+    ) : (
+      <section class="border-l border-border-light pl-5 dark:border-neutral-800">
+        <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-500">
+          Belum ada catatan di sini. Nanti tempat ini akan terisi pelan-pelan.
+        </p>
+      </section>
+    )}
+  </main>
+</Layout>

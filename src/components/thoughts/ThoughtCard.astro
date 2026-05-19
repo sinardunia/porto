@@ -1,0 +1,46 @@
+---
+import type { Thought } from "@/types/thoughts";
+
+type Props = {
+  thought: Thought;
+};
+
+const { thought } = Astro.props;
+const createdAt = new Date(thought.created_at);
+const formattedDate = Number.isNaN(createdAt.getTime()) ? thought.created_at : [
+  new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(createdAt),
+  new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(createdAt),
+].join(" · ");
+---
+
+<article class="group relative pb-10">
+  <div class="absolute bottom-0 left-0 h-px w-16 bg-border-light/70 dark:bg-neutral-800/80"></div>
+
+  <p class="whitespace-pre-wrap text-[1rem] leading-8 text-neutral-800 dark:text-neutral-200 md:text-[1.03rem]">
+    {thought.content}
+  </p>
+
+  {thought.image_url && (
+    <img
+      src={thought.image_url}
+      alt={thought.image_alt || ""}
+      loading="lazy"
+      decoding="async"
+      class="mt-5 h-auto max-h-[520px] w-full rounded-xl object-contain opacity-95"
+    />
+  )}
+
+  <time
+    datetime={thought.created_at}
+    class="mt-4 block text-[0.72rem] tracking-wide text-neutral-400 dark:text-neutral-600"
+  >
+    {formattedDate}
+  </time>
+</article>
