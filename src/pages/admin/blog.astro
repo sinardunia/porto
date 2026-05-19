@@ -113,6 +113,7 @@ export const prerender = false;
       try {
         const response = await fetch("/api/blog", {
           method: "POST",
+          credentials: "same-origin",
           headers: {
             Authorization: `Bearer ${adminSecret}`,
           },

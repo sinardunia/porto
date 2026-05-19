@@ -28,20 +28,24 @@ const getStoragePath = (file: File) => {
 
 const uploadImage = async (file: File) => {
   const supabase = createSupabaseAdminClient();
+
   const path = getStoragePath(file);
+
   const buffer = await file.arrayBuffer();
 
   const { error } = await withTimeout(
-    supabase.storage.from(THOUGHT_IMAGES_BUCKET).upload(path, buffer, {
-      contentType: file.type,
-      upsert: false,
-    }),
+    supabase.storage
+      .from(THOUGHT_IMAGES_BUCKET)
+      .upload(path, buffer, {
+        contentType: file.type,
+        upsert: false,
+      }),
     15000,
     "Thought image upload"
   );
 
   if (error) {
-    throw new Error(`Image upload failed: ${error.message}`);
+    throw new Error(error.message);
   }
 
   const { data } = supabase.storage
@@ -52,13 +56,13 @@ const uploadImage = async (file: File) => {
 };
 
 /* -------------------------
-   GET (SAFE DEBUG)
+   GET
 -------------------------- */
 
 export const GET: APIRoute = async () => {
   return json({
+    ok: true,
     message: "Thoughts API running",
-    method: "GET enabled",
   });
 };
 
@@ -69,25 +73,39 @@ export const GET: APIRoute = async () => {
 export const POST: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
-    if (!auth.ok) return auth.response;
+
+    if (!auth.ok) {
+      return auth.response;
+    }
 
     const formData = await request.formData();
 
-    const content = cleanText(formData.get("content"), 5000);
-    const imageAlt = cleanText(formData.get("imageAlt"), 300);
+    const content = cleanText(
+      formData.get("content"),
+      5000
+    );
+
+    const imageAlt = cleanText(
+      formData.get("imageAlt"),
+      300
+    );
 
     const images = formData
       .getAll("image")
-      .filter((img): img is File => img instanceof File && img.size > 0)
+      .filter(
+        (img): img is File =>
+          img instanceof File && img.size > 0
+      )
       .slice(0, 6);
 
     if (!content) {
-      return json({ message: "Thought content is required." }, 400);
+      return json(
+        {
+          message: "Thought content is required.",
+        },
+        400
+      );
     }
-
-    /* -------------------------
-       UPLOAD IMAGES
-    -------------------------- */
 
     const uploadedImages: {
       image_url: string;
@@ -97,7 +115,15 @@ export const POST: APIRoute = async ({ request }) => {
 
     for (const [position, image] of images.entries()) {
       const imageError = validateImageFile(image);
-      if (imageError) return json({ message: imageError }, 400);
+
+      if (imageError) {
+        return json(
+          {
+            message: imageError,
+          },
+          400
+        );
+      }
 
       try {
         const imageUrl = await uploadImage(image);
@@ -108,14 +134,19 @@ export const POST: APIRoute = async ({ request }) => {
           position,
         });
       } catch (error) {
-        console.error("Thought image upload failed:", error);
-        return json({ message: "Image upload failed." }, 502);
+        console.error(
+          "Thought image upload failed:",
+          error
+        );
+
+        return json(
+          {
+            message: "Image upload failed.",
+          },
+          502
+        );
       }
     }
-
-    /* -------------------------
-       INSERT THOUGHT
-    -------------------------- */
 
     const supabase = createSupabaseAdminClient();
 
@@ -124,8 +155,10 @@ export const POST: APIRoute = async ({ request }) => {
         .from("thoughts")
         .insert({
           content,
-          image_url: uploadedImages[0]?.image_url || null,
-          image_alt: uploadedImages[0]?.image_alt || null,
+          image_url:
+            uploadedImages[0]?.image_url || null,
+          image_alt:
+            uploadedImages[0]?.image_alt || null,
           is_published: true,
         })
         .select("id")
@@ -135,25 +168,33 @@ export const POST: APIRoute = async ({ request }) => {
     );
 
     if (error) {
-      console.error("Thought insert failed:", error.message);
-      return json({ message: "Thought insert failed." }, 500);
+      console.error(
+        "Thought insert failed:",
+        error.message
+      );
+
+      return json(
+        {
+          message: "Thought insert failed.",
+        },
+        500
+      );
     }
 
-    /* -------------------------
-       INSERT IMAGE METADATA
-    -------------------------- */
-
     if (uploadedImages.length > 0) {
-      const { error: imageInsertError } = await withTimeout(
-        supabase.from("thought_images").insert(
-          uploadedImages.map((img) => ({
-            ...img,
-            thought_id: data.id,
-          }))
-        ),
-        10000,
-        "Thought images insert"
-      );
+      const { error: imageInsertError } =
+        await withTimeout(
+          supabase
+            .from("thought_images")
+            .insert(
+              uploadedImages.map((img) => ({
+                ...img,
+                thought_id: data.id,
+              }))
+            ),
+          10000,
+          "Thought images insert"
+        );
 
       if (imageInsertError) {
         console.error(
@@ -161,9 +202,13 @@ export const POST: APIRoute = async ({ request }) => {
           imageInsertError.message
         );
 
-        return json({
-          message: "Thought saved but image metadata failed.",
-        }, 500);
+        return json(
+          {
+            message:
+              "Thought saved but image metadata failed.",
+          },
+          500
+        );
       }
     }
 
@@ -175,7 +220,34 @@ export const POST: APIRoute = async ({ request }) => {
       201
     );
   } catch (error) {
-    console.error("Failed to publish thought:", error);
-    return json({ message: "Server error." }, 500);
+    console.error(
+      "Failed to publish thought:",
+      error
+    );
+
+    return json(
+      {
+        message: "Server error.",
+      },
+      500
+    );
   }
+};
+
+/* -------------------------
+   BLOCK OTHER METHODS
+-------------------------- */
+
+export const ALL: APIRoute = async ({ request }) => {
+  return new Response(
+    JSON.stringify({
+      message: `Method ${request.method} not allowed.`,
+    }),
+    {
+      status: 405,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };

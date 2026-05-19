@@ -168,12 +168,13 @@ export const prerender = false;
 
       try {
         const response = await fetch("/api/thoughts", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${adminSecret}`,
-          },
-          body: formData,
-        });
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          Authorization: `Bearer ${adminSecret}`,
+        },
+        body: formData,
+      });
 
         const result = await response
           .json()

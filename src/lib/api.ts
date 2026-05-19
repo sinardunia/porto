@@ -1,5 +1,8 @@
-export const json = (body: Record<string, unknown>, status = 200) =>
-  new Response(JSON.stringify(body), {
+export const json = (
+  body: Record<string, unknown>,
+  status = 200
+) =>
+  new Response(JSON.stringify(body, null, 2), {
     status,
     headers: {
       "Content-Type": "application/json",
@@ -8,23 +11,83 @@ export const json = (body: Record<string, unknown>, status = 200) =>
   });
 
 export const getBearerToken = (request: Request) => {
-  const authorization = request.headers.get("Authorization");
-  if (!authorization?.startsWith("Bearer ")) return null;
-  return authorization.slice("Bearer ".length).trim();
+  const authorization =
+    request.headers.get("authorization") ||
+    request.headers.get("Authorization");
+
+  console.log("AUTH HEADER:", authorization);
+
+  if (!authorization?.startsWith("Bearer ")) {
+    console.log("INVALID AUTH FORMAT");
+    return null;
+  }
+
+  const token = authorization
+    .slice("Bearer ".length)
+    .trim();
+
+  console.log("TOKEN:", token);
+
+  return token;
 };
 
-export const verifyAdminSecret = (request: Request) => {
-  const expectedSecret = import.meta.env.THOUGHTS_ADMIN_SECRET;
-  const providedSecret = getBearerToken(request);
+export const verifyAdminSecret = (
+  request: Request
+) => {
+  const expectedSecret =
+    import.meta.env.THOUGHTS_ADMIN_SECRET;
+
+  const providedSecret =
+    getBearerToken(request);
+
+  console.log("EXPECTED SECRET:", expectedSecret);
+  console.log("PROVIDED SECRET:", providedSecret);
 
   if (!expectedSecret) {
-    return { ok: false as const, response: json({ message: "Admin secret is not configured." }, 500) };
+    console.log("ENV NOT FOUND");
+
+    return {
+      ok: false as const,
+      response: json(
+        {
+          message:
+            "Admin secret is not configured.",
+        },
+        500
+      ),
+    };
   }
 
-  if (!providedSecret || providedSecret !== expectedSecret) {
-    console.warn("Failed admin auth attempt.");
-    return { ok: false as const, response: json({ message: "Unauthorized." }, 401) };
+  if (
+    !providedSecret ||
+    providedSecret.trim() !==
+      expectedSecret.trim()
+  ) {
+    console.log("SECRET MISMATCH");
+
+    return {
+      ok: false as const,
+      response: json(
+        {
+          message: "Unauthorized.",
+          expectedSecret,
+          providedSecret,
+          authHeader:
+            request.headers.get(
+              "authorization"
+            ) ||
+            request.headers.get(
+              "Authorization"
+            ),
+        },
+        401
+      ),
+    };
   }
 
-  return { ok: true as const };
+  console.log("AUTH SUCCESS");
+
+  return {
+    ok: true as const,
+  };
 };
