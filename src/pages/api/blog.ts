@@ -107,17 +107,21 @@ export const GET: APIRoute =
    OPTIONS
 ---------------------------------- */
 
-export const OPTIONS: APIRoute =
-  async () => {
-    return new Response(null, {
-      status: 204,
+export const OPTIONS: APIRoute = async () => {
+  return new Response(null, {
+    status: 204,
 
-      headers: {
-        Allow:
-          "GET, POST, OPTIONS",
-      },
-    });
-  };
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+
+      "Access-Control-Allow-Methods":
+        "GET, POST, OPTIONS",
+
+      "Access-Control-Allow-Headers":
+        "Content-Type, Authorization",
+    },
+  });
+};
 
 /* ---------------------------------
    POST

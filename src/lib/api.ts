@@ -2,14 +2,29 @@ export const json = (
   body: Record<string, unknown>,
   status = 200
 ) =>
-  new Response(JSON.stringify(body), {
-    status,
+  new Response(
+    JSON.stringify(body),
+    {
+      status,
 
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store",
-    },
-  });
+      headers: {
+        "Content-Type":
+          "application/json",
+
+        "Cache-Control":
+          "no-store",
+
+        "Access-Control-Allow-Origin":
+          "*",
+
+        "Access-Control-Allow-Headers":
+          "Content-Type, Authorization",
+
+        "Access-Control-Allow-Methods":
+          "GET, POST, OPTIONS",
+      },
+    }
+  );
 
 export const getBearerToken = (
   request: Request
