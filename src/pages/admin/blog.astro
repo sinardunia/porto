@@ -15,7 +15,7 @@ export const prerender = false;
       </p>
     </header>
 
-    <form id="blog-form" class="flex flex-col gap-5">
+  <form id="blog-form" novalidate class="flex flex-col gap-5">
       <label class="flex flex-col gap-2">
         <span class="text-sm text-neutral-500 dark:text-neutral-400">Admin secret</span>
         <input id="admin-secret" type="password" autocomplete="current-password" required class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100" />
@@ -65,75 +65,96 @@ export const prerender = false;
   </main>
 </Layout>
 
-<script>
-  const form = document.getElementById("blog-form");
-  const status = document.getElementById("form-status");
-  const secretInput = document.getElementById("admin-secret");
-  const publishButton = document.getElementById("publish-button");
+<script type="module">
+  const form = document.querySelector("#blog-form");
+  const status = document.querySelector("#form-status");
+  const secretInput = document.querySelector("#admin-secret");
+  const publishButton = document.querySelector("#publish-button");
 
-  if (secretInput instanceof HTMLInputElement) {
-    secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
+  if (
+    !(form instanceof HTMLFormElement) ||
+    !(secretInput instanceof HTMLInputElement) ||
+    !(publishButton instanceof HTMLButtonElement)
+  ) {
+    console.error("Blog admin form elements missing.");
+  } else {
+    secretInput.value =
+      localStorage.getItem("thoughts_admin_secret") || "";
+
+    const setLoading = (loading) => {
+      publishButton.disabled = loading;
+      publishButton.textContent = loading
+        ? "Saving..."
+        : "Save blog post";
+    };
+
+    const setStatus = (message) => {
+      if (status) status.textContent = message;
+    };
+
+    const submitBlogPost = async () => {
+      const adminSecret = secretInput.value.trim();
+
+      if (!adminSecret) {
+        setStatus("Admin secret belum diisi.");
+        return;
+      }
+
+      localStorage.setItem(
+        "thoughts_admin_secret",
+        adminSecret
+      );
+
+      const formData = new FormData(form);
+
+      setLoading(true);
+      setStatus("");
+
+      try {
+        const response = await fetch("/api/blog", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${adminSecret}`,
+          },
+          body: formData,
+        });
+
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(
+            result?.message || "Failed to save blog post."
+          );
+        }
+
+        form.reset();
+        secretInput.value = adminSecret;
+
+        setStatus(
+          result?.message ||
+            "Blog post published successfully."
+        );
+      } catch (error) {
+        setStatus(
+          error instanceof Error
+            ? error.message
+            : "Failed to save blog post."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await submitBlogPost();
+    });
+
+    publishButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      await submitBlogPost();
+    });
   }
-
-  const submitBlogPost = async () => {
-    if (!(form instanceof HTMLFormElement)) return;
-    if (!(secretInput instanceof HTMLInputElement)) return;
-
-    const formData = new FormData(form);
-    const adminSecret = secretInput.value;
-
-    if (!adminSecret) {
-      if (status) status.textContent = "Admin secret belum diisi.";
-      return;
-    }
-
-    localStorage.setItem("thoughts_admin_secret", adminSecret);
-
-    if (publishButton instanceof HTMLButtonElement) {
-      publishButton.disabled = true;
-      publishButton.textContent = "Saving...";
-    }
-    if (status) status.textContent = "";
-
-    try {
-      const response = await fetch("/api/blog", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${adminSecret}`,
-        },
-        body: formData,
-      });
-
-      const result = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Failed to save blog post.");
-      }
-
-      form.reset();
-      secretInput.value = adminSecret;
-      if (status) status.textContent = result?.isPublished ? "Blog post published. It should appear on /posts now." : "Blog post saved as draft.";
-    } catch (error) {
-      if (status) {
-        status.textContent = error instanceof Error ? error.message : "Failed to save blog post.";
-      }
-    } finally {
-      if (publishButton instanceof HTMLButtonElement) {
-        publishButton.disabled = false;
-        publishButton.textContent = "Save blog post";
-      }
-    }
-  };
-
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    void submitBlogPost();
-  });
-
-  publishButton?.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    void submitBlogPost();
-  });
 </script>

@@ -15,7 +15,7 @@ export const prerender = false;
       </p>
     </header>
 
-    <form id="thought-form" action="javascript:void(0)" method="dialog" onsubmit="return false" class="flex flex-col gap-5">
+<form id="thought-form" novalidate class="flex flex-col gap-5">
       <label class="flex flex-col gap-2">
         <span class="text-sm text-muted-light dark:text-neutral-400">Admin secret</span>
         <input
@@ -71,94 +71,158 @@ export const prerender = false;
     </form>
   </main>
 </Layout>
+<script type="module">
+  const form = document.querySelector("#thought-form");
+  const status = document.querySelector("#form-status");
+  const secretInput = document.querySelector("#admin-secret");
+  const publishButton = document.querySelector("#publish-button");
 
-<script>
-  const form = document.getElementById("thought-form");
-  const status = document.getElementById("form-status");
-  const secretInput = document.getElementById("admin-secret");
-  const publishButton = document.getElementById("publish-button");
+  if (
+    !(form instanceof HTMLFormElement) ||
+    !(secretInput instanceof HTMLInputElement) ||
+    !(publishButton instanceof HTMLButtonElement)
+  ) {
+    console.error("Thought form elements missing.");
+  } else {
+    secretInput.value =
+      localStorage.getItem("thoughts_admin_secret") || "";
 
-  if (secretInput instanceof HTMLInputElement) {
-    secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
+    const draftKey = "thought_admin_draft";
+
+    const contentInput =
+      form.elements.namedItem("content");
+
+    const imageAltInput =
+      form.elements.namedItem("imageAlt");
+
+    const restoreDraft = () => {
+      try {
+        const draft = JSON.parse(
+          localStorage.getItem(draftKey) || "{}"
+        );
+
+        if (
+          contentInput instanceof HTMLTextAreaElement &&
+          typeof draft.content === "string"
+        ) {
+          contentInput.value = draft.content;
+        }
+
+        if (
+          imageAltInput instanceof HTMLInputElement &&
+          typeof draft.imageAlt === "string"
+        ) {
+          imageAltInput.value = draft.imageAlt;
+        }
+      } catch {}
+    };
+
+    const saveDraft = () => {
+      localStorage.setItem(
+        draftKey,
+        JSON.stringify({
+          content:
+            contentInput instanceof HTMLTextAreaElement
+              ? contentInput.value
+              : "",
+          imageAlt:
+            imageAltInput instanceof HTMLInputElement
+              ? imageAltInput.value
+              : "",
+        })
+      );
+    };
+
+    restoreDraft();
+
+    form.addEventListener("input", saveDraft);
+
+    const setLoading = (loading) => {
+      publishButton.disabled = loading;
+      publishButton.textContent = loading
+        ? "Publishing..."
+        : "Publish";
+    };
+
+    const setStatus = (message) => {
+      if (status) status.textContent = message;
+    };
+
+    const submitThought = async () => {
+      const adminSecret = secretInput.value.trim();
+
+      if (!adminSecret) {
+        setStatus("Admin secret belum diisi.");
+        return;
+      }
+
+      localStorage.setItem(
+        "thoughts_admin_secret",
+        adminSecret
+      );
+
+      const formData = new FormData(form);
+
+      setLoading(true);
+      setStatus("");
+
+      try {
+        const response = await fetch("/api/thoughts", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${adminSecret}`,
+          },
+          body: formData,
+        });
+
+        const result = await response
+          .json()
+          .catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(
+            result?.message ||
+              "Failed to publish thought."
+          );
+        }
+
+        form.reset();
+
+        localStorage.removeItem(draftKey);
+
+        secretInput.value = adminSecret;
+
+        setStatus(
+          result?.message ||
+            "Thought published successfully."
+        );
+      } catch (error) {
+        setStatus(
+          error instanceof Error
+            ? error.message
+            : "Failed to publish thought."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    form.addEventListener(
+      "submit",
+      async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        await submitThought();
+      }
+    );
+
+    publishButton.addEventListener(
+      "click",
+      async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        await submitThought();
+      }
+    );
   }
-
-  const draftKey = "thought_admin_draft";
-  const contentInput = form instanceof HTMLFormElement ? form.elements.namedItem("content") : null;
-  const imageAltInput = form instanceof HTMLFormElement ? form.elements.namedItem("imageAlt") : null;
-
-  const restoreDraft = () => {
-    const draft = JSON.parse(localStorage.getItem(draftKey) || "{}");
-    if (contentInput instanceof HTMLTextAreaElement && typeof draft.content === "string") contentInput.value = draft.content;
-    if (imageAltInput instanceof HTMLInputElement && typeof draft.imageAlt === "string") imageAltInput.value = draft.imageAlt;
-  };
-
-  const saveDraft = () => {
-    localStorage.setItem(draftKey, JSON.stringify({
-      content: contentInput instanceof HTMLTextAreaElement ? contentInput.value : "",
-      imageAlt: imageAltInput instanceof HTMLInputElement ? imageAltInput.value : "",
-    }));
-  };
-
-  restoreDraft();
-  form?.addEventListener("input", saveDraft);
-
-  const submitThought = async () => {
-    if (!(form instanceof HTMLFormElement)) return;
-    if (!(secretInput instanceof HTMLInputElement)) return;
-
-    const formData = new FormData(form);
-    const adminSecret = secretInput.value;
-
-    if (!adminSecret) {
-      if (status) status.textContent = "Admin secret belum diisi.";
-      return;
-    }
-
-    localStorage.setItem("thoughts_admin_secret", adminSecret);
-
-    if (publishButton instanceof HTMLButtonElement) {
-      publishButton.disabled = true;
-      publishButton.textContent = "Publishing...";
-    }
-    if (status) status.textContent = "";
-
-    try {
-      const response = await fetch("/api/thoughts", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${adminSecret}`,
-        },
-        body: formData,
-      });
-
-      const result = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(result?.message || "Failed to publish thought.");
-      }
-
-      form.reset();
-      localStorage.removeItem(draftKey);
-      secretInput.value = adminSecret;
-      if (status) status.textContent = "Published. It should appear on /thoughts now.";
-    } catch (error) {
-      if (status) {
-        status.textContent = error instanceof Error ? error.message : "Failed to publish thought.";
-      }
-    } finally {
-      if (publishButton instanceof HTMLButtonElement) {
-        publishButton.disabled = false;
-        publishButton.textContent = "Publish";
-      }
-    }
-  };
-
-  form?.addEventListener("submit", (event) => {
-    event.preventDefault();
-    void submitThought();
-  });
-
-  publishButton?.addEventListener("click", () => {
-    void submitThought();
-  });
 </script>
