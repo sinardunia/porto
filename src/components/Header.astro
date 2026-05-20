@@ -92,42 +92,44 @@ const pathname = removeTrailingSlash(Astro.url.pathname);
     const header = document.getElementById('main-header');
     let lastScroll = 0;
 
-    window.removeEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', handleScroll);
-
-    function handleScroll() {
+    const handleScroll = () => {
+      if (!header) return;
       const currentScroll = window.scrollY;
 
-      // Efek Blur Kaca Pudar yang Halus
+      // FIX: Memisah string yang memiliki spasi menjadi token argumen mandiri memakai koma
       if (currentScroll > 10) {
-        header?.classList.add(
+        header.classList.add(
           'bg-white/80', 
           'dark:bg-[#0a0a0a]/80', 
           'backdrop-blur-md', 
           'border-neutral-200/20', 
-          'dark:border-neutral-900/30 shadow-sm'
+          'dark:border-neutral-900/30', 
+          'shadow-sm'
         );
       } else {
-        header?.classList.remove(
+        header.classList.remove(
           'bg-white/80', 
           'dark:bg-[#0a0a0a]/80', 
           'backdrop-blur-md', 
           'border-neutral-200/20', 
-          'dark:border-neutral-900/30 shadow-sm'
+          'dark:border-neutral-900/30', 
+          'shadow-sm'
         );
       }
 
       // Hide on Scroll Down, Show on Scroll Up
       if (currentScroll > lastScroll && currentScroll > 100) {
-        if (header) header.style.transform = 'translateY(-100%)';
+        header.style.transform = 'translateY(-100%)';
       } else {
-        if (header) header.style.transform = 'translateY(0)';
+        header.style.transform = 'translateY(0)';
       }
       lastScroll = currentScroll;
-    }
+    };
+
+    window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
   }
 
-  // Eksekusi aman untuk siklus hidup normal maupun sistem View Transitions Astro
   initHeader();
   document.addEventListener('astro:page-load', initHeader);
 </script>

@@ -40,20 +40,21 @@ const latestPosts = await getLatestPosts();
 ---
 
 <style>
+/* Animasi opacity dioptimalkan via hardware acceleration memanfaatkan properti will-change */
 .fade-in {
   opacity: 0;
-  animation: fadeIn 0.8s ease-out forwards;
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity;
 }
 @keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
+  to { opacity: 1; }
 }
 
 .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
 }
 .reveal.visible {
   opacity: 1;
@@ -62,9 +63,11 @@ const latestPosts = await getLatestPosts();
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  function initHomeAnimations() {
     const mainElement = document.querySelector("main");
     const revealElements = document.querySelectorAll(".reveal");
+    
+    // Konfigurasi observer dengan threshold yang aman untuk mobile device layar pendek
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -72,70 +75,88 @@ const latestPosts = await getLatestPosts();
           observer.unobserve(entry.target);
         }
       });
-    });
+    }, { rootMargin: "0px 0px -50px 0px" });
 
     mainElement?.classList.add("fade-in");
     revealElements.forEach((element) => observer.observe(element));
-  });
+
+    // Bersihkan instansi memori observer saat berpindah halaman di ekosistem Astro
+    document.addEventListener("astro:before-swap", () => observer.disconnect(), { once: true });
+  }
+
+  // Amankan siklus hidup rendering dari interupsi navigasi Astro View Transitions
+  initHomeAnimations();
+  document.addEventListener("astro:page-load", initHomeAnimations);
 </script>
 
 <Layout>
-  <main class="flex flex-col gap-20 fade-in">
+  <main class="mx-auto flex w-full max-w-[540px] flex-col gap-20 px-4 md:px-0 pb-24 box-border min-w-0 overflow-x-hidden">
+    
     <article class="flex flex-col gap-8 reveal">
-      <!-- ada suara klik, loh -->
-      <button >
-        <h1 class="flex items-center gap-2 text-4xl font-bold dark:text-#e5e7eb">
-          <img src="/star.gif" alt="star" class="w-6 h-6 animate-spin-slow" />
+      
+      <header>
+        <h1 class="flex items-center gap-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100 transition-colors duration-200">
+          <img 
+            src="/star.gif" 
+            alt="star" 
+            width="24" 
+            height="24" 
+            class="w-6 h-6 object-contain pointer-events-none" 
+          />
           Fuji 
-          <span class="text-sm font-normal opacity-75 ml-1">
-            /<span class="bold underline">Waltahh</span>
+          <span class="text-sm font-normal text-neutral-500 dark:text-neutral-400 ml-1 select-none">
+            /<span class="font-bold underline tracking-wide">Waltahh</span>
           </span>
         </h1>
-      </button>
-      <div class="space-y-5 leading-8 text-neutral-700">
+      </header>
 
-  <p>Halo, saya Fuji.</p>
+      <div class="space-y-5 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
+        <p>Halo, saya Fuji.</p>
 
-  <div class="space-y-4">
-    <p>
-      Tempat ini semacam arsip kecil buat menaruh cerita, duka,
-      dan keseharian seada-adanya.
-    </p>
+        <div class="space-y-4">
+          <p>
+            Tempat ini semacam arsip kecil buat menaruh cerita, duka,
+            dan keseharian seada-adanya.
+          </p>
 
-    <p>
-      Di luar itu, saya cuma orang biasa yang menghabiskan waktu
-      dengan bermain internet, menonton anime, olahraga,
-      dan hal-hal kecil lainnya :3
-    </p>
-  </div>
+          <p>
+            Di luar itu, saya manusia yang menghabiskan waktu
+            dengan bermain internet, menonton anime, olahraga,
+            dan hal-hal lainnya :3
+          </p>
+        </div>
 
-  <p>Senang Anda mampir:)</p>
-
-</div>
+        <p class="font-medium">Senang Anda mampir :)</p>
+      </div>
       
       <SocialLinks />
     </article>
+
     <article class="flex flex-col gap-8 reveal">
-      <header class="flex w-full justify-between gap-2">
-        <h3 class="text-lg font-medium text-text-light dark:text-neutral-100">Latest posts</h3>
-        <Link href="/blog" label="See all posts" isUnderline target="_self" class="transition-transform hover:scale-105" />
+      <header class="flex w-full justify-between items-center gap-2">
+        <h3 class="text-base font-semibold text-neutral-900 dark:text-neutral-100">Latest posts</h3>
+        <Link href="/blog" label="See all posts" isUnderline target="_self" class="text-xs transition-all duration-200 hover:opacity-80" />
       </header>
+      
       {latestPosts.length === 0 && (
-        <p class="text-muted-light dark:text-neutral-400">Soon, stay connected 👀...</p>
+        <p class="text-xs text-neutral-400 dark:text-neutral-500 italic">Soon, stay connected 👀...</p>
       )}
-      <section class="flex flex-col gap-4 md:flex-row md:flex-wrap">
+      
+      <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 w-full min-w-0">
         {latestPosts.length !== 0 &&
           latestPosts.map((post) => (
-            <div class="flex flex-col md:flex-row md:max-w-[500px] gap-4 reveal">
+            <div class="flex flex-col w-full min-w-0 reveal">
               <BlogListItem post={post} basePath="/blog" />
             </div>
           ))}
       </section>
     </article>
+
     <article class="flex flex-col gap-8 reveal">
-      <p class="text-text-light dark:text-neutral-400">
-        📩 Email me at <Link href="mailto:fujihalimrabani1601@gmail.com" label="fujihalimrabani1601@gmail.com" class="transition-colors hover:text-blue-500" />
+      <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-6">
+        📩 Email me at <Link href="mailto:fujihalimrabani1601@gmail.com" label="fujihalimrabani1601@gmail.com" class="font-medium text-neutral-800 dark:text-neutral-200 hover:underline transition-colors" />
       </p>
     </article>
+
   </main>
 </Layout>

@@ -11,97 +11,162 @@ const media: ThoughtMedia[] = thought.thought_media || [];
 const date = new Date(thought.created_at);
 
 const isLongText = thought.content && thought.content.length > 500;
-const isTextOnly = media.length === 0;
+const isSingleMedia = media.length === 1;
+
+// --- FUNGSI HUMANIZE TIME (WAKTU MANUSIAWI) ---
+function humanizeTime(date: Date) {
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+  if (diffInSeconds < 60) return "Baru saja";
+  
+  const diffInMinutes = Math.floor(diffInSeconds / 60);
+  if (diffInMinutes < 60) return `${diffInMinutes} menit yang lalu`;
+  
+  const diffInHours = Math.floor(diffInMinutes / 60);
+  if (diffInHours < 24) {
+    if (now.getDate() === date.getDate()) {
+      return `Hari ini, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+    }
+  }
+  
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  if (yesterday.getDate() === date.getDate() && yesterday.getMonth() === date.getMonth() && yesterday.getFullYear() === date.getFullYear()) {
+    return `Kemarin, ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+  }
+  
+  return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+}
+
+const displayTime = humanizeTime(date);
 ---
 
-<article class="w-full max-w-[500px] mx-auto mb-28 group/card select-none min-w-0 overflow-hidden table-fixed box-border">
-  
-  <div class="flex flex-col gap-4 w-full min-w-0 box-border">
+<article class="w-full max-w-[500px] mx-auto mb-10 group/card select-none min-w-0 overflow-hidden table-fixed box-border border-b border-neutral-100/70 dark:border-neutral-900/40 pb-10 last:border-0 last:pb-0">
+  <div class="flex flex-col gap-3.5 w-full min-w-0 box-border">
     
+    <header class="flex items-center justify-between w-full min-w-0 box-border px-1">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-6 h-6 rounded-full overflow-hidden border border-neutral-200/50 dark:border-neutral-800/50 flex-shrink-0">
+          <img src="/pfp.jpeg" alt="Avatar" class="w-full h-full object-cover" />
+        </div>
+        <span class="text-xs font-semibold text-neutral-800 dark:text-neutral-200">Fuji</span>
+        <span class="text-neutral-300 dark:text-neutral-700 text-[10px] select-none">•</span>
+        <time class="text-[10px] font-medium tracking-wide text-neutral-400 dark:text-neutral-500 whitespace-nowrap overflow-hidden text-ellipsis" title={date.toLocaleString('id-ID')}>
+          {displayTime}
+        </time>
+      </div>
+    </header>
+
     {thought.content && (
-      <div class="w-full min-w-0 px-2 box-border">
-        <div class:list={[
-          "text-neutral-800 dark:text-neutral-200 transition-colors duration-500 w-full min-w-0 box-border",
-          isTextOnly ? "py-16 px-6 border-y border-neutral-100/50 dark:border-neutral-900/30" : ""
-        ]}>
-          <div class:list={[
-            "relative overflow-hidden transition-all duration-700 w-full min-w-0 box-border",
+      <div class="w-full min-w-0 px-1 box-border">
+        <div 
+          class:list={[
+            "relative overflow-hidden transition-all duration-300 w-full min-w-0 box-border",
             isLongText ? "max-h-[320px] pb-12" : ""
-          ]} id={`content-${thought.id}`}>
-            
-            <p class="leading-[1.8] font-normal selection:bg-orange-100 dark:selection:bg-orange-900/30 whitespace-pre-wrap break-words min-w-0 text-[16px]">
-              {thought.content}
-            </p>
-            
-            {isLongText && (
-              <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent flex items-end justify-center">
-                <button class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 hover:text-orange-500 transition-colors pb-2 read-more-btn" data-id={thought.id}>
-                  baca selengkapnya
-                </button>
-              </div>
-            )}
-          </div>
+          ]} 
+          id={`content-${thought.id}`}
+        >
+          <p class="leading-[1.6] font-normal selection:bg-orange-100 dark:selection:bg-orange-900/30 whitespace-pre-wrap break-words min-w-0 text-[14px] text-neutral-800 dark:text-neutral-200"><slot>{thought.content}</slot></p>
+          
+          {isLongText && (
+            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent flex items-end justify-center">
+              <button class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 hover:text-orange-500 transition-colors pb-2 read-more-btn" data-id={thought.id}>
+                baca selengkapnya
+              </button>
+            </div>
+          )}
         </div>
       </div>
     )}
 
     {media.length > 0 && (
-      <div class="relative w-full min-w-0 px-1 group/media overflow-hidden select-none touch-pan-y box-border">
+      <div class="relative w-full min-w-0 group/media overflow-hidden select-none touch-pan-y box-border mt-0.5 px-1">
         
-        <div class="flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory custom-scrollbar scroll-smooth gap-3 px-2 pb-3 media-slider w-full min-w-0 box-border">
+        {media.length > 1 && (
+          <div class="absolute top-3 right-3 z-20 bg-black/60 dark:bg-black/50 backdrop-blur-md text-[10px] font-bold text-white/90 px-2 py-0.5 rounded-full tracking-wider badge-counter">
+            1 / {media.length}
+          </div>
+        )}
+
+        <div class="flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory custom-scrollbar scroll-smooth gap-3 pb-2 media-slider w-full min-w-0 box-border">
           {media.map((item) => (
+            // FIX ROUNDED TAJAM & DYNAMIC HEIGHT: rounded-md (4px) mengunci ujung tanpa memotong media parah
+            // Untuk media tunggal (TikTok/Vertikal), kita pakai w-full h-auto agar rasio asli ter-render utuh.
             <div class:list={[
-              "snap-center relative overflow-hidden bg-neutral-50 dark:bg-[#0d0d0d] ring-1 ring-neutral-100 dark:ring-neutral-900/50 flex-shrink-0 rounded-[20px] box-border",
-              // FIX MULTIPART RENDER: Ukuran dikunci memakai takaran viewport kaku (vw) di mobile agar stabil sebelum gambar terunduh
-              media.length === 1 ? "w-full aspect-video md:aspect-[4/3]" : "w-[80vw] max-w-[390px] aspect-[4/5]"
+              "snap-center relative bg-neutral-50 dark:bg-[#0d0d0d] ring-1 ring-neutral-100 dark:ring-neutral-900/50 flex-shrink-0 rounded-md box-border flex items-center justify-center overflow-hidden z-10",
+              isSingleMedia ? "w-full h-auto max-h-[600px] border border-neutral-100/50 dark:border-neutral-900/60" : "w-[82vw] max-w-[390px] aspect-[4/5]"
             ]}>
               {item.media_type === "video" ? (
-                <video src={item.media_url} class="absolute inset-0 w-full h-full object-cover video-player" muted loop playsinline controls />
-              ) : (
-                <img 
-                  src={getOptimizedMedia(item.media_url, 1200)} 
-                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 block pointer-events-none" 
-                  alt="" 
-                  loading="lazy" 
+                <video 
+                  src={item.media_url} 
+                  class:list={[
+                    "video-player rounded-md w-full h-full object-cover",
+                    // single media vertikal panjang akan ter-fit utuh menggunakan object-contain tanpa crop samping
+                    isSingleMedia ? "max-h-[600px] object-contain" : "absolute inset-0"
+                  ]} 
+                  muted 
+                  loop 
+                  playsinline 
+                  controls 
                 />
+              ) : (
+                <div class="w-full h-full overflow-hidden flex items-center justify-center relative">
+                  <img 
+                    src={getOptimizedMedia(item.media_url, 1200)} 
+                    data-raw-src={item.media_url}
+                    class:list={[
+                      "transition-all duration-300 block cursor-zoom-in rounded-md clickable-image pointer-events-auto w-full h-full object-cover relative z-10",
+                      isSingleMedia ? "max-h-[600px] object-contain" : "absolute inset-0"
+                    ]} 
+                    alt="" 
+                    loading="lazy" 
+                  />
+                </div>
               )}
             </div>
           ))}
         </div>
 
-        {/* Minimalist Desktop Nav (Berada di dalam area kartu, aman dari kebocoran layar) */}
         {media.length > 1 && (
-          <div class="hidden md:block">
-             <button class="prev-btn absolute left-4 top-1/2 -translate-y-1/2 opacity-0 group-hover/media:opacity-60 hover:opacity-100 transition-all text-neutral-400 bg-white/80 dark:bg-black/40 p-1.5 rounded-full backdrop-blur"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
-             <button class="next-btn absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover/media:opacity-60 hover:opacity-100 transition-all text-neutral-400 bg-white/80 dark:bg-black/40 p-1.5 rounded-full backdrop-blur"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          <div class="hidden md:flex items-center justify-between absolute inset-x-0 top-1/2 -translate-y-1/2 pointer-events-none z-20 px-1">
+             <button type="button" class="prev-btn pointer-events-auto text-neutral-400 hover:text-neutral-800 dark:hover:text-white bg-white/95 dark:bg-neutral-900 w-7 h-7 flex items-center justify-center rounded-full shadow-md border border-neutral-200/50 dark:border-neutral-800 -translate-x-2.5 transition-all opacity-80 hover:opacity-100">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                 <polyline points="15 18 9 12 15 6"></polyline>
+               </svg>
+             </button>
+             <button type="button" class="next-btn pointer-events-auto text-neutral-400 hover:text-neutral-800 dark:hover:text-white bg-white/95 dark:bg-neutral-900 w-7 h-7 flex items-center justify-center rounded-full shadow-md border border-neutral-200/50 dark:border-neutral-800 translate-x-2.5 transition-all opacity-80 hover:opacity-100">
+               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                 <polyline points="9 18 15 12 9 6"></polyline>
+               </svg>
+             </button>
           </div>
         )}
       </div>
     )}
 
-    <footer class="px-3 py-2 flex items-center justify-between border-t border-neutral-50/50 dark:border-neutral-900/20 mt-2 w-full min-w-0 box-border">
-      <div class="flex items-center gap-3 min-w-0">
-        <div class="w-6 h-6 rounded-full overflow-hidden border border-neutral-200/50 dark:border-neutral-800/50 opacity-70 group-hover/card:opacity-100 transition-all duration-500 flex-shrink-0">
-          <img src="/pfp.jpeg" alt="Fuji" class="w-full h-full object-cover" />
-        </div>
-        <time class="text-[10px] font-bold tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-500 whitespace-nowrap overflow-hidden text-ellipsis">
-          {date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' })} — {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-        </time>
+    {media.length > 1 && (
+      <div class="flex gap-1.5 dot-container flex-shrink-0 justify-center py-0.5 w-full">
+        {media.map((_, i) => (
+          <div 
+            data-dot-index={i}
+            class:list={["h-1 rounded-full transition-all duration-300", i === 0 ? "w-3 bg-neutral-400 dark:bg-neutral-600" : "w-1 bg-neutral-200 dark:bg-neutral-800/60"]}
+          ></div>
+        ))}
       </div>
+    )}
 
-      {media.length > 1 && (
-        <div class="flex gap-1.5 dot-container flex-shrink-0">
-          {media.map((_, i) => (
-            <div 
-              data-dot-index={i}
-              class:list={["h-1 rounded-full transition-all duration-500", i === 0 ? "w-4 bg-neutral-400 dark:bg-neutral-600" : "w-1 bg-neutral-100 dark:bg-neutral-800"]}
-            ></div>
-          ))}
-        </div>
-      )}
-    </footer>
   </div>
 </article>
+
+<div id="image-lightbox" class="fixed inset-0 z-[500] bg-black/95 backdrop-blur-sm hidden opacity-0 flex items-center justify-center transition-all duration-300 pointer-events-none select-none">
+  <button id="lightbox-close" type="button" class="absolute top-5 right-5 z-[510] text-neutral-400 hover:text-white transition-colors p-2 text-2xl font-bold bg-neutral-900/40 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer pointer-events-auto">
+    &times;
+  </button>
+  <div class="w-full max-w-[92vw] max-h-[90vh] flex items-center justify-center p-2 pointer-events-auto">
+    <img id="lightbox-img" class="w-auto h-auto max-w-full max-h-[88vh] object-contain rounded-sm shadow-2xl transition-transform duration-300 scale-95" src="" alt="" />
+  </div>
+</div>
 
 <style>
   .custom-scrollbar::-webkit-scrollbar {
@@ -125,62 +190,158 @@ const isTextOnly = media.length === 0;
 
   article { -webkit-tap-highlight-color: transparent; }
 </style>
+<script type="module">
+  const form = document.querySelector("#thought-form");
+  const status = document.querySelector("#form-status");
+  const secretInput = document.querySelector("#admin-secret");
+  const publishButton = document.querySelector("#publish-button");
+  const mediaInput = document.querySelector("#media-input");
+  const mediaPreview = document.querySelector("#media-preview");
 
-<script>
-  function initCards() {
-    document.querySelectorAll('article').forEach(card => {
-      const slider = card.querySelector('.media-slider') as HTMLElement;
-      const dots = card.querySelectorAll('.dot-container > div');
-      
-      card.querySelector('.read-more-btn')?.replaceWith(card.querySelector('.read-more-btn')!.cloneNode(true));
-      
-      card.querySelector('.read-more-btn')?.addEventListener('click', (e) => {
-        const btn = e.currentTarget as HTMLElement;
-        const container = card.querySelector(`#content-${btn.dataset.id}`) as HTMLElement;
-        if (container) container.style.maxHeight = 'none';
-        btn.parentElement?.remove();
+  let selectedFiles = [];
+  let isUploading = false; // Lacak status unggah aktif global
+  const MAX_FILES = 6;
+
+  if (
+    !(form instanceof HTMLFormElement) ||
+    !(secretInput instanceof HTMLInputElement) ||
+    !(publishButton instanceof HTMLButtonElement) ||
+    !(mediaInput instanceof HTMLInputElement)
+  ) {
+    console.error("Missing elements");
+  } else {
+    secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
+
+    const setStatus = (msg, isError = false) => {
+      if (!status) return;
+      status.textContent = msg;
+      status.className = isError 
+        ? "min-h-6 text-sm font-medium text-red-500" 
+        : "min-h-6 text-sm font-medium text-emerald-500 dark:text-emerald-400";
+    };
+
+    const clearPreviewUrls = () => {
+      if (!mediaPreview) return;
+      // FIX MEMORY LEAK: Hancurkan URL blob lama di memori internal agar RAM HP tidak meledak
+      mediaPreview.querySelectorAll("img, video").forEach((el) => {
+        if (el.src) URL.revokeObjectURL(el.src);
+      });
+    };
+
+    const renderPreview = (files) => {
+      if (!mediaPreview) return;
+      clearPreviewUrls();
+      mediaPreview.innerHTML = "";
+
+      files.slice(0, MAX_FILES).forEach((file) => {
+        const url = URL.createObjectURL(file);
+        const wrapper = document.createElement("div");
+        wrapper.className = "overflow-hidden rounded-lg border border-border-light dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 relative h-28";
+
+        if (file.type.startsWith("image/")) {
+          const img = document.createElement("img");
+          img.src = url;
+          img.className = "h-full w-full object-cover";
+          wrapper.appendChild(img);
+        } else if (file.type.startsWith("video/")) {
+          const video = document.createElement("video");
+          video.src = url;
+          video.className = "h-full w-full object-cover";
+          wrapper.appendChild(video);
+        }
+        mediaPreview.appendChild(wrapper);
+      });
+    };
+
+    mediaInput.addEventListener("change", () => {
+      if (!mediaInput.files) return;
+      selectedFiles = Array.from(mediaInput.files).slice(0, MAX_FILES);
+      renderPreview(selectedFiles);
+    });
+
+    // PENGAMAN SYSTEM OPERASI MOBILE: Larang browser menutup tab secara sepihak saat proses upload berjalan
+    window.addEventListener("beforeunload", (e) => {
+      if (isUploading) {
+        e.preventDefault();
+        e.returnValue = "Proses pengiriman memori sedang berjalan di latar belakang. Jangan tutup tab ini.";
+      }
+    });
+
+    const executeBackgroundUpload = async (adminSecret, content, files, altText) => {
+      const backgroundFormData = new FormData();
+      backgroundFormData.append("adminSecret", adminSecret);
+      backgroundFormData.append("content", content);
+      if (altText) backgroundFormData.append("imageAlt", altText);
+
+      files.forEach((file) => {
+        backgroundFormData.append("media", file);
       });
 
-      if (slider) {
-        const firstChild = slider.firstElementChild as HTMLElement;
+      try {
+        const res = await fetch("/api/thoughts", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${adminSecret}`,
+          },
+          body: backgroundFormData,
+        });
+
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          throw new Error(data?.message || "Ditolak oleh server.");
+        }
         
-        card.querySelector('.next-btn')?.replaceWith(card.querySelector('.next-btn')!.cloneNode(true));
-        card.querySelector('.prev-btn')?.replaceWith(card.querySelector('.prev-btn')!.cloneNode(true));
+        // Kirim sinyal aman ke layar jika user masih membuka tab
+        alert("Memori berhasil terpatri penuh di database server.");
+      } catch (err) {
+        console.error("[CRITICAL BACKGROUND FAILURE]", err);
+        // Jika gagal pas HP di saku, minimal ada alert pemberitahuan saat layar dibuka kembali
+        alert(`[GAGAL KIRIM MEMORI] Gila, upload macet di tengah jalan: ${err.message}. Catat ulang atau cari sinyal bagus.`);
+      } finally {
+        isUploading = false;
+        publishButton.disabled = false;
+        publishButton.textContent = "Publish";
+      }
+    };
 
-        card.querySelector('.next-btn')?.addEventListener('click', () => {
-          if (firstChild) slider.scrollBy({ left: firstChild.offsetWidth + 12, behavior: 'smooth' });
-        });
-        card.querySelector('.prev-btn')?.addEventListener('click', () => {
-          if (firstChild) slider.scrollBy({ left: -(firstChild.offsetWidth + 12), behavior: 'smooth' });
-        });
+    const submitThought = () => {
+      const adminSecret = secretInput.value.trim();
+      const content = document.querySelector("#thought-content")?.value || "";
+      const altText = document.querySelector("#media-alt")?.value || "";
 
-        slider.addEventListener('scroll', () => {
-          if (!firstChild) return;
-          const index = Math.round(slider.scrollLeft / (firstChild.offsetWidth + 12));
-          
-          dots?.forEach((dot, i) => {
-            const d = dot as HTMLElement;
-            if (Number(d.dataset.dotIndex) === index) {
-              d.className = "h-1 rounded-full transition-all duration-500 w-4 bg-neutral-400 dark:bg-neutral-600";
-            } else {
-              d.className = "h-1 rounded-full transition-all duration-500 w-1 bg-neutral-100 dark:bg-neutral-800";
-            }
-          });
-        });
+      if (isUploading) return; // Cegah double submit jika user menekan tombol berkali-kali
+
+      if (!adminSecret) {
+        setStatus("Admin secret required", true);
+        return;
       }
 
-      const videos = card.querySelectorAll('.video-player');
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          const v = entry.target as HTMLVideoElement;
-          if (entry.isIntersecting) v.play().catch(() => {});
-          else v.pause();
-        });
-      }, { threshold: 0.6 });
-      videos.forEach(v => observer.observe(v));
-    });
-  }
+      if (!content.trim() && selectedFiles.length === 0) {
+        setStatus("Thought atau media tidak boleh kosong", true);
+        return;
+      }
 
-  initCards();
-  document.addEventListener('astro:page-load', initCards);
+      localStorage.setItem("thoughts_admin_secret", adminSecret);
+
+      // Kunci status upload global aktif
+      isUploading = true;
+      publishButton.disabled = true;
+      publishButton.textContent = "Sending...";
+
+      // Jalankan klon biner aman
+      executeBackgroundUpload(adminSecret, content, [...selectedFiles], altText);
+
+      // INSTANT UI PURGE: Kosongkan elemen di layar agar responsif 100%
+      if (form) form.reset();
+      secretInput.value = adminSecret;
+      selectedFiles = [];
+      clearPreviewUrls();
+      if (mediaPreview) mediaPreview.innerHTML = "";
+
+      setStatus("Memori dilempar ke server... Jangan tutup halaman ini sampai konfirmasi selesai.");
+    };
+
+    publishButton.addEventListener("click", submitThought);
+  }
 </script>
