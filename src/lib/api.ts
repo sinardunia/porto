@@ -51,8 +51,15 @@ export const getBearerToken = (
 export const verifyAdminSecret = (
   request: Request
 ) => {
+  /*
+    IMPORTANT:
+    Astro + Vercel server runtime
+    should use import.meta.env
+    instead of process.env
+  */
+
   const expectedSecret =
-    process.env
+    import.meta.env
       .THOUGHTS_ADMIN_SECRET?.trim();
 
   const providedSecret =
@@ -80,7 +87,7 @@ export const verifyAdminSecret = (
 
   if (!expectedSecret) {
     console.error(
-      "THOUGHTS_ADMIN_SECRET is missing."
+      "[ADMIN AUTH] THOUGHTS_ADMIN_SECRET missing."
     );
 
     return {
@@ -102,7 +109,7 @@ export const verifyAdminSecret = (
       expectedSecret
   ) {
     console.warn(
-      "Failed admin auth attempt."
+      "[ADMIN AUTH] Unauthorized attempt."
     );
 
     return {

@@ -6,67 +6,107 @@ import { createSupabaseAdminClient } from "@/lib/supabase";
 
 import {
   cleanText,
-  normalizeImageExtension,
-  validateImageFile,
+  normalizeMediaExtension,
+  validateMediaFile,
   withTimeout,
 } from "@/lib/security";
 
 export const prerender = false;
 
-const THOUGHT_IMAGES_BUCKET = "thought-images";
+const THOUGHT_MEDIA_BUCKET =
+  "thought-media";
 
 /* ---------------------------------
    STORAGE HELPERS
 ---------------------------------- */
 
-const getStoragePath = (file: File) => {
+const getStoragePath = (
+  file: File
+) => {
   const now = new Date();
 
-  const year = now.getUTCFullYear();
+  const year =
+    now.getUTCFullYear();
 
   const month = String(
     now.getUTCMonth() + 1
   ).padStart(2, "0");
 
-  const id = crypto.randomUUID();
+  const id =
+    crypto.randomUUID();
 
   const extension =
-    normalizeImageExtension(file);
+    normalizeMediaExtension(
+      file
+    );
 
   return `thoughts/${year}/${month}/${id}.${extension}`;
 };
 
-const uploadImage = async (
+const getMediaType = (
+  file: File
+) => {
+  if (
+    file.type.startsWith(
+      "image/"
+    )
+  ) {
+    return "image";
+  }
+
+  if (
+    file.type.startsWith(
+      "video/"
+    )
+  ) {
+    return "video";
+  }
+
+  return null;
+};
+
+const uploadMedia = async (
   file: File
 ) => {
   const supabase =
     createSupabaseAdminClient();
 
-  const path = getStoragePath(file);
+  const path =
+    getStoragePath(file);
 
   const buffer =
     await file.arrayBuffer();
 
-  const { error } = await withTimeout(
-    supabase.storage
-      .from(THOUGHT_IMAGES_BUCKET)
-      .upload(path, buffer, {
-        contentType: file.type,
-        upsert: false,
-      }),
+  const { error } =
+    await withTimeout(
+      supabase.storage
+        .from(
+          THOUGHT_MEDIA_BUCKET
+        )
+        .upload(path, buffer, {
+          contentType:
+            file.type,
 
-    15000,
+          upsert: false,
+        }),
 
-    "Thought image upload"
-  );
+      15000,
+
+      "Thought media upload"
+    );
 
   if (error) {
-    throw new Error(error.message);
+    throw new Error(
+      error.message
+    );
   }
 
-  const { data } = supabase.storage
-    .from(THOUGHT_IMAGES_BUCKET)
-    .getPublicUrl(path);
+  const { data } =
+    supabase.storage
+      .from(
+        THOUGHT_MEDIA_BUCKET
+      )
+      .getPublicUrl(path);
 
   return data.publicUrl;
 };
@@ -79,7 +119,8 @@ export const GET: APIRoute =
   async () => {
     return json({
       ok: true,
-      message: "Thoughts API running",
+      message:
+        "Thoughts API running",
     });
   };
 
@@ -87,21 +128,23 @@ export const GET: APIRoute =
    OPTIONS
 ---------------------------------- */
 
-export const OPTIONS: APIRoute = async () => {
-  return new Response(null, {
-    status: 204,
+export const OPTIONS: APIRoute =
+  async () => {
+    return new Response(null, {
+      status: 204,
 
-    headers: {
-      "Access-Control-Allow-Origin": "*",
+      headers: {
+        "Access-Control-Allow-Origin":
+          "*",
 
-      "Access-Control-Allow-Methods":
-        "GET, POST, OPTIONS",
+        "Access-Control-Allow-Methods":
+          "GET, POST, OPTIONS",
 
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization",
-    },
-  });
-};
+        "Access-Control-Allow-Headers":
+          "Content-Type, Authorization",
+      },
+    });
+  };
 
 /* ---------------------------------
    POST
@@ -115,7 +158,9 @@ export const POST: APIRoute =
       );
 
       const auth =
-        verifyAdminSecret(request);
+        verifyAdminSecret(
+          request
+        );
 
       if (!auth.ok) {
         return auth.response;
@@ -124,26 +169,34 @@ export const POST: APIRoute =
       const formData =
         await request.formData();
 
-      const content = cleanText(
-        formData.get("content"),
-        5000
-      );
+      const content =
+        cleanText(
+          formData.get(
+            "content"
+          ),
+          5000
+        );
 
-      const imageAlt = cleanText(
-        formData.get("imageAlt"),
-        300
-      );
+      const mediaAlt =
+        cleanText(
+          formData.get(
+            "mediaAlt"
+          ),
+          300
+        );
 
-      const images = formData
-        .getAll("image")
-        .filter(
-          (
-            img
-          ): img is File =>
-            img instanceof File &&
-            img.size > 0
-        )
-        .slice(0, 6);
+      const mediaFiles =
+        formData
+          .getAll("media")
+          .filter(
+            (
+              file
+            ): file is File =>
+              file instanceof
+                File &&
+              file.size > 0
+          )
+          .slice(0, 6);
 
       if (!content) {
         return json(
@@ -156,51 +209,139 @@ export const POST: APIRoute =
       }
 
       /* -------------------------
-         UPLOAD IMAGES
+         UPLOAD MEDIA
       -------------------------- */
 
-      const uploadedImages: {
-        image_url: string;
-        image_alt: string | null;
+      const uploadedMedia: {
+        media_type: string;
+
+        media_url: string;
+
+        media_alt: string | null;
+
         position: number;
       }[] = [];
 
       for (const [
         position,
-        image,
-      ] of images.entries()) {
-        const imageError =
-          validateImageFile(image);
+        file,
+      ] of mediaFiles.entries()) {
+        const mediaType =
+          getMediaType(file);
 
-        if (imageError) {
+        if (!mediaType) {
           return json(
             {
-              message: imageError,
+              message:
+                "Unsupported media type.",
             },
             400
           );
         }
 
-        try {
-          const imageUrl =
-            await uploadImage(image);
+        /*
+          IMAGE RULES
+        */
 
-          uploadedImages.push({
-            image_url: imageUrl,
-            image_alt:
-              imageAlt || null,
-            position,
-          });
+        if (
+          mediaType ===
+          "image"
+        ) {
+          const imageError =
+            validateMediaFile(
+              file
+            );
+
+          if (imageError) {
+            return json(
+              {
+                message:
+                  imageError,
+              },
+              400
+            );
+          }
+        }
+
+        /*
+          VIDEO RULES
+        */
+
+        if (
+          mediaType ===
+          "video"
+        ) {
+          const maxVideoSize =
+            50 *
+            1024 *
+            1024;
+
+          if (
+            file.size >
+            maxVideoSize
+          ) {
+            return json(
+              {
+                message:
+                  "Video max size is 50MB.",
+              },
+              400
+            );
+          }
+
+          const allowedVideos =
+            [
+              "video/mp4",
+              "video/webm",
+              "video/quicktime",
+            ];
+
+          if (
+            !allowedVideos.includes(
+              file.type
+            )
+          ) {
+            return json(
+              {
+                message:
+                  "Only MP4, WEBM, and MOV videos are allowed.",
+              },
+              400
+            );
+          }
+        }
+
+        try {
+          const mediaUrl =
+            await uploadMedia(
+              file
+            );
+
+          uploadedMedia.push(
+            {
+              media_type:
+                mediaType,
+
+              media_url:
+                mediaUrl,
+
+              media_alt:
+                mediaAlt ||
+                null,
+
+              position,
+            }
+          );
         } catch (error) {
           console.error(
-            "[THOUGHTS_API] Upload failed:",
+            "[THOUGHTS_API] Media upload failed:",
             error
           );
 
           return json(
             {
               message:
-                "Image upload failed.",
+                "Media upload failed.",
             },
             502
           );
@@ -214,81 +355,79 @@ export const POST: APIRoute =
       const supabase =
         createSupabaseAdminClient();
 
-      const { data, error } =
-        await withTimeout(
-          supabase
-            .from("thoughts")
-            .insert({
-              content,
+const { data, error } = await withTimeout(
+  supabase
+    .from("thoughts")
+    .insert({
+      content,
+      // is_published: true, <-- HAPUS INI karena kolomnya tidak ada/tidak perlu
+    })
+    .select("id")
+    .single(),
 
-              image_url:
-                uploadedImages[0]
-                  ?.image_url || null,
+  10000,
+  "Thought insert"
+);
 
-              image_alt:
-                uploadedImages[0]
-                  ?.image_alt || null,
-
-              is_published: true,
-            })
-            .select("id")
-            .single(),
-
-          10000,
-
-          "Thought insert"
-        );
-
-      if (error) {
-        console.error(
-          "[THOUGHTS_API] Insert failed:",
-          error
-        );
-
-        return json(
-          {
-            message:
-              "Thought insert failed.",
-          },
-          500
-        );
-      }
+if (error) {
+  console.error("[THOUGHTS_API] Insert failed:", error);
+  // TIPS: Cek console log di terminal/hosting kamu, 
+  // pasti muncul error: "column is_published does not exist"
+  return json(
+    {
+      message: `Thought insert failed: ${error.message}`, // Tambahkan error.message biar jelas
+    },
+    500
+  );
+}
 
       /* -------------------------
-         INSERT IMAGE METADATA
+         INSERT MEDIA METADATA
       -------------------------- */
 
-      if (uploadedImages.length > 0) {
+      if (
+        uploadedMedia.length >
+        0
+      ) {
         const {
-          error: imageInsertError,
-        } = await withTimeout(
-          supabase
-            .from("thought_images")
-            .insert(
-              uploadedImages.map(
-                (img) => ({
-                  ...img,
-                  thought_id:
-                    data.id,
-                })
+          error:
+            mediaInsertError,
+        } =
+          await withTimeout(
+            supabase
+              .from(
+                "thought_media"
               )
-            ),
+              .insert(
+                uploadedMedia.map(
+                  (
+                    media
+                  ) => ({
+                    ...media,
 
-          10000,
+                    thought_id:
+                      data.id,
+                  })
+                )
+              ),
 
-          "Thought images insert"
-        );
+            10000,
 
-        if (imageInsertError) {
+            "Thought media insert"
+          );
+
+        if (
+          mediaInsertError
+        ) {
           console.error(
-            "[THOUGHTS_API] Image metadata insert failed:",
-            imageInsertError
+            "[THOUGHTS_API] Media metadata insert failed:",
+            mediaInsertError
           );
 
           return json(
             {
               message:
-                "Thought saved but image metadata failed.",
+                "Thought saved but media metadata failed.",
             },
             500
           );
@@ -298,7 +437,9 @@ export const POST: APIRoute =
       return json(
         {
           ok: true,
+
           id: data.id,
+
           message:
             "Thought published.",
         },
@@ -312,7 +453,8 @@ export const POST: APIRoute =
 
       return json(
         {
-          message: "Server error.",
+          message:
+            "Server error.",
         },
         500
       );

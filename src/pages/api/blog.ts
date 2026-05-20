@@ -11,9 +11,9 @@ import {
 
 import {
   cleanText,
-  normalizeImageExtension,
+  normalizeMediaExtension,
   normalizeSlug,
-  validateImageFile,
+  validateMediaFile,
   withTimeout,
 } from "@/lib/security";
 
@@ -41,7 +41,7 @@ const getStoragePath = (
   const id = crypto.randomUUID();
 
   const extension =
-    normalizeImageExtension(file);
+    normalizeMediaExtension(file);
 
   return `blog/${year}/${month}/${id}.${extension}`;
 };
@@ -241,7 +241,7 @@ export const POST: APIRoute =
         coverImage.size > 0
       ) {
         const imageError =
-          validateImageFile(
+          validateMediaFile(
             coverImage
           );
 

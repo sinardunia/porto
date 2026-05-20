@@ -1,65 +1,186 @@
 ---
-import type { Thought } from "@/types/thoughts";
+import type { Thought, ThoughtMedia } from "@/types/thoughts";
+import { getOptimizedMedia } from "@/lib/thoughts";
 
 type Props = {
   thought: Thought;
 };
 
 const { thought } = Astro.props;
-const images = thought.thought_images?.length
-  ? thought.thought_images
-  : thought.image_url
-    ? [{ id: thought.id, image_url: thought.image_url, image_alt: thought.image_alt, position: 0 }]
-    : [];
-const createdAt = new Date(thought.created_at);
-const formattedDate = Number.isNaN(createdAt.getTime()) ? thought.created_at : [
-  new Intl.DateTimeFormat("en-US", {
-    hour: "numeric",
-    minute: "2-digit",
-  }).format(createdAt),
-  new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(createdAt),
-].join(" · ");
+const media: ThoughtMedia[] = thought.thought_media || [];
+const date = new Date(thought.created_at);
+
+const isLongText = thought.content && thought.content.length > 500;
+const isTextOnly = media.length === 0;
 ---
 
-<article class="group relative pb-10">
-  <div class="absolute bottom-0 left-0 h-px w-16 bg-border-light/70 dark:bg-neutral-800/80"></div>
+<article class="w-full max-w-[500px] mx-auto mb-28 group/card select-none min-w-0 overflow-hidden table-fixed box-border">
+  
+  <div class="flex flex-col gap-4 w-full min-w-0 box-border">
+    
+    {thought.content && (
+      <div class="w-full min-w-0 px-2 box-border">
+        <div class:list={[
+          "text-neutral-800 dark:text-neutral-200 transition-colors duration-500 w-full min-w-0 box-border",
+          isTextOnly ? "py-16 px-6 border-y border-neutral-100/50 dark:border-neutral-900/30" : ""
+        ]}>
+          <div class:list={[
+            "relative overflow-hidden transition-all duration-700 w-full min-w-0 box-border",
+            isLongText ? "max-h-[320px] pb-12" : ""
+          ]} id={`content-${thought.id}`}>
+            
+            <p class="leading-[1.8] font-normal selection:bg-orange-100 dark:selection:bg-orange-900/30 whitespace-pre-wrap break-words min-w-0 text-[16px]">
+              {thought.content}
+            </p>
+            
+            {isLongText && (
+              <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white dark:from-[#0a0a0a] to-transparent flex items-end justify-center">
+                <button class="text-[10px] font-bold uppercase tracking-widest text-neutral-400 hover:text-orange-500 transition-colors pb-2 read-more-btn" data-id={thought.id}>
+                  baca selengkapnya
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    )}
 
-  <p class="whitespace-pre-wrap text-[1rem] leading-8 text-neutral-800 dark:text-neutral-200 md:text-[1.03rem]">
-    {thought.content}
-  </p>
+    {media.length > 0 && (
+      <div class="relative w-full min-w-0 px-1 group/media overflow-hidden select-none touch-pan-y box-border">
+        
+        <div class="flex overflow-x-auto overflow-y-hidden snap-x snap-mandatory custom-scrollbar scroll-smooth gap-3 px-2 pb-3 media-slider w-full min-w-0 box-border">
+          {media.map((item) => (
+            <div class:list={[
+              "snap-center relative overflow-hidden bg-neutral-50 dark:bg-[#0d0d0d] ring-1 ring-neutral-100 dark:ring-neutral-900/50 flex-shrink-0 rounded-[20px] box-border",
+              // FIX MULTIPART RENDER: Ukuran dikunci memakai takaran viewport kaku (vw) di mobile agar stabil sebelum gambar terunduh
+              media.length === 1 ? "w-full aspect-video md:aspect-[4/3]" : "w-[80vw] max-w-[390px] aspect-[4/5]"
+            ]}>
+              {item.media_type === "video" ? (
+                <video src={item.media_url} class="absolute inset-0 w-full h-full object-cover video-player" muted loop playsinline controls />
+              ) : (
+                <img 
+                  src={getOptimizedMedia(item.media_url, 1200)} 
+                  class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 block pointer-events-none" 
+                  alt="" 
+                  loading="lazy" 
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
-  {images.length > 0 && (
-    <div class:list={[
-      "mt-5 grid gap-2",
-      images.length === 1 ? "grid-cols-1" : "grid-cols-2",
-      images.length >= 3 ? "sm:grid-cols-3" : "",
-    ]}>
-      {images.map((image) => (
-        <button type="button" class="thought-image-button rounded-xl text-left focus:outline-none focus:ring-2 focus:ring-neutral-300" data-image-url={image.image_url} data-image-alt={image.image_alt || ""}>
-          <img
-            src={image.image_url}
-            alt={image.image_alt || ""}
-            loading="lazy"
-            decoding="async"
-            sizes={images.length === 1 ? "(min-width: 768px) 672px, 100vw" : "(min-width: 768px) 320px, 50vw"}
-            class:list={[
-              "h-auto w-full rounded-xl object-contain opacity-95",
-              images.length === 1 ? "max-h-[560px]" : "max-h-[340px]",
-            ]}
-          />
-        </button>
-      ))}
-    </div>
-  )}
+        {/* Minimalist Desktop Nav (Berada di dalam area kartu, aman dari kebocoran layar) */}
+        {media.length > 1 && (
+          <div class="hidden md:block">
+             <button class="prev-btn absolute left-4 top-1/2 -translate-y-1/2 opacity-0 group-hover/media:opacity-60 hover:opacity-100 transition-all text-neutral-400 bg-white/80 dark:bg-black/40 p-1.5 rounded-full backdrop-blur"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m15 18-6-6 6-6"/></svg></button>
+             <button class="next-btn absolute right-4 top-1/2 -translate-y-1/2 opacity-0 group-hover/media:opacity-60 hover:opacity-100 transition-all text-neutral-400 bg-white/80 dark:bg-black/40 p-1.5 rounded-full backdrop-blur"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+        )}
+      </div>
+    )}
 
-  <time
-    datetime={thought.created_at}
-    class="mt-4 block text-[0.72rem] tracking-wide text-neutral-400 dark:text-neutral-600"
-  >
-    {formattedDate}
-  </time>
+    <footer class="px-3 py-2 flex items-center justify-between border-t border-neutral-50/50 dark:border-neutral-900/20 mt-2 w-full min-w-0 box-border">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-6 h-6 rounded-full overflow-hidden border border-neutral-200/50 dark:border-neutral-800/50 opacity-70 group-hover/card:opacity-100 transition-all duration-500 flex-shrink-0">
+          <img src="/pfp.jpeg" alt="Fuji" class="w-full h-full object-cover" />
+        </div>
+        <time class="text-[10px] font-bold tracking-[0.15em] uppercase text-neutral-400 dark:text-neutral-500 whitespace-nowrap overflow-hidden text-ellipsis">
+          {date.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: '2-digit' })} — {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+        </time>
+      </div>
+
+      {media.length > 1 && (
+        <div class="flex gap-1.5 dot-container flex-shrink-0">
+          {media.map((_, i) => (
+            <div 
+              data-dot-index={i}
+              class:list={["h-1 rounded-full transition-all duration-500", i === 0 ? "w-4 bg-neutral-400 dark:bg-neutral-600" : "w-1 bg-neutral-100 dark:bg-neutral-800"]}
+            ></div>
+          ))}
+        </div>
+      )}
+    </footer>
+  </div>
 </article>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    height: 3px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e5e5e5;
+    border-radius: 99px;
+  }
+  :global(.dark) .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #262626;
+  }
+  
+  @media (max-width: 768px) {
+    .custom-scrollbar::-webkit-scrollbar { display: none; }
+    .custom-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  }
+
+  article { -webkit-tap-highlight-color: transparent; }
+</style>
+
+<script>
+  function initCards() {
+    document.querySelectorAll('article').forEach(card => {
+      const slider = card.querySelector('.media-slider') as HTMLElement;
+      const dots = card.querySelectorAll('.dot-container > div');
+      
+      card.querySelector('.read-more-btn')?.replaceWith(card.querySelector('.read-more-btn')!.cloneNode(true));
+      
+      card.querySelector('.read-more-btn')?.addEventListener('click', (e) => {
+        const btn = e.currentTarget as HTMLElement;
+        const container = card.querySelector(`#content-${btn.dataset.id}`) as HTMLElement;
+        if (container) container.style.maxHeight = 'none';
+        btn.parentElement?.remove();
+      });
+
+      if (slider) {
+        const firstChild = slider.firstElementChild as HTMLElement;
+        
+        card.querySelector('.next-btn')?.replaceWith(card.querySelector('.next-btn')!.cloneNode(true));
+        card.querySelector('.prev-btn')?.replaceWith(card.querySelector('.prev-btn')!.cloneNode(true));
+
+        card.querySelector('.next-btn')?.addEventListener('click', () => {
+          if (firstChild) slider.scrollBy({ left: firstChild.offsetWidth + 12, behavior: 'smooth' });
+        });
+        card.querySelector('.prev-btn')?.addEventListener('click', () => {
+          if (firstChild) slider.scrollBy({ left: -(firstChild.offsetWidth + 12), behavior: 'smooth' });
+        });
+
+        slider.addEventListener('scroll', () => {
+          if (!firstChild) return;
+          const index = Math.round(slider.scrollLeft / (firstChild.offsetWidth + 12));
+          
+          dots?.forEach((dot, i) => {
+            const d = dot as HTMLElement;
+            if (Number(d.dataset.dotIndex) === index) {
+              d.className = "h-1 rounded-full transition-all duration-500 w-4 bg-neutral-400 dark:bg-neutral-600";
+            } else {
+              d.className = "h-1 rounded-full transition-all duration-500 w-1 bg-neutral-100 dark:bg-neutral-800";
+            }
+          });
+        });
+      }
+
+      const videos = card.querySelectorAll('.video-player');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const v = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) v.play().catch(() => {});
+          else v.pause();
+        });
+      }, { threshold: 0.6 });
+      videos.forEach(v => observer.observe(v));
+    });
+  }
+
+  initCards();
+  document.addEventListener('astro:page-load', initCards);
+</script>

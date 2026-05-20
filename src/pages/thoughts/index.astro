@@ -1,64 +1,27 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import ThoughtCard from "@/components/thoughts/ThoughtCard.astro";
-import { createSupabaseClient } from "@/lib/supabase";
-import { withTimeout } from "@/lib/security";
+import { queryThoughts } from "@/lib/search"; 
 import type { Thought } from "@/types/thoughts";
 
 export const prerender = false;
 
-const getThoughts = async (): Promise<Thought[]> => {
-  try {
-    const supabase = createSupabaseClient();
-    const cursor = Astro.url.searchParams.get("before");
-    const search = Astro.url.searchParams.get("q")?.trim();
-    let query = supabase
-      .from("thoughts")
-      .select("id, content, image_url, image_alt, created_at, thought_images(id, image_url, image_alt, position)")
-      .eq("is_published", true)
-      .is("deleted_at", null)
-      .order("created_at", { ascending: false })
-      .order("position", { referencedTable: "thought_images", ascending: true })
-      .limit(30);
+const searchQuery = Astro.url.searchParams.get("q")?.trim() || "";
+const cursorQuery = Astro.url.searchParams.get("before")?.trim() || "";
 
-    if (cursor) {
-      query = query.lt("created_at", cursor);
-    }
+const thoughts = await queryThoughts({ query: searchQuery, cursor: cursorQuery });
 
-    if (search) {
-      query = query.textSearch("content", search, { type: "websearch" });
-    }
-
-    const { data, error } = await withTimeout(query, 10000, "Thoughts fetch");
-
-    if (error) {
-      console.warn("Unable to load thoughts:", error.message);
-      return [];
-    }
-
-    return data ?? [];
-  } catch (error) {
-    console.warn(
-      "Unable to load thoughts:",
-      error instanceof Error ? error.message : "Unknown error"
-    );
-    return [];
-  }
-};
-
-const thoughts = await getThoughts();
-const query = Astro.url.searchParams.get("q")?.trim() || "";
-const lastThought = thoughts.at(-1);
-
-const groupedThoughts = thoughts.reduce<{ month: string; thoughts: Thought[] }[]>((groups, thought) => {
+const groupedThoughts = thoughts.reduce<
+  { month: string; thoughts: Thought[] }[]
+>((groups, thought) => {
   const date = new Date(thought.created_at);
   const month = Number.isNaN(date.getTime())
-    ? "Earlier"
-    : new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(date);
-  const current = groups.at(-1);
+    ? "Waktu Lampau"
+    : new Intl.DateTimeFormat("id-ID", { month: "long", year: "numeric" }).format(date);
 
-  if (current?.month === month) {
-    current.thoughts.push(thought);
+  const last = groups.at(-1);
+  if (last?.month === month) {
+    last.thoughts.push(thought);
   } else {
     groups.push({ month, thoughts: [thought] });
   }
@@ -67,94 +30,89 @@ const groupedThoughts = thoughts.reduce<{ month: string; thoughts: Thought[] }[]
 }, []);
 ---
 
-<Layout title="Thoughts - Fuji Halim Rabani">
-  <main class="mx-auto flex w-full max-w-[42rem] flex-col gap-11 pb-24">
-    <header class="flex flex-col gap-3 pt-1">
-      <h1 class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-        Thoughts
-      </h1>
-      <p class="max-w-2xl text-[0.95rem] leading-8 text-neutral-500 dark:text-neutral-400">
-        Catatan kecil, potongan hari, dan hal-hal random yang kusimpan sebelum hilang.
-      </p>
+<Layout title="Thoughts">
+  <main class="mx-auto flex w-full max-w-[500px] flex-col px-4 pb-24 min-w-0 overflow-x-hidden box-border">
+    
+    <header class="pt-14 pb-3 w-full min-w-0 overflow-hidden">
+      <h1 class="text-sm font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-200">Thoughts</h1>
     </header>
 
-    <form action="/thoughts" method="get" class="flex gap-2">
-      <input
-        type="search"
-        name="q"
-        value={query}
-        placeholder="Search thoughts"
-        class="min-w-0 flex-1 rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-sm text-neutral-800 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-      />
-      <button type="submit" class="rounded-lg border border-border-light px-4 py-3 text-sm text-neutral-500 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-100">
-        Search
-      </button>
-    </form>
+    <div class="mb-10 w-full min-w-0 overflow-hidden">
+      <form method="get" action="/thoughts" class="flex items-center gap-3 w-full min-w-0">
+        <div class="relative flex-1 border-b border-neutral-200 dark:border-neutral-800 pb-1 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-200 min-w-0">
+          <input
+            type="text"
+            name="q"
+            value={searchQuery}
+            inputmode="search"
+            placeholder="Cari potongan memori..."
+            class="w-full text-xs bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400"
+            autocomplete="off"
+          />
+          
+          {searchQuery && (
+            <a 
+              href="/thoughts" 
+              class="absolute right-0 bottom-1 p-0.5 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+              aria-label="Clear search"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </a>
+          )}
+        </div>
 
-    {thoughts.length > 0 ? (
-      <section class="flex flex-col gap-12" aria-label="Thoughts archive">
-        {groupedThoughts.map((group) => (
-          <section class="flex flex-col gap-7">
-            <h2 class="text-xs font-medium uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600">
-              {group.month}
-            </h2>
-            <div class="flex flex-col gap-10">
-              {group.thoughts.map((thought) => <ThoughtCard thought={thought} />)}
-            </div>
-          </section>
-        ))}
-      </section>
-    ) : (
-      <section class="border-l border-border-light pl-5 dark:border-neutral-800">
-        <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-500">
-          Belum ada catatan di sini. Nanti tempat ini akan terisi pelan-pelan.
-        </p>
-      </section>
-    )}
+        <button 
+          type="submit" 
+          class="text-[11px] font-bold text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors duration-200"
+        >
+          Cari
+        </button>
+      </form>
+    </div>
 
-    
+    <div id="feed-container" class="w-full min-w-0 overflow-hidden">
+      {thoughts.length > 0 ? (
+        <div class="flex flex-col gap-14 w-full min-w-0">
+          {groupedThoughts.map((group) => (
+            <section class="flex flex-col gap-5 month-section w-full min-w-0 overflow-hidden">
+              
+              <div class="w-full min-w-0 border-b border-neutral-100 dark:border-neutral-900/60 pb-1">
+                <h2 class="text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-400 dark:text-neutral-500">
+                  {group.month}
+                </h2>
+              </div>
+
+              <div class="flex flex-col gap-8 w-full min-w-0">
+                {group.thoughts.map((thought) => (
+                  <div class="thought-card-wrapper w-full min-w-0 overflow-hidden block">
+                    <ThoughtCard thought={thought} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <div class="py-16 select-none w-full border-t border-neutral-100 dark:border-neutral-900">
+          <p class="text-xs text-neutral-400 dark:text-neutral-500">
+            Tidak ditemukan hasil pencarian.
+          </p>
+          <a href="/thoughts" class="text-[10px] uppercase tracking-wider font-bold text-orange-500 mt-2 inline-block hover:underline">
+            Reset
+          </a>
+        </div>
+      )}
+    </div>
+
   </main>
 </Layout>
 
-<div id="thought-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-neutral-950/80 p-4 opacity-0 transition-opacity duration-200" role="dialog" aria-modal="true" aria-label="Expanded image">
-  <button id="thought-lightbox-close" type="button" class="absolute inset-0 cursor-default" aria-label="Close expanded image"></button>
-  <img id="thought-lightbox-image" src="" alt="" class="relative max-h-[88vh] max-w-full rounded-xl object-contain shadow-2xl" />
-</div>
-
-<script>
-  const lightbox = document.getElementById("thought-lightbox");
-  const lightboxImage = document.getElementById("thought-lightbox-image");
-  const lightboxClose = document.getElementById("thought-lightbox-close");
-
-  const closeLightbox = () => {
-    if (!(lightbox instanceof HTMLDivElement)) return;
-    if (!(lightboxImage instanceof HTMLImageElement)) return;
-
-    lightbox.classList.add("opacity-0");
-    setTimeout(() => {
-      lightbox.classList.add("hidden");
-      lightbox.classList.remove("flex");
-      lightboxImage.src = "";
-      lightboxImage.alt = "";
-    }, 180);
-  };
-
-  document.querySelectorAll(".thought-image-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      if (!(button instanceof HTMLButtonElement)) return;
-      if (!(lightbox instanceof HTMLDivElement)) return;
-      if (!(lightboxImage instanceof HTMLImageElement)) return;
-
-      lightboxImage.src = button.dataset.imageUrl || "";
-      lightboxImage.alt = button.dataset.imageAlt || "";
-      lightbox.classList.remove("hidden");
-      lightbox.classList.add("flex");
-      requestAnimationFrame(() => lightbox.classList.remove("opacity-0"));
-    });
-  });
-
-  lightboxClose?.addEventListener("click", closeLightbox);
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeLightbox();
-  });
-</script>
+<style>
+  main { 
+    -webkit-tap-highlight-color: transparent; 
+  }
+  .thought-card-wrapper {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+  }
+</style>

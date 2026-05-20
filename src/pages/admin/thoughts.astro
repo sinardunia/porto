@@ -15,7 +15,8 @@ export const prerender = false;
       </p>
     </header>
 
-<form id="thought-form" novalidate class="flex flex-col gap-5">
+    <form id="thought-form" novalidate class="flex flex-col gap-5">
+      <!-- ADMIN SECRET -->
       <label class="flex flex-col gap-2">
         <span class="text-sm text-muted-light dark:text-neutral-400">Admin secret</span>
         <input
@@ -28,6 +29,7 @@ export const prerender = false;
         />
       </label>
 
+      <!-- CONTENT -->
       <label class="flex flex-col gap-2">
         <span class="text-sm text-muted-light dark:text-neutral-400">Thought</span>
         <textarea
@@ -39,191 +41,173 @@ export const prerender = false;
         ></textarea>
       </label>
 
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-muted-light dark:text-neutral-400">Image, optional</span>
-        <input
-          name="image"
-          type="file"
-          accept="image/*"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-sm text-muted-light file:mr-4 file:rounded-md file:border-0 file:bg-neutral-200 file:px-3 file:py-2 file:text-sm file:text-neutral-900 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:file:bg-neutral-800 dark:file:text-neutral-100"
-        />
-      </label>
+      <!-- MEDIA UPLOAD -->
+      <div class="flex flex-col gap-3">
+        <label
+          for="media-input"
+          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border-light bg-secondary-light px-6 py-10 text-center"
+        >
+          <span class="text-sm text-muted-light">Upload images / videos</span>
+          <span class="text-xs text-muted-light">max 6 files</span>
+        </label>
 
+        <input
+          id="media-input"
+          name="media"
+          type="file"
+          accept="image/*,video/*"
+          multiple
+          class="hidden"
+        />
+
+        <!-- PREVIEW -->
+        <div id="media-preview" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
+      </div>
+
+      <!-- ALT -->
       <label class="flex flex-col gap-2">
-        <span class="text-sm text-muted-light dark:text-neutral-400">Image alt text, optional</span>
+        <span class="text-sm text-muted-light dark:text-neutral-400">Media alt text</span>
         <input
           name="imageAlt"
           type="text"
-          placeholder="Deskripsi singkat gambar"
+          placeholder="Deskripsi singkat"
           class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-text-light outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
         />
       </label>
 
+      <!-- BUTTON -->
       <button
         id="publish-button"
         type="button"
-        class="rounded-lg bg-text-light px-5 py-3 text-sm font-medium text-primary-light transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300"
+        class="rounded-lg bg-text-light px-5 py-3 text-sm font-medium text-primary-light"
       >
         Publish
       </button>
 
-      <p id="form-status" class="min-h-6 text-sm text-muted-light dark:text-neutral-400" aria-live="polite"></p>
+      <p id="form-status" class="min-h-6 text-sm text-muted-light"></p>
     </form>
   </main>
 </Layout>
+
 <script type="module">
   const form = document.querySelector("#thought-form");
   const status = document.querySelector("#form-status");
   const secretInput = document.querySelector("#admin-secret");
   const publishButton = document.querySelector("#publish-button");
+  const mediaInput = document.querySelector("#media-input");
+  const mediaPreview = document.querySelector("#media-preview");
+
+  let selectedFiles = [];
+  const MAX_FILES = 6;
 
   if (
     !(form instanceof HTMLFormElement) ||
     !(secretInput instanceof HTMLInputElement) ||
-    !(publishButton instanceof HTMLButtonElement)
+    !(publishButton instanceof HTMLButtonElement) ||
+    !(mediaInput instanceof HTMLInputElement)
   ) {
-    console.error("Thought form elements missing.");
+    console.error("Missing elements");
   } else {
-    secretInput.value =
-      localStorage.getItem("thoughts_admin_secret") || "";
+    secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
 
-    const draftKey = "thought_admin_draft";
-
-    const contentInput =
-      form.elements.namedItem("content");
-
-    const imageAltInput =
-      form.elements.namedItem("imageAlt");
-
-    const restoreDraft = () => {
-      try {
-        const draft = JSON.parse(
-          localStorage.getItem(draftKey) || "{}"
-        );
-
-        if (
-          contentInput instanceof HTMLTextAreaElement &&
-          typeof draft.content === "string"
-        ) {
-          contentInput.value = draft.content;
-        }
-
-        if (
-          imageAltInput instanceof HTMLInputElement &&
-          typeof draft.imageAlt === "string"
-        ) {
-          imageAltInput.value = draft.imageAlt;
-        }
-      } catch {}
+    const setStatus = (msg) => {
+      if (status) status.textContent = msg;
     };
-
-    const saveDraft = () => {
-      localStorage.setItem(
-        draftKey,
-        JSON.stringify({
-          content:
-            contentInput instanceof HTMLTextAreaElement
-              ? contentInput.value
-              : "",
-          imageAlt:
-            imageAltInput instanceof HTMLInputElement
-              ? imageAltInput.value
-              : "",
-        })
-      );
-    };
-
-    restoreDraft();
-
-    form.addEventListener("input", saveDraft);
 
     const setLoading = (loading) => {
       publishButton.disabled = loading;
-      publishButton.textContent = loading
-        ? "Publishing..."
-        : "Publish";
+      publishButton.textContent = loading ? "Publishing..." : "Publish";
     };
 
-    const setStatus = (message) => {
-      if (status) status.textContent = message;
+    const renderPreview = (files) => {
+      if (!mediaPreview) return;
+
+      mediaPreview.innerHTML = "";
+
+      files.slice(0, MAX_FILES).forEach((file) => {
+        const url = URL.createObjectURL(file);
+
+        const wrapper = document.createElement("div");
+        wrapper.className =
+          "overflow-hidden rounded-lg border border-border-light bg-neutral-100";
+
+        if (file.type.startsWith("image/")) {
+          const img = document.createElement("img");
+          img.src = url;
+          img.className = "h-28 w-full object-cover";
+          wrapper.appendChild(img);
+        } else if (file.type.startsWith("video/")) {
+          const video = document.createElement("video");
+          video.src = url;
+          video.controls = true;
+          video.className = "h-28 w-full object-cover";
+          wrapper.appendChild(video);
+        }
+
+        mediaPreview.appendChild(wrapper);
+      });
     };
+
+    mediaInput.addEventListener("change", () => {
+      if (!mediaInput.files) return;
+
+      selectedFiles = Array.from(mediaInput.files).slice(0, MAX_FILES);
+      renderPreview(selectedFiles);
+    });
 
     const submitThought = async () => {
       const adminSecret = secretInput.value.trim();
 
       if (!adminSecret) {
-        setStatus("Admin secret belum diisi.");
+        setStatus("Admin secret required");
         return;
       }
 
-      localStorage.setItem(
-        "thoughts_admin_secret",
-        adminSecret
+      const formData = new FormData();
+
+      formData.append("adminSecret", adminSecret);
+      formData.append(
+        "content",
+        form.elements.namedItem("content").value
       );
 
-      const formData = new FormData(form);
-
-      setLoading(true);
-      setStatus("");
-
-      try {
-        const response = await fetch("/api/thoughts", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          Authorization: `Bearer ${adminSecret}`,
-        },
-        body: formData,
+      selectedFiles.forEach((file) => {
+        formData.append("media", file);
       });
 
-        const result = await response
-          .json()
-          .catch(() => null);
+      const alt = form.elements.namedItem("imageAlt")?.value;
+      if (alt) formData.append("imageAlt", alt);
 
-        if (!response.ok) {
-          throw new Error(
-            result?.message ||
-              "Failed to publish thought."
-          );
+      try {
+        setLoading(true);
+        setStatus("");
+
+        const res = await fetch("/api/thoughts", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${adminSecret}`,
+          },
+          body: formData,
+        });
+
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          throw new Error(data?.message || "Failed");
         }
 
         form.reset();
+        selectedFiles = [];
+        if (mediaPreview) mediaPreview.innerHTML = "";
 
-        localStorage.removeItem(draftKey);
-
-        secretInput.value = adminSecret;
-
-        setStatus(
-          result?.message ||
-            "Thought published successfully."
-        );
-      } catch (error) {
-        setStatus(
-          error instanceof Error
-            ? error.message
-            : "Failed to publish thought."
-        );
+        setStatus("Published!");
+      } catch (err) {
+        setStatus(err.message || "Error");
       } finally {
         setLoading(false);
       }
     };
 
-    form.addEventListener(
-      "submit",
-      async (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        await submitThought();
-      }
-    );
-
-    publishButton.addEventListener(
-      "click",
-      async (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        await submitThought();
-      }
-    );
+    publishButton.addEventListener("click", submitThought);
   }
 </script>
