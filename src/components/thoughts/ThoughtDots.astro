@@ -1,0 +1,25 @@
+---
+type Props = {
+  count: number;
+};
+
+const { count } = Astro.props;
+---
+
+<div class="dot-container flex justify-center gap-1.5 py-0.5">
+
+  {
+    Array.from({ length: count }).map((_, i) => (
+      <div
+        data-dot-index={i}
+        class:list={[
+          "h-1 rounded-full transition-all duration-300",
+          i === 0
+            ? "w-3 bg-neutral-400 dark:bg-neutral-600"
+            : "w-1 bg-neutral-200 dark:bg-neutral-800/60",
+        ]}
+      />
+    ))
+  }
+
+</div>

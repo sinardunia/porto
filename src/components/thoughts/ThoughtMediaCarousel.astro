@@ -1,0 +1,165 @@
+---
+import type { ThoughtMedia } from "@/types/thoughts";
+import ThoughtVideo from "./ThoughtVideo.astro";
+import ThoughtImage from "./ThoughtImage.astro";
+import ThoughtDots from "./ThoughtDots.astro";
+
+interface Props {
+  media: ThoughtMedia[];
+}
+
+const { media } = Astro.props;
+const isSingle = media.length === 1;
+const total = media.length;
+---
+
+<thought-media-slider 
+  class="relative mt-0.5 block w-full overflow-hidden px-1"
+  data-total={total}
+>
+  <!-- NEURO-BADGE: Dinamis dengan Kontras Tinggi -->
+  {total > 1 && (
+    <div
+      class="badge-counter absolute right-5 top-4 z-30 rounded-full bg-black/70 px-3 py-1 text-[10px] font-black tracking-[0.2em] text-white backdrop-blur-xl border border-white/10 opacity-0 transition-opacity duration-500 pointer-events-none"
+    >
+      <span class="current-idx">1</span> / {total}
+    </div>
+  )}
+
+  <!-- SLIDER ENGINE: Peeking Effect (86vw) -->
+  <div
+    class="slider-root no-scrollbar flex snap-x snap-mandatory gap-3 overflow-x-auto overflow-y-hidden scroll-smooth pb-3 px-1"
+  >
+    {media.map((item, index) => (
+      <div
+        class:list={[
+          "media-item snap-center shrink-0 overflow-hidden rounded-sm bg-neutral-100 dark:bg-[#0d0d0d] ring-1 ring-black/5 dark:ring-white/5 shadow-sm transition-all duration-500",
+          isSingle ? "w-full" : "w-[86vw] max-w-[400px] aspect-[4/5]"
+        ]}
+        data-index={index + 1}
+      >
+        {item.media_type === "video" ? (
+          <ThoughtVideo src={item.media_url} isSingleMedia={isSingle} />
+        ) : (
+          <ThoughtImage src={item.media_url} isSingleMedia={isSingle} />
+        )}
+      </div>
+    ))}
+    
+    <!-- Buffer spacer agar item terakhir tetap presisi -->
+    {!isSingle && <div class="shrink-0 w-6" aria-hidden="true" />}
+  </div>
+
+  <!-- NAVIGATION DOTS -->
+  {total > 1 && <ThoughtDots count={total} />}
+</thought-media-slider>
+
+<script>
+  class ThoughtMediaSlider extends HTMLElement {
+    private slider: HTMLElement | null = null;
+    private badge: HTMLElement | null = null;
+    private idxDisplay: HTMLElement | null = null;
+    private observer: IntersectionObserver | null = null;
+
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      // Type Casting untuk menghindari error 'Object is possibly null'
+      this.slider = this.querySelector('.slider-root') as HTMLElement;
+      this.badge = this.querySelector('.badge-counter') as HTMLElement;
+      this.idxDisplay = this.querySelector('.current-idx') as HTMLElement;
+      
+      const totalAttr = this.getAttribute('data-total');
+      const total = totalAttr ? parseInt(totalAttr) : 1;
+      
+      if (total > 1) this.initNeuroEngine();
+    }
+
+    private initNeuroEngine() {
+      if (!this.slider) return;
+
+      // Intersection Observer dengan Type Safety
+      this.observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const target = entry.target as HTMLElement;
+          const video = target.querySelector('video');
+
+          if (entry.isIntersecting) {
+            // Update Badge Numerik
+            if (this.idxDisplay) this.idxDisplay.textContent = target.dataset.index || '1';
+            if (this.badge) this.badge.style.opacity = "1";
+            
+            // Auto-play video yang sedang aktif
+            if (video) video.play().catch(() => {});
+          } else {
+            // Pause video yang sudah tidak terlihat (Hemat RAM)
+            if (video) video.pause();
+          }
+        });
+      }, {
+        root: this.slider,
+        threshold: 0.65 // 65% area terlihat untuk memicu pergantian status
+      });
+
+      this.querySelectorAll('.media-item').forEach(item => {
+        this.observer?.observe(item);
+      });
+
+      // Visual Hint (The Shake): Memberitahu user bahwa konten bisa digeser
+      this.triggerVisualHint();
+    }
+
+    private triggerVisualHint() {
+      // Optional Chaining (?.) untuk mencegah error jika elemen null
+      setTimeout(() => {
+        this.slider?.scrollBy({ left: 60, behavior: 'smooth' });
+        setTimeout(() => {
+          this.slider?.scrollBy({ left: -60, behavior: 'smooth' });
+        }, 600);
+      }, 1500);
+    }
+
+    disconnectedCallback() {
+      // Cleanup untuk mencegah Memory Leak
+      this.observer?.disconnect();
+    }
+  }
+
+  // Registrasi Custom Element dengan pengecekan keamanan
+  if (typeof customElements !== 'undefined' && !customElements.get('thought-media-slider')) {
+    customElements.define('thought-media-slider', ThoughtMediaSlider);
+  }
+</script>
+
+<style>
+  /* Sembunyikan Scrollbar secara total */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Physics: Momentum Scroll & Snapping */
+  .slider-root {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+    will-change: scroll-position;
+  }
+
+  /* GPU Acceleration: Performa FPS Tinggi */
+  .media-item {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  /* Micro-interaction saat ditekan */
+  .media-item:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+</style>

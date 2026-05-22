@@ -1,0 +1,103 @@
+<!-- 
+  GOD-MODE LIGHTBOX 
+  Taruh di paling bawah index.astro, di luar Layout agar benar-benar di root DOM.
+-->
+<div 
+  id="global-lightbox" 
+  class="fixed inset-0 z-[999999] hidden items-center justify-center bg-black/98 opacity-0 backdrop-blur-md transition-all duration-300 pointer-events-auto select-none"
+  onclick="window.closeNeuroLightbox()"
+>
+  <button 
+    type="button"
+    class="absolute top-6 right-6 z-[1000000] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white text-3xl border border-white/10 active:scale-90 transition-all cursor-pointer"
+    onclick="window.closeNeuroLightbox()"
+  >
+    &times;
+  </button>
+
+  <div class="relative flex h-full w-full items-center justify-center p-4">
+    <img 
+      id="global-lightbox-img" 
+      class="max-h-[88vh] max-w-[95vw] scale-90 object-contain transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-2xl" 
+      src="" 
+      alt=""
+      onclick="event.stopPropagation()"
+    />
+  </div>
+</div>
+
+<style>
+  main { -webkit-tap-highlight-color: transparent; }
+  .thought-card-wrapper {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 400px;
+  }
+
+  /* Memastikan lightbox benar-benar fixed di root layar */
+  #global-lightbox {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+</style>
+
+<script is:inline>
+  /**
+   * GLOBAL LIGHTBOX ENGINE
+   * Menggunakan is:inline agar fungsi ini tersedia seketika di lingkup window
+   */
+  window.openNeuroLightbox = function(src) {
+    const lb = document.getElementById("global-lightbox");
+    const img = document.getElementById("global-lightbox-img");
+    if (!lb || !img || !src) return;
+
+    img.src = src;
+    lb.classList.remove("hidden");
+    lb.classList.add("flex");
+    document.body.style.overflow = "hidden"; // Lock scroll
+    
+    // Force Reflow
+    void lb.offsetWidth;
+
+    lb.classList.add("opacity-100");
+    img.style.transform = "scale(1)";
+    
+    // Push state biar bisa di-back pake tombol back HP
+    window.history.pushState({ lightboxOpen: true }, "");
+  };
+
+  window.closeNeuroLightbox = function() {
+    const lb = document.getElementById("global-lightbox");
+    const img = document.getElementById("global-lightbox-img");
+    if (!lb || !img) return;
+
+    lb.classList.remove("opacity-100");
+    img.style.transform = "scale(0.9)";
+
+    setTimeout(() => {
+      lb.classList.add("hidden");
+      lb.classList.remove("flex");
+      document.body.style.overflow = "";
+      img.src = "";
+    }, 300);
+    
+    if (window.history.state?.lightboxOpen) {
+      window.history.back();
+    }
+  };
+
+  // Back button handling
+  window.addEventListener("popstate", () => {
+    const lb = document.getElementById("global-lightbox");
+    if (lb && !lb.classList.contains("hidden")) {
+      window.closeNeuroLightbox();
+    }
+  });
+
+  // Keyboard Support
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") window.closeNeuroLightbox();
+  });
+</script>
