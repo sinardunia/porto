@@ -3,30 +3,21 @@ import Layout from "@/layouts/Layout.astro";
 import BlogListItem from "@/components/blog/BlogListItem.astro";
 import { createSupabaseClient } from "@/lib/supabase";
 import { withTimeout } from "@/lib/security";
+import { matchesSearch, matchesTag, getAllTags } from "@/lib/blog";
 import type { BlogPostSummary } from "@/types/blog";
 
 export const prerender = false;
-
-const normalizeSearch = (value: string) =>
-  value.trim().toLowerCase();
-
-const matchesSearch = (post: BlogPostSummary, search: string) => {
-  const normalizedSearch = normalizeSearch(search);
-  if (!normalizedSearch) return true;
-
-  return [post.title, post.excerpt, post.slug]
-    .filter(Boolean)
-    .some((value) => value?.toLowerCase().includes(normalizedSearch));
-};
 
 const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
   try {
     const supabase = createSupabaseClient();
     const search = Astro.url.searchParams.get("q")?.trim();
+    const tag = Astro.url.searchParams.get("tag")?.trim();
+
     const { data, error } = await withTimeout(
       supabase
         .from("blog_posts")
-        .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+        .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published")
         .eq("is_published", true)
         .order("created_at", { ascending: false })
         .limit(50),
@@ -39,8 +30,17 @@ const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
       return [];
     }
 
-    const posts = data ?? [];
-    return search ? posts.filter((post) => matchesSearch(post, search)) : posts;
+    const posts = (data ?? []) as BlogPostSummary[];
+
+    let filtered = posts;
+    if (search) {
+      filtered = filtered.filter((post) => matchesSearch(post, search));
+    }
+    if (tag) {
+      filtered = filtered.filter((post) => matchesTag(post, tag));
+    }
+
+    return filtered;
   } catch (error) {
     console.warn(
       "Unable to load blog posts:",
@@ -52,17 +52,21 @@ const getBlogPosts = async (): Promise<BlogPostSummary[]> => {
 
 const posts = await getBlogPosts();
 const query = Astro.url.searchParams.get("q")?.trim() || "";
-const shouldUseCarousel = posts.length > 6;
+const activeTag = Astro.url.searchParams.get("tag")?.trim() || "";
+const shouldUseCarousel = posts.length > 6 && !query && !activeTag;
+const allTags = getAllTags(posts);
 ---
 
-<Layout title="Blog - Fuji Halim Rabani">
-  <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-10 pb-24">
+<Layout title={activeTag ? `${activeTag} — Blog` : "Blog - Fuji Halim Rabani"}>
+  <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-8 pb-24">
     <header class="flex flex-col gap-3">
       <h1 class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-        Blog
+        {activeTag ? `Tag: ${activeTag}` : "Blog"}
       </h1>
       <p class="max-w-2xl text-[0.95rem] leading-8 text-neutral-500 dark:text-neutral-400">
-        Tulisan yang lebih pelan; tempat pikiran dirapikan setelah cukup lama tinggal di kepala.
+        {activeTag
+          ? `Tulisan yang ditandai dengan "${activeTag}".`
+          : "Tulisan yang lebih pelan; tempat pikiran dirapikan setelah cukup lama tinggal di kepala."}
       </p>
     </header>
 
@@ -74,10 +78,39 @@ const shouldUseCarousel = posts.length > 6;
         placeholder="Cari tulisan..."
         class="min-w-0 flex-1 rounded-xl bg-transparent px-3 py-2 text-sm text-neutral-800 outline-none placeholder:text-neutral-400 dark:text-neutral-100"
       />
+      {activeTag && (
+        <input type="hidden" name="tag" value={activeTag} />
+      )}
       <button type="submit" class="rounded-xl bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300">
         Search
       </button>
     </form>
+
+    {allTags.length > 0 && (
+      <div class="no-scrollbar -mx-6 flex snap-x gap-2 overflow-x-auto px-6 md:-mx-10 md:px-10">
+        {allTags.map((tag) => (
+          <a
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+            class:list={[
+              "shrink-0 snap-start rounded-full border px-3 py-1 text-xs transition-colors",
+              activeTag === tag
+                ? "border-text-light bg-text-light text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-950"
+                : "border-border-light bg-secondary-light text-neutral-500 hover:border-neutral-400 hover:text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-neutral-200",
+            ]}
+          >
+            {tag}
+          </a>
+        ))}
+        {activeTag && (
+          <a
+            href="/blog"
+            class="shrink-0 snap-start rounded-full border border-border-light px-3 py-1 text-xs text-neutral-400 transition-colors hover:text-neutral-700 dark:border-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200"
+          >
+            &times; Clear
+          </a>
+        )}
+      </div>
+    )}
 
     {posts.length > 0 ? (
       <section aria-label="Blog posts" class:list={[
@@ -94,9 +127,21 @@ const shouldUseCarousel = posts.length > 6;
     ) : (
       <section class="border-l border-border-light pl-5 dark:border-neutral-800">
         <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-500">
-          {query ? "Tidak ada blog post yang cocok." : "Belum ada blog post dari Supabase di sini."}
+          {query || activeTag
+            ? "Tidak ada blog post yang cocok."
+            : "Belum ada blog post dari Supabase di sini."}
         </p>
       </section>
     )}
   </main>
 </Layout>
+
+<style>
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+</style>

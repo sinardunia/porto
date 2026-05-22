@@ -6,6 +6,7 @@ export type BlogPost = {
   content: string;
   cover_image_url: string | null;
   cover_image_alt: string | null;
+  tags: string[];
   created_at: string;
   updated_at: string | null;
   is_published: boolean;

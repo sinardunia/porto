@@ -31,7 +31,7 @@ export const GET: APIRoute = async () => {
     if (error) throw error;
 
     const items = (data ?? []).map((post) => {
-      const url = new URL(`/posts/${post.slug}`, SITE_URL).toString();
+      const url = new URL(`/blog/${post.slug}`, SITE_URL).toString();
       const description = sanitizeRenderedHtml(escapeXml(post.excerpt || ""));
 
       return `

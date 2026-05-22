@@ -95,29 +95,19 @@ const { title } = Astro.props;
     </style>
 
     <!-- THEME -->
-    <script>
-      const initTheme = () => {
-        const savedTheme =
-          localStorage.getItem("theme") || "dark";
-
+    <script is:inline>
+      (function () {
+        var savedTheme = localStorage.getItem("theme") || "dark";
         if (
           savedTheme === "dark" ||
           (!savedTheme &&
-            window.matchMedia(
-              "(prefers-color-scheme: dark)"
-            ).matches)
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
         ) {
-          document.documentElement.classList.add(
-            "dark"
-          );
+          document.documentElement.classList.add("dark");
         } else {
-          document.documentElement.classList.remove(
-            "dark"
-          );
+          document.documentElement.classList.remove("dark");
         }
-      };
-
-      initTheme();
+      })();
     </script>
 
     <!-- SOUND -->

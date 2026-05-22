@@ -166,8 +166,15 @@ export const POST: APIRoute =
         return auth.response;
       }
 
-      const formData =
-        await request.formData();
+      let formData;
+      try {
+        formData = await request.formData();
+      } catch {
+        return json(
+          { message: "Invalid form data." },
+          400
+        );
+      }
 
       const content =
         cleanText(
@@ -200,10 +207,14 @@ export const POST: APIRoute =
 
       if (!content) {
         return json(
-          {
-            message:
-              "Thought content is required.",
-          },
+          { message: "Thought content is required." },
+          400
+        );
+      }
+
+      if (content.length > 5000) {
+        return json(
+          { message: "Content is too long (max 5,000 characters)." },
           400
         );
       }
@@ -358,10 +369,7 @@ export const POST: APIRoute =
 const { data, error } = await withTimeout(
   supabase
     .from("thoughts")
-    .insert({
-      content,
-      // is_published: true, <-- HAPUS INI karena kolomnya tidak ada/tidak perlu
-    })
+    .insert({ content })
     .select("id")
     .single(),
 
@@ -369,13 +377,13 @@ const { data, error } = await withTimeout(
   "Thought insert"
 );
 
-if (error) {
+if (error || !data) {
   console.error("[THOUGHTS_API] Insert failed:", error);
-  // TIPS: Cek console log di terminal/hosting kamu, 
-  // pasti muncul error: "column is_published does not exist"
   return json(
     {
-      message: `Thought insert failed: ${error.message}`, // Tambahkan error.message biar jelas
+      message: error?.message
+        ? `Thought insert failed: ${error.message}`
+        : "Thought insert failed.",
     },
     500
   );
@@ -416,19 +424,14 @@ if (error) {
             "Thought media insert"
           );
 
-        if (
-          mediaInsertError
-        ) {
+        if (mediaInsertError) {
           console.error(
             "[THOUGHTS_API] Media metadata insert failed:",
             mediaInsertError
           );
 
           return json(
-            {
-              message:
-                "Thought saved but media metadata failed.",
-            },
+            { message: "Thought saved but media metadata failed." },
             500
           );
         }

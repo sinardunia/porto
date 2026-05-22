@@ -188,10 +188,36 @@ export const POST: APIRoute =
           "coverImage"
         );
 
-      const isPublished =
-        formData.get(
-          "isPublished"
-        ) === "on";
+      /* -------------------------
+         TAGS
+      -------------------------- */
+
+      const rawTags = cleanText(
+        formData.get("tags"),
+        500
+      );
+
+      const tags = rawTags
+        ? rawTags
+            .split(",")
+            .map((t) =>
+              t
+                .trim()
+                .toLowerCase()
+                .replace(
+                  /[^a-z0-9\s-]/g,
+                  ""
+                )
+                .replace(
+                  /\s+/g,
+                  " "
+                )
+                .trim()
+            )
+            .filter(
+              (t) => t.length > 0 && t.length <= 30
+            )
+        : [];
 
       /* -------------------------
          VALIDATION
@@ -224,6 +250,46 @@ export const POST: APIRoute =
               "Blog post content is required.",
           },
           400
+        );
+      }
+
+      if (content.length > 200000) {
+        return json(
+          {
+            message:
+              "Content is too long (max 200,000 characters).",
+          },
+          400
+        );
+      }
+
+      if (!/^[a-z0-9-]+$/.test(slug)) {
+        return json(
+          {
+            message:
+              "Slug can only contain lowercase letters, numbers, and hyphens.",
+          },
+          400
+        );
+      }
+
+      const supabase = createSupabaseAdminClient();
+
+      /* -------------------------
+         CHECK SLUG EXISTS
+      -------------------------- */
+      const { data: existingSlug } = await withTimeout(
+        supabase.from("blog_posts").select("id").eq("slug", slug).single(),
+        5000,
+        "Slug check"
+      );
+
+      if (existingSlug) {
+        return json(
+          {
+            message: "Slug already exists.",
+          },
+          409
         );
       }
 
@@ -280,9 +346,6 @@ export const POST: APIRoute =
          INSERT BLOG POST
       -------------------------- */
 
-      const supabase =
-        createSupabaseAdminClient();
-
       const { data, error } =
         await withTimeout(
           supabase
@@ -307,8 +370,10 @@ export const POST: APIRoute =
                 coverImageAlt ||
                 null,
 
+              tags,
+
               is_published:
-                isPublished,
+                true,
             })
 
             .select(
@@ -358,13 +423,8 @@ export const POST: APIRoute =
 
           slug: data.slug,
 
-          isPublished:
-            data.is_published,
-
           message:
-            data.is_published
-              ? "Blog published."
-              : "Saved as draft.",
+            "Blog published.",
         },
 
         201
