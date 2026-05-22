@@ -161,7 +161,11 @@ const { src, isSingleMedia } = Astro.props;
 
       if (this.interactionLayer) {
         this.interactionLayer.onclick = () => {
-          this.video.paused ? this.playInstance() : this.video.pause();
+          if (this.video.paused) {
+            this.playInstance();
+          } else {
+            this.pauseInstance();
+          }
           this.animateFeedback();
         };
       }
