@@ -84,20 +84,38 @@ export const prerender = false;
         Publish
       </button>
 
+      <!-- COMPRESSION PROGRESS -->
+      <div id="compression-ui" class="hidden flex-col gap-2 rounded-lg border border-border-light bg-secondary-light p-4">
+        <div class="flex items-center justify-between">
+          <span id="compression-label" class="text-xs font-medium text-muted-light">Mengompresi...</span>
+          <span id="compression-percent" class="text-xs font-bold text-text-light">0%</span>
+        </div>
+        <div class="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
+          <div id="compression-bar" class="h-full w-0 rounded-full bg-text-light transition-all duration-300"></div>
+        </div>
+      </div>
+
       <p id="form-status" class="min-h-6 text-sm text-muted-light"></p>
     </form>
   </main>
 </Layout>
 
 <script type="module">
+  import { compressMedia } from "/src/lib/compression.ts";
+
   const form = document.querySelector("#thought-form");
   const status = document.querySelector("#form-status");
   const secretInput = document.querySelector("#admin-secret");
   const publishButton = document.querySelector("#publish-button");
   const mediaInput = document.querySelector("#media-input");
   const mediaPreview = document.querySelector("#media-preview");
+  const compressionUi = document.querySelector("#compression-ui");
+  const compressionLabel = document.querySelector("#compression-label");
+  const compressionPercent = document.querySelector("#compression-percent");
+  const compressionBar = document.querySelector("#compression-bar");
 
   let selectedFiles = [];
+  let previewUrls = [];
   const MAX_FILES = 6;
 
   if (
@@ -119,13 +137,26 @@ export const prerender = false;
       publishButton.textContent = loading ? "Publishing..." : "Publish";
     };
 
+    const setCompressing = (show, label = "", percent = 0) => {
+      if (compressionUi) compressionUi.classList.toggle("hidden", !show);
+      if (compressionUi) compressionUi.classList.toggle("flex", show);
+      if (compressionLabel) compressionLabel.textContent = label;
+      if (compressionPercent) compressionPercent.textContent = `${percent}%`;
+      if (compressionBar) compressionBar.style.width = `${percent}%`;
+    };
+
     const renderPreview = (files) => {
       if (!mediaPreview) return;
+
+      // Revoke old URLs to prevent memory leak
+      previewUrls.forEach((url) => URL.revokeObjectURL(url));
+      previewUrls = [];
 
       mediaPreview.innerHTML = "";
 
       files.slice(0, MAX_FILES).forEach((file) => {
         const url = URL.createObjectURL(file);
+        previewUrls.push(url);
 
         const wrapper = document.createElement("div");
         wrapper.className =
@@ -171,16 +202,45 @@ export const prerender = false;
         form.elements.namedItem("content").value
       );
 
-      selectedFiles.forEach((file) => {
-        formData.append("media", file);
-      });
-
       const alt = form.elements.namedItem("imageAlt")?.value;
       if (alt) formData.append("imageAlt", alt);
 
+      // COMPRESSION PHASE
+      let filesToUpload = selectedFiles;
+      const hasMedia = selectedFiles.length > 0;
+
+      if (hasMedia) {
+        setCompressing(true, "Mengompresi media...", 0);
+
+        try {
+          const results = await compressMedia(selectedFiles, (index, percent) => {
+            const fileName = selectedFiles[index]?.name || "";
+            setCompressing(true, `Mengompresi ${fileName}...`, percent);
+          });
+
+          filesToUpload = results.map((r) => r.file);
+
+          const totalOriginal = results.reduce((s, r) => s + r.originalSize, 0);
+          const totalCompressed = results.reduce((s, r) => s + r.compressedSize, 0);
+          const saved = totalOriginal - totalCompressed;
+          const savedMb = (saved / 1024 / 1024).toFixed(1);
+
+          setStatus(`Dihematkan ${savedMb}MB`);
+        } catch (err) {
+          console.error("Compression failed:", err);
+          setStatus("Kompresi gagal, upload asli saja...");
+        } finally {
+          setCompressing(false);
+        }
+      }
+
+      filesToUpload.forEach((file) => {
+        formData.append("media", file);
+      });
+
       try {
         setLoading(true);
-        setStatus("");
+        if (!hasMedia) setStatus("");
 
         const res = await fetch("/api/thoughts", {
           method: "POST",
@@ -198,6 +258,8 @@ export const prerender = false;
 
         form.reset();
         selectedFiles = [];
+        previewUrls.forEach((url) => URL.revokeObjectURL(url));
+        previewUrls = [];
         if (mediaPreview) mediaPreview.innerHTML = "";
 
         setStatus("Published!");

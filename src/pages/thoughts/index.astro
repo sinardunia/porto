@@ -33,9 +33,29 @@ const groupedThoughts = thoughts.reduce<
 <Layout title="Thoughts">
   <main class="mx-auto flex w-full max-w-[500px] flex-col px-4 pb-24 min-w-0 overflow-x-hidden box-border">
     
-    <header class="pt-14 pb-3 w-full min-w-0 overflow-hidden">
-      <h1 class="text-sm font-bold uppercase tracking-wider text-neutral-800 dark:text-neutral-200">Thoughts</h1>
-    </header>
+   <header class="pt-16 pb-10 w-full min-w-0 overflow-hidden border-b border-neutral-100/50 dark:border-neutral-900/30 mb-10">
+  <!-- Title dengan Aksen Titik -->
+  <div class="flex items-center gap-2 mb-4">
+    <h1 class="text-sm font-black uppercase tracking-[0.2em] text-neutral-800 dark:text-neutral-100">
+      Thoughts
+    </h1>
+    <span class="h-1 w-1 rounded-full bg-orange-500 animate-pulse"></span>
+  </div>
+
+  <!-- Deskripsi Personal -->
+  <div class="max-w-[420px] space-y-3">
+    <p class="text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-medium italic">
+      Maaf, isinya cuma kumpulan hal acak yang lewat di kepala saja
+    </p>
+    
+    <div class="space-y-1.5">
+      <p class="text-xs leading-relaxed text-neutral-400 dark:text-neutral-500">
+        Apa yang ditulis di sini memang pas lagi kepikiran hari itu aja.
+        Terkadang saya juga merasa cringe kalau baca tulisan dulu.
+      </p>
+    </div>
+  </div>
+</header>
 
     <div class="mb-10 w-full min-w-0 overflow-hidden">
       <form method="get" action="/thoughts" class="flex items-center gap-3 w-full min-w-0">
@@ -193,11 +213,11 @@ const groupedThoughts = thoughts.reduce<
     document.body.style.overflow = '';
   };
 
-  // Delegasi klik backup
+  // Event delegation tunggal untuk lightbox
   document.addEventListener('click', (e) => {
     const target = e.target;
     if (!(target instanceof HTMLElement)) return;
-    const trigger = target.closest('.clickable-image') || target.closest('.media-item img');
+    const trigger = target.closest('.clickable-image');
     if (trigger) {
       const src = trigger.getAttribute('data-raw-src') || trigger.src;
       window.openNeuroLightbox(src);
