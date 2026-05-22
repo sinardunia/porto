@@ -1,72 +1,389 @@
 ---
-title: "Kebijakan Privasi yang Sangat Komprehensif dan Tidak Mengumpulkan Apa Pun"
-publishedAt: 2023-05-24
-description: "Dokumen ini menjelaskan dengan sangat detail dan panjang lebar tentang bagaimana kami sama sekali tidak mengumpulkan, menyimpan, atau menggunakan data pribadi Anda dalam bentuk apa pun. Percayalah, kami sangat bersih."
-slug: "kebijakan-privasi-tanpa-pengumpulan"
+title: "Privacy Policy"
+publishedAt: 2026-05-22
+description: "A small note about privacy, cookies, and the quiet corners of this website."
+slug: "privacy-policy"
 isPublish: true
 ---
 
-# Kebijakan Privasi yang Tidak Mengumpulkan Apa Pun
+# Privacy Policy
 
-Dalam upaya kami untuk menjadi entitas yang paling transparan dan tidak mau bersalah di dunia digital ini, kami merasa perlu untuk menyampaikan dengan sangat jelas bahwa kami **sama sekali tidak mengumpulkan data pribadi Anda**. Tidak ada. Nihil. Zero. Kosong. Bohong. 
+hello stranger :)
 
-## Apa yang Kami Tidak Lakukan
+If you're reading this, you're probably one of these people:
 
-1. **Tidak Mengumpulkan Data Pribadi**: Kami tidak mengumpulkan nama, alamat, nomor telepon, alamat email, atau informasi pribadi lainnya. Bahkan jika Anda dengan sukarela memberikan informasi tersebut, kami akan mengabaikannya dengan sangat sopan.
+- curious
+- careful
+- slightly paranoid (understandable)
+- bored at 2AM
+- or someone who actually reads privacy policies
 
-2. **Tidak Melacak Aktivitas Anda**: Kami tidak menggunakan cookie, pelacak, atau teknologi lainnya untuk memantau aktivitas Anda di platform kami. Jika Anda merasa dilacak, itu pasti bukan kami.
+Either way, welcome.
 
-3. **Tidak Berbagi Data dengan Pihak Ketiga**: Karena kami tidak mengumpulkan data, maka tidak ada data yang bisa dibagikan. Ini adalah logika yang sangat sederhana.
+This page explains what this website does, what it *doesn't* do, and how your data is treated here.
 
-## Kenapa Kami Tidak Mengumpulkan Data?
+No weird corporate language.  
+No fake legal intimidation.  
+No “we value your privacy” ritual copied from a startup template generator.
 
-Kami percaya bahwa privasi adalah hak asasi manusia yang paling mendasar. Oleh karena itu, kami memutuskan untuk tidak mengumpulkan data sama sekali. Ini adalah filosofi kami, dan kami bangga dengan keputusan ini.
-
-## Bahasa-Bahasa yang Digunakan
-
-Untuk memastikan bahwa kebijakan ini dapat dipahami oleh sebanyak mungkin orang, kami telah menulisnya dalam berbagai bahasa dan gaya penulisan yang berbeda. Berikut adalah beberapa contoh:
-
-- **English**: We do not collect any personal data. Period.
-- **Español**: No recopilamos ningún dato personal. Punto.
-- **Français**: Nous ne collectons aucune donnée personnelle. Point final.
-- **Deutsch**: Wir erfassen keine personenbezogenen Daten. Punkt.
-- **中文 (简体)**: 我们不收集任何个人数据。句号。
-- **日本語**: 私たちは個人データを一切収集しません。以上。
-
-## Penutup yang Panjang dan Berbelit-belit
-
-Jika Anda masih memiliki pertanyaan tentang kebijakan privasi ini, silakan hubungi kami. Namun, perlu diingat bahwa kami tidak akan mengumpulkan informasi kontak Anda, jadi mungkin lebih baik jika Anda tidak menghubungi kami sama sekali. Terima kasih telah membaca dokumen yang sangat panjang ini. Kami harap Anda merasa nyaman dengan kebijakan kami yang sangat tidak mengganggu ini.
+Just a normal explanation from one human to another.
 
 
 
-# Kebijakan Privasi yang Tidak Mengumpulkan Data
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
 
-Kami ingin memulai dengan menyatakan bahwa **kami tidak mengumpulkan data pribadi Anda**. Ini adalah pernyataan yang sangat penting, jadi kami akan mengulanginya: **kami tidak mengumpulkan data pribadi Anda**. 
 
-## Apa Artinya Ini?
 
-Ini berarti bahwa ketika Anda menggunakan layanan kami, Anda dapat merasa aman karena tidak ada data yang dikumpulkan, disimpan, atau dibagikan. Kami bahkan tidak tahu siapa Anda, dan kami lebih suka tetap seperti itu.
+# First things first
 
-## Kenapa Ini Penting?
+This website is a **personal website**.
 
-Privasi adalah hal yang sangat penting di era digital ini. Dengan tidak mengumpulkan data, kami memastikan bahwa privasi Anda tetap terjaga. Ini adalah komitmen kami kepada Anda.
+Not a startup.  
+Not a productivity machine.  
+Not a growth-hacking laboratory pretending to be a notebook.
 
-## Bagaimana Kami Melakukannya?
+It's more like:
 
-Kami telah merancang sistem kami sedemikian rupa  sehingga tidak ada data yang dikumpulkan. Ini adalah prestasi teknis yang luar biasa, dan kami bangga dengan hal ini. 
+```text
+online room
++
+archive
++
+thought collection
++
+unfinished digital garden
+```
 
-Semua yang ditulis di sini adalah sebuah template dan kebohongan, harap dibaca baik-baik.
-## Contoh dalam Berbagai Bahasa
+Some pages are polished.
 
-Untuk memastikan bahwa kebijakan ini dapat dipahami oleh semua orang, kami telah menulisnya dalam berbagai bahasa:
+Some are messy.
 
-- **English**: We do not collect any personal data. Period.
-- **Español**: No recopilamos ningún dato personal. Punto.
-- **Français**: Nous ne collectons aucune donnée personnelle. Point final.
-- **Deutsch**: Wir erfassen keine personenbezogenen Daten. Punkt.
-- **中文 (简体)**: 我们不收集任何个人数据。句号。
-- **日本語**: 私たちは個人データを一切収集しません。以上。
+Some thoughts were written at emotionally questionable hours.
 
-## Penutup yang Sangat Panjang
+That is intentional.
 
-Jika Anda masih memiliki pertanyaan, silakan hubungi kami. Namun, perlu diingat bahwa kami tidak akan mengumpulkan informasi kontak Anda, jadi mungkin lebih baik jika Anda tidak menghubungi kami sama sekali. Terima kasih telah membaca dokumen yang sangat panjang ini. Kami harap Anda merasa nyaman dengan kebijakan kami yang sangat tidak mengganggu ini. Semua yang ditulis di sini adalah sebuah template dan kebohongan, harap dibaca baik-baik.
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# What data is collected?
+
+Honestly?
+
+Very little.
+
+Mostly boring technical information required for the website to function properly.
+
+Things like:
+
+- browser type
+- device information
+- pages visited
+- approximate region
+- loading performance
+- timestamps
+- error logs
+- security protection stuff
+
+Mostly anonymous. Mostly automatic.
+
+Mostly not that interesting.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Things this website does NOT do
+
+```text
+✗ sell your data
+✗ build creepy advertising profiles
+✗ secretly listen to your microphone
+✗ read your thoughts
+✗ know your favorite instant noodle flavor
+✗ emotionally manipulate you into clicking things forever
+```
+
+This website is not interested in becoming surveillance software disguised as “user experience optimization.”
+
+That sentence alone sounds exhausting.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Cookies 🍪
+
+Yes, maybe a few.
+
+But mostly harmless ones.
+
+Things like:
+
+- remembering theme preferences
+- basic functionality
+- security/session handling
+- preventing the website from behaving like a haunted machine
+
+No aggressive tracking.
+
+No “hyper-engagement behavioral prediction engine.”
+
+No “we noticed you breathing near a keyboard” systems.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Third-party services
+
+Modern websites are unfortunately built on top of many other websites.
+
+Which are built on top of even more websites.
+
+Which are probably held together by:
+
+```text
+coffee
++
+sleep deprivation
++
+old forum posts from 2011
+```
+
+So yes, some external services may occasionally exist here:
+
+- hosting providers
+- analytics tools
+- uptime monitoring
+- embedded media
+- fonts/CDNs
+- infrastructure services
+
+Those services may process limited technical information according to their own policies.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Analytics
+
+If analytics exist here, they are used lightly and mostly for curiosity.
+
+Things like:
+
+- which pages people enjoy
+- what breaks on mobile
+- whether a page loads painfully slowly
+- if nobody visits something for six months straight
+
+Closer to:
+
+```text
+"oh cool people actually read this"
+```
+
+and less:
+
+```text
+"target user #48291 during emotional vulnerability window"
+```
+
+The second one sounds dystopian.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# About the content here
+
+Some posts are serious.
+
+Some are unfinished.
+
+Some are tiny.
+
+Some were written too late at night.
+
+Some may age beautifully.
+
+Some may become deeply embarrassing in five years.
+
+That's part of keeping a living archive instead of a perfectly polished museum.
+
+Humans change.
+
+Opinions evolve.
+
+Taste evolves too.
+
+That is normal.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# AI & automation
+
+Some tools used here may involve automation, scripting, optimization, or AI-assisted workflows.
+
+But tools are still just tools.
+
+A camera does not replace the photographer.
+
+A brush does not replace the painter.
+
+Autocomplete definitely does not replace taste.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Your responsibility too
+
+The internet is public.
+
+Please avoid posting:
+
+- passwords
+- banking information
+- government IDs
+- private documents
+- secrets better left inside notebooks
+- nuclear launch codes
+
+Some things deserve to remain offline.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Security 🔒
+
+Reasonable effort is made to keep this website secure.
+
+But no website can promise:
+
+```text
+100% invincible servers
+100% impossible hacks
+100% eternal uptime
+```
+
+Technology breaks sometimes.
+
+The modern internet is basically a giant magical castle built on top of six forgotten dependencies and collective optimism.
+
+Please browse wisely.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# External links
+
+Sometimes this website links to other websites.
+
+Once you leave this place, their rules apply — not these ones.
+
+Some corners of the internet are wonderful.
+
+Some are cursed.
+
+Some contain wisdom.
+
+Some contain people arguing about keyboards for seven consecutive years.
+
+Explore responsibly.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Small philosophy
+
+This website tries to feel more human than algorithmic.
+
+Less optimized.  
+Less manipulative.  
+Less noisy.
+
+More like discovering someone's notebook near a window during rain.
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Changes to this policy
+
+This page may change over time.
+
+Mostly because:
+
+- the website changes
+- features evolve
+- laws evolve
+- or I suddenly remember something important at midnight
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Contact
+
+If something here feels unclear or concerning, you can contact me through available channels on this website.
+
+Unless you're trying to sell SEO services.
+
+In that case:
+
+```text
+respectfully,
+i am running away
+```
+
+
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⟡
+
+
+
+# Final note
+
+Thanks for visiting.
+
+Seriously.
+
+The internet already has enough loud places.
+
+I'm trying to keep this one quieter.
+
+Take care of your privacy.
+
+And take care of yourself too.

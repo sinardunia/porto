@@ -3,15 +3,18 @@ import type { TailwindColor } from "@/utils/types/tailwind";
 type Theme = {
   colors: {
     primary: TailwindColor;
+
     blur: {
       top: TailwindColor;
       bottom: TailwindColor;
     };
+
     light: {
       background: string;
       text: string;
       primary: string;
     };
+
     dark: {
       background: string;
       text: string;
@@ -19,23 +22,25 @@ type Theme = {
     };
   };
 };
-
 const theme: Theme = {
   colors: {
     primary: "orange",
+
     blur: {
       top: "orange",
-      bottom: "violet",
+      bottom: "orange",
     },
+
     light: {
       background: "#ffffff",
-      text: "#111827",
-      primary: "#f97316",
+      text: "#171717",
+      primary: "#9a3412",
     },
+
     dark: {
-      background: "#0f0f11",
-      text: "#f9fafb",
-      primary: "#f97316",
+      background: "#0a0a0a",
+      text: "#f5f5f5",
+      primary: "#c2410c",
     },
   },
 };

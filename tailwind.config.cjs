@@ -1,44 +1,49 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+
   darkMode: 'class',
+
   theme: {
     extend: {
       fontFamily: {
         sans: ['Open Sans', 'sans-serif'],
       },
+
       colors: {
         primary: {
-          light: '#FFFFFF',
-          dark: '#0f0f11',
+          light: '#ffffff',
+          dark: '#0a0a0a',
         },
+
         secondary: {
-          light: '#f9fafb',
-          dark: '#171717',
+          light: '#f7f7f7',
+          dark: '#111111',
         },
+
         text: {
-          light: '#111827',
-          dark: '#f9fafb',
+          light: '#171717',
+          dark: '#f5f5f5',
         },
+
         accent: {
-          light: '#f97316',
-          dark: '#f97316',
+          light: '#a16207',
+          dark: '#ca8a04',
         },
+
         muted: {
-          light: '#4b5563',
-          dark: '#9ca3af',
+          light: '#525252',
+          dark: '#a3a3a3',
         },
+
         border: {
-          light: '#e5e7eb',
-          dark: '#27272a',
-        },
-        background: {
-          light: '#FFFFFF', 
-          dark: 'linear-gradient(135deg, #3a3a3a 0%, #121212 100%)', 
+          light: '#e5e5e5',
+          dark: '#262626',
         },
       },
     },
   },
+
   plugins: [
     require('@tailwindcss/typography'),
   ],

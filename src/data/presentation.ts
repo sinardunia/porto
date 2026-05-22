@@ -22,7 +22,7 @@ const presentation: Presentation = {
     },
     {
       label: "Github",
-      link: "https://github.com/fujitime", 
+      link: "https://github.com/sinardunia", 
     },
   ],
 };

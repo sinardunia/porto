@@ -5,7 +5,9 @@ import BlurCircle from "@/components/shared/BlurCircle.astro";
 import theme from "@/data/theme";
 import SEOTags from "@/components/seo/SEOTags.astro";
 import Cookie from "@/components/Cookie.astro";
+
 import "@fontsource/open-sans";
+
 import "@/styles/tailwind.css";
 import "@/styles/post.css";
 
@@ -21,33 +23,53 @@ const { title } = Astro.props;
   <head>
     <SEOTags title={title} />
   </head>
-  
-  <body class="bg-primary-light text-text-light dark:bg-neutral-950 dark:text-neutral-400 font-sans antialiased m-0 p-0 w-full min-h-screen relative overflow-x-hidden">
-    
-    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-      <BlurCircle position="top" color={theme.colors.blur.top} />
-      <BlurCircle position="bottom" color={theme.colors.blur.bottom} />
+
+  <body
+    class="m-0 min-h-screen w-full bg-primary-light p-0 font-sans antialiased text-text-light dark:bg-neutral-950 dark:text-neutral-400"
+  >
+    <!-- BACKGROUND BLUR -->
+    <div
+      class="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
+      <BlurCircle
+        position="top"
+        color={theme.colors.blur.top}
+      />
+
+      <BlurCircle
+        position="bottom"
+        color={theme.colors.blur.bottom}
+      />
     </div>
 
-    <div class="relative z-10 mx-auto flex min-h-screen max-w-[872px] flex-col gap-12 px-6 md:px-10 py-8 md:py-16 box-border min-w-0 w-full overflow-x-hidden">
-      
-      <div class="w-full max-w-3xl mx-auto min-w-0 flex-shrink-0">
-        <Header />
-      </div>
+    <!-- APP -->
+    <div
+      class="relative z-10 mx-auto flex min-h-screen w-full max-w-[1080px] flex-col gap-12 px-6 py-8 md:px-10 md:py-16"
+    >
+      <!-- HEADER -->
+      <Header />
 
-      <main class="w-full flex-1 flex flex-col min-w-0 box-border">
+      <!-- CONTENT -->
+      <main class="flex flex-1 flex-col min-w-0">
         <slot />
       </main>
 
-      <div class="w-full min-w-0 flex-shrink-0 mt-auto">
-        <Footer />
-      </div>
-
+      <!-- FOOTER -->
+      <Footer />
     </div>
 
     <Cookie />
-    <audio id="button-sound" src="/click.mp3" preload="none" hidden></audio>
 
+    <!-- AUDIO -->
+    <audio
+      id="button-sound"
+      src="/click.mp3"
+      preload="none"
+      hidden
+    ></audio>
+
+    <!-- GLOBAL STYLE -->
     <style is:global>
       html {
         font-family: "Open Sans", sans-serif;
@@ -56,83 +78,150 @@ const { title } = Astro.props;
         -webkit-text-size-adjust: 100%;
       }
 
-      /* Gembok besi tingkat terdalam: Mematikan seluruh potensi getaran scroll horizontal palsu */
-      html, body {
-        max-width: 100% !important;
-        overflow-x: hidden !important;
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
       }
 
-      /* Animasi transisi warna halus standard sistem */
-      body, a, button, div, span, p, h1, h2, h3, h4, h5, h6 {
-        transition-property: color, background-color, border-color;
-        transition-duration: 300ms;
+      a,
+      button {
+        transition:
+          color 300ms,
+          background-color 300ms,
+          border-color 300ms,
+          opacity 300ms;
       }
     </style>
 
+    <!-- THEME -->
     <script>
       const initTheme = () => {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
+        const savedTheme =
+          localStorage.getItem("theme") || "dark";
+
+        if (
+          savedTheme === "dark" ||
+          (!savedTheme &&
+            window.matchMedia(
+              "(prefers-color-scheme: dark)"
+            ).matches)
+        ) {
+          document.documentElement.classList.add(
+            "dark"
+          );
         } else {
-          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.remove(
+            "dark"
+          );
         }
       };
+
       initTheme();
     </script>
 
+    <!-- SOUND -->
     <script is:inline>
-      document.addEventListener("DOMContentLoaded", () => {
-        const audio = document.getElementById("button-sound");
-        let isPlaying = false;
+      document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+          const audio =
+            document.getElementById(
+              "button-sound"
+            );
 
-        const isInternalLink = (href) =>
-          href && href.startsWith("/") && !href.startsWith("//");
+          const isInternalLink = (href) =>
+            href &&
+            href.startsWith("/") &&
+            !href.startsWith("//");
 
-        const resetPlayingState = () => {
-          isPlaying = false;
-        };
+          const playClickSound = () => {
+            if (
+              !(audio instanceof HTMLAudioElement)
+            ) {
+              return;
+            }
 
-        const playClickSound = () => {
-          if (!audio || isPlaying) return;
-          isPlaying = true;
-          const sound = audio.cloneNode();
-          sound.volume = 1;
-          sound.play().catch(() => {}).finally(() => {
-            sound.onended = resetPlayingState;
-            setTimeout(resetPlayingState, 300);
-          });
-        };
-
-        document.body.addEventListener("click", (event) => {
-          const target = event.target.closest("button, a");
-          if (!target) return;
-          if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-          if (target.tagName !== "A") {
-            playClickSound();
-            return;
-          }
-          const href = target.getAttribute("href");
-          if (!isInternalLink(href)) {
-            playClickSound();
-            return;
-          }
-          event.preventDefault();
-          playClickSound();
-          setTimeout(() => {
-            window.location.href = href;
-          }, 100);
-        });
-
-        const unlockAudio = () => {
-          audio.play().catch(() => {}).finally(() => {
-            audio.pause();
             audio.currentTime = 0;
-          });
-          document.removeEventListener("click", unlockAudio);
-        };
-        document.addEventListener("click", unlockAudio, { once: true });
-      });
+
+            audio.play().catch(() => {});
+          };
+
+          document.body.addEventListener(
+            "click",
+            (event) => {
+              const target =
+                event.target.closest(
+                  "button, a"
+                );
+
+              if (!target) return;
+
+              if (
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey
+              ) {
+                return;
+              }
+
+              // BUTTON
+              if (target.tagName !== "A") {
+                playClickSound();
+                return;
+              }
+
+              // LINK
+              const href =
+                target.getAttribute("href");
+
+              if (!isInternalLink(href)) {
+                playClickSound();
+                return;
+              }
+
+              event.preventDefault();
+
+              playClickSound();
+
+              setTimeout(() => {
+                window.location.href = href;
+              }, 90);
+            }
+          );
+
+          // unlock audio
+          const unlockAudio = () => {
+            if (
+              !(audio instanceof HTMLAudioElement)
+            ) {
+              return;
+            }
+
+            audio
+              .play()
+              .catch(() => {})
+              .finally(() => {
+                audio.pause();
+                audio.currentTime = 0;
+              });
+
+            document.removeEventListener(
+              "click",
+              unlockAudio
+            );
+          };
+
+          document.addEventListener(
+            "click",
+            unlockAudio,
+            {
+              once: true,
+            }
+          );
+        }
+      );
     </script>
   </body>
 </html>

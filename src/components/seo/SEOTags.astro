@@ -1,5 +1,4 @@
 ---
-
 import { SEO } from "astro-seo";
 import { SITE_URL } from "@/data/config";
 
@@ -8,74 +7,106 @@ type Props = {
   description?: string;
   noindex?: boolean;
   og?: {
-    title: string;
-    type: string;
-    description: string;
-    image: string;
-    alt: string;
+    title?: string;
+    description?: string;
+    image?: string;
+    alt?: string;
+    type?: string;
   };
 };
 
-const { title, description, noindex, og } = Astro.props;
+const {
+  title,
+  description,
+  noindex,
+  og,
+} = Astro.props;
 
-const DEFAULT_TITLE_PAGE = "Fuji Halim Rabani - Personal Website";
-const DEFAULT_DESCRIPTION_PAGE =
-  "Hi, I'm Fuji aka Waltahh";
-const DEFAULT_URL_SITE = SITE_URL;
-const canonicalUrl = new URL(Astro.url.pathname, DEFAULT_URL_SITE).toString();
+const DEFAULT_TITLE =
+  "Fuji";
 
-const openGraph = {
-  title: og?.title || DEFAULT_TITLE_PAGE,
-  type: og?.type || "website",
-  image: og?.image || "/opengraph-image.jpg",
-  alt: og?.alt || "Fuji Halim Rabani ",
-  url: DEFAULT_URL_SITE,
-  description: og?.description || DEFAULT_DESCRIPTION_PAGE,
-};
+const DEFAULT_DESCRIPTION =
+  "Personal website.";
+
+const pageTitle =
+  title
+    ? `${title} • Fuji`
+    : DEFAULT_TITLE;
+
+const pageDescription =
+  description || DEFAULT_DESCRIPTION;
+
+const canonicalUrl = new URL(
+  Astro.url.pathname,
+  SITE_URL
+).toString();
+
+const ogImage =
+  og?.image || "/opengraph-image.jpg";
 ---
 
-<head>
+<SEO
+  charset="UTF-8"
+  title={pageTitle}
+  description={pageDescription}
+  canonical={canonicalUrl}
+  noindex={noindex || false}
 
-  
-  <SEO
-    charset="UTF-8"
-    title={title || DEFAULT_TITLE_PAGE}
-    description={description || DEFAULT_DESCRIPTION_PAGE}
-    noindex={noindex || false}
-    openGraph={{
-      basic: {
-        title: openGraph.title,
-        type: openGraph.type,
-        image: openGraph.image,
+  openGraph={{
+    basic: {
+      title: og?.title || pageTitle,
+      type: og?.type || "website",
+      image: ogImage,
+      url: canonicalUrl,
+    },
+
+    optional: {
+      description:
+        og?.description || pageDescription,
+    },
+
+    image: {
+      alt:
+        og?.alt ||
+        "Fuji personal website",
+    },
+  }}
+
+  twitter={{
+    card: "summary_large_image",
+    creator: "@fuhara16",
+  }}
+
+  extend={{
+    link: [
+      {
+        rel: "icon",
+        href: "/favicon.ico",
       },
-      image: {
-        alt: openGraph.alt,
+
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        href: "/rss.xml",
       },
-    }}
-    twitter={{
-      creator: "@fuhara16",
-    }}
-    extend={{
-      link: [
-        { rel: "icon", href: "/favicon.ico" },
-        { rel: "sitemap", href: "/sitemap.xml" },
-        { rel: "canonical", href: canonicalUrl },
-        { rel: "alternate", type: "application/rss+xml", href: "/rss.xml" },
-      ],
-      meta: [
-        { name: "viewport", content: "width=device-width, initial-scale=1" },
-        { name: "generator", content: Astro.generator },
-        {
-          name: "twitter:image",
-          content: openGraph.image,
-        },
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: openGraph.title },
-        { name: "twitter:description", content: openGraph.description },
-        { name: "twitter:site", content: "fuhara16@" },
-      ],
-    }}
-  />
 
+      {
+        rel: "sitemap",
+        href: "/sitemap.xml",
+      },
+    ],
 
-</head>
+    meta: [
+      {
+        name: "viewport",
+        content:
+          "width=device-width, initial-scale=1",
+      },
+
+      {
+        name: "generator",
+        content: Astro.generator,
+      },
+    ],
+  }}
+/>

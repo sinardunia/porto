@@ -1,73 +1,159 @@
 ---
-title: "Disclaimer yang Sangat Panjang dan Berbelit-belit"
+title: "Disclaimer"
 publishedAt: 2023-05-24
-description: "Dokumen ini berisi penafian yang sangat panjang dan kompleks bahwa kami tidak bertanggung jawab atas apa pun."
-slug: "disclaimer-super-panjang"
+description: "Hal-hal kecil yang perlu diketahui sebelum membaca isi website ini."
+slug: "disclaimer"
 isPublish: true
 ---
 
-# Disclaimer yang Sangat Panjang
+# Disclaimer
 
-Dokumen ini dibuat dengan tujuan untuk memberikan informasi yang sangat umum dan tidak boleh dianggap sebagai nasihat hukum, keuangan, atau profesional lainnya. Kami tidak bertanggung jawab atas segala kerugian atau kerusakan yang mungkin terjadi akibat penggunaan informasi dalam dokumen ini.
+Halo.  
+Sebelum Anda menjelajahi website ini lebih jauh, ada beberapa hal kecil yang mungkin penting untuk diketahui terlebih dahulu.
 
-## Tidak Ada Jaminan
+Tidak perlu serius-serius amat bacanya.  
+Ini bukan kontrak dengan iblis.  
+Cuma disclaimer biasa yang dibuat sedikit lebih manusiawi.
 
-Kami tidak memberikan jaminan apa pun mengenai keakuratan, kelengkapan, atau keandalan informasi yang terkandung dalam dokumen ini. Semua informasi disediakan "sebagaimana adanya" tanpa jaminan apa pun.
+────────────────────────
 
-## Tidak Ada Tanggung Jawab
+## 01. Tentang isi website ini
 
-Kami tidak bertanggung jawab atas segala kerugian, kerusakan, atau konsekuensi lainnya yang mungkin timbul dari penggunaan informasi dalam dokumen ini. Gunakan informasi ini dengan risiko Anda sendiri.
+Website ini adalah tempat untuk menyimpan:
 
-## Penjelasan dalam Berbagai Bahasa
+- thoughts
+- catatan kecil
+- eksperimen
+- opini pribadi
+- dokumentasi hidup
+- dan kadang hal random jam 2 pagi
 
-Untuk memastikan bahwa disclaimer ini dapat dipahami oleh semua orang, kami telah menulisnya dalam berbagai bahasa:
+Artinya:
 
-### English
-This document is provided for general information purposes only and should not be considered legal, financial, or professional advice. We are not responsible for any losses or damages that may arise from the use of this information.
+tidak semua hal di sini harus benar  
+tidak semua hal di sini harus disetujui  
+dan tidak semua hal di sini dibuat untuk semua orang
 
-### Español
-Este documento se proporciona únicamente con fines informativos generales y no debe considerarse asesoramiento legal, financiero o profesional. No somos responsables de ninguna pérdida o daño que pueda surgir del uso de esta información.
+Kadang seseorang hanya sedang berpikir keras lalu menuliskannya.
 
-### Français
-Ce document est fourni à titre informatif uniquement et ne doit pas être considéré comme un conseil juridique, financier ou professionnel. Nous ne sommes pas responsables des pertes ou dommages qui pourraient résulter de l'utilisation de ces informations.
+Itu saja.
 
-### Deutsch
-Dieses Dokument dient nur zu allgemeinen Informationszwecken und sollte nicht als Rechts-, Finanz- oder Berufsberatung angesehen werden. Wir sind nicht verantwortlich für Verluste oder Schäden, die aus der Verwendung dieser Informationen resultieren könnten.
+────────────────────────
 
-### 中文 (简体)
-本文档仅供一般信息用途，不应被视为法律、财务或专业建议。对于因使用此信息而产生的任何损失或损害，我们概不负责。
+## 02. Bukan nasihat profesional
 
-### 日本語
-このドキュメントは一般的な情報提供のみを目的としており、法的、財務的、または専門的なアドバイスと見なすべきではありません。この情報の使用によって生じるいかなる損失または損害についても、当社は責任を負いません。
+Apa pun yang ada di website ini:
 
-### Русский
-Этот документ предоставлен только для общей информации и не должен рассматриваться как юридическая, финансовая или профессиональная консультация. Мы не несем ответственности за любые убытки или ущерб, которые могут возникнуть в результате использования этой информации.
+bukan nasihat hukum  
+bukan nasihat finansial  
+bukan nasihat kesehatan  
+bukan nasihat hidup  
+dan jelas bukan pengganti tidur cukup
 
-### العربية
-يتم تقديم هذا المستند لأغراض المعلومات العامة فقط ولا ينبغي اعتباره مشورة قانونية أو مالية أو مهنية. نحن لسنا مسؤولين عن أي خسائر أو أضرار قد تنشأ عن استخدام هذه المعلومات.
+Jika Anda mengambil keputusan besar berdasarkan tulisan random di internet...
 
-### Português
-Este documento é fornecido apenas para fins de informação geral e não deve ser considerado aconselhamento jurídico, financeiro ou profissional. Não somos responsáveis por quaisquer perdas ou danos que possam surgir do uso desta informação.
+yah...
 
-### Italiano
-Questo documento è fornito solo a scopo informativo generale e non deve essere considerato una consulenza legale, finanziaria o professionale. Non siamo responsabili per eventuali perdite o danni che possano derivare dall'uso di queste informazioni.
+please think twice dulu.
 
-### 한국어
-이 문서는 일반 정보 제공 목적으로만 제공되며 법률, 재정 또는 전문가 조언으로 간주되어서는 안 됩니다. 우리는 이 정보의 사용으로 인해 발생할 수 있는 모든 손실 또는 손해에 대해 책임을 지지 않습니다.
+────────────────────────
 
-### Türkçe
-Bu belge yalnızca genel bilgi amaçlıdır ve hukuki, mali veya mesleki tavsiye olarak değerlendirilmemelidir. Bu bilgilerin kullanımından kaynaklanabilecek herhangi bir kayıp veya hasardan sorumlu değiliz.
+## 03. Kemungkinan salah itu selalu ada
 
-### Hindi
-यह दस्तावेज़ केवल सामान्य जानकारी के उद्देश्यों के लिए प्रदान किया गया है और इसे कानूनी, वित्तीय या पेशेवर सलाह नहीं माना जाना चाहिए। हम इस जानकारी के उपयोग से होने वाले किसी भी नुकसान या क्षति के लिए जिम्मेदार नहीं हैं।
+Walaupun sudah berusaha teliti:
 
-### Bahasa Indonesia
-Dokumen ini disediakan hanya untuk tujuan informasi umum dan tidak boleh dianggap sebagai nasihat hukum, keuangan, atau profesional. Kami tidak bertanggung jawab atas segala kerugian atau kerusakan yang mungkin timbul dari penggunaan informasi ini.
+kadang ada typo  
+kadang ada opini yang berubah  
+kadang ada hal yang ternyata kurang tepat  
+kadang ada coding bug yang muncul jam 1 malam tanpa alasan
 
-### Dan masih banyak lagi...
+Manusia berubah.  
+Pemikiran juga berubah.
 
-Kami telah mencoba mencakup sebanyak mungkin bahasa untuk memastikan bahwa disclaimer ini dapat dipahami oleh semua orang. Jika bahasa Anda tidak tercantum di sini, mohon maaf. Kami berjanji bahwa kami tetap tidak bertanggung jawab atas apa pun, apa pun bahasanya.
+Jadi jangan anggap semua tulisan di sini sebagai kebenaran absolut.
 
-## Penutup yang Sangat Panjang
+────────────────────────
 
-Jika Anda tidak setuju dengan isi dokumen ini, silakan berhenti membacanya sekarang juga. Terima kasih telah membaca disclaimer yang sangat panjang ini. Kami harap Anda merasa nyaman dengan ketidakbertanggungjawaban kami yang sangat jelas ini.
+## 04. Tentang link eksternal
+
+Kadang website ini mengarah ke tempat lain.
+
+Mungkin:
+
+GitHub  
+YouTube  
+Twitter/X  
+artikel lain  
+atau sudut internet random lainnya
+
+Kalau suatu hari link itu berubah, hilang, rusak, aneh, atau tiba-tiba jadi jual crypto...
+
+itu sudah di luar kendali.
+
+Internet memang liar.
+
+────────────────────────
+
+## 05. Tentang opini
+
+Semua opini di sini adalah opini pribadi pada saat tulisan dibuat.
+
+Bukan representasi:
+
+- perusahaan
+- organisasi
+- komunitas
+- negara
+- planet
+- galaksi
+
+Kadang manusia cuma punya pikiran lalu menuliskannya.
+
+Tidak lebih.
+
+────────────────────────
+
+## 06. Tentang teknologi
+
+Website ini dibuat dengan banyak trial & error.
+
+Artinya mungkin ada:
+
+- bug kecil
+- layout aneh di device tertentu
+- typo random
+- dark mode yang kadang lebih dark dari kehidupan
+- atau tombol yang tiba-tiba keras kepala
+
+Kalau menemukan sesuatu yang rusak:
+
+selamat  
+Anda menemukan side quest.
+
+────────────────────────
+
+## 07. Tentang perasaan manusia
+
+Beberapa tulisan mungkin terasa personal.  
+Beberapa mungkin terasa dingin.  
+Beberapa mungkin terlalu jujur.  
+Beberapa mungkin tidak penting sama sekali.
+
+Itu normal.
+
+Karena website ini memang lebih dekat ke:
+living archive  
+daripada social media.
+
+────────────────────────
+
+## 08. Bahasa super singkatnya
+
+Versi pendek disclaimer ini:
+
+```txt
+Baca dengan santai.
+Gunakan logika sendiri.
+Jangan telan mentah-mentah.
+Dan jangan jadikan tulisan random internet
+sebagai fondasi hidup Anda.

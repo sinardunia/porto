@@ -107,12 +107,30 @@ const groupedThoughts = thoughts.reduce<
   </main>
 </Layout>
 
-<div id="image-lightbox" class="fixed inset-0 z-[500] bg-black/95 backdrop-blur-md hidden opacity-0 flex items-center justify-center transition-all duration-300 pointer-events-none select-none">
-  <button id="lightbox-close" type="button" class="absolute top-5 right-5 z-[510] text-neutral-400 hover:text-white transition-colors p-2 text-2xl font-bold bg-neutral-900/40 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer pointer-events-auto">
-    &times;
+<div id="image-lightbox" class="fixed inset-0 z-[999999] bg-black/95 backdrop-blur-md hidden opacity-0 flex items-center justify-center transition-all duration-300 select-none pointer-events-auto" onclick="window.closeNeuroLightbox()">
+  
+  <!-- TOMBOL X: Pake z-index tertinggi dan stopPropagation -->
+  <button 
+    id="lightbox-close" 
+    type="button" 
+    class="absolute top-6 right-6 z-[1000001] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 border border-white/10 cursor-pointer pointer-events-auto"
+    onclick="event.stopPropagation(); window.closeNeuroLightbox();"
+    aria-label="Close"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+    </svg>
   </button>
-  <div class="w-full max-w-[95vw] max-h-[92vh] flex items-center justify-center p-2 pointer-events-auto">
-    <img id="lightbox-img" class="w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-sm shadow-2xl transition-transform duration-300 scale-95" src="" alt="" />
+
+  <!-- IMAGE CONTAINER -->
+  <div class="relative flex h-full w-full items-center justify-center p-4">
+    <img 
+      id="lightbox-img" 
+      class="max-w-[95vw] max-h-[90vh] object-contain rounded-sm shadow-2xl transition-all duration-300 scale-95 pointer-events-auto" 
+      src="" 
+      alt="" 
+      onclick="event.stopPropagation()" 
+    />
   </div>
 </div>
 
@@ -125,103 +143,75 @@ const groupedThoughts = thoughts.reduce<
     contain-intrinsic-size: auto 400px;
   }
   
-  /* KUNCI UTAMA: Menembus isolasi komponen anak dan memaksa pointer-events aktif murni agar gambar bisa merespon klik */
-  :global(.media-slider img) {
+  #image-lightbox {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+  }
+
+  /* Memastikan elemen interaktif beneran bisa diklik */
+  #lightbox-close, #lightbox-img {
     pointer-events: auto !important;
-    cursor: zoom-in !important;
   }
 </style>
-<script>
-  function initGlobalLightbox() {
-    const lightbox = document.getElementById('image-lightbox');
-    const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
-    const lightboxClose = document.getElementById('lightbox-close');
 
-    if (!lightbox || !lightboxImg || !lightboxClose) return;
+<script is:inline>
+  window.openNeuroLightbox = function(src) {
+    const lb = document.getElementById('image-lightbox');
+    const img = document.getElementById('lightbox-img');
+    if (!lb || !img) return;
 
-    // KUNCI UTAMA: Pindahkan paksa elemen modal ke root body agar lepas dari isolasi layout Astro/CSS
-    if (lightbox.parentElement !== document.body) {
-      document.body.appendChild(lightbox);
+    img.src = src;
+    lb.classList.remove('hidden');
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+
+    setTimeout(() => {
+      lb.classList.add('opacity-100');
+      img.classList.replace('scale-95', 'scale-100');
+    }, 10);
+    
+    window.history.pushState({ lightboxOpen: true }, '');
+  };
+
+  window.closeNeuroLightbox = function() {
+    const lb = document.getElementById('image-lightbox');
+    const img = document.getElementById('lightbox-img');
+    if (!lb || !img) return;
+
+    lb.classList.remove('opacity-100');
+    img.classList.replace('scale-100', 'scale-95');
+    
+    setTimeout(() => {
+      lb.classList.add('hidden');
+      lb.style.display = 'none';
+      img.src = "";
+    }, 300);
+    
+    document.body.style.overflow = '';
+  };
+
+  // Delegasi klik backup
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+    const trigger = target.closest('.clickable-image') || target.closest('.media-item img');
+    if (trigger) {
+      const src = trigger.getAttribute('data-raw-src') || trigger.src;
+      window.openNeuroLightbox(src);
     }
+  });
 
-    const closeLightbox = () => {
-      lightbox.classList.remove('opacity-100');
-      lightboxImg.classList.remove('scale-100');
-      lightboxImg.classList.add('scale-95');
-      
-      // Kembalikan interaksi pointer ke kondisi mati saat modal tutup
-      lightbox.classList.add('pointer-events-none');
-      
-      setTimeout(() => {
-        lightbox.classList.add('hidden');
-        lightboxImg.src = "";
-      }, 300);
-      document.body.style.overflow = '';
-      if (window.history.state?.lightboxOpen) {
-        window.history.back();
-      }
-    };
+  window.addEventListener('popstate', () => {
+    const lb = document.getElementById('image-lightbox');
+    if (lb && lb.style.display === 'flex') {
+      window.closeNeuroLightbox();
+    }
+  });
 
-    const handleGlobalClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const imgTarget = target.closest('.media-slider img') as HTMLImageElement;
-      
-      if (imgTarget) {
-        // Gunakan atribut data-raw-src yang terdeteksi ada di log konsol lo
-        const rawSrc = imgTarget.getAttribute('data-raw-src') || imgTarget.src;
-        lightboxImg.src = rawSrc;
-        
-        // FIX VISUAL: Hapus hidden dan matikan pointer-events-none agar modal merespon klik/touch
-        lightbox.classList.remove('hidden', 'pointer-events-none');
-        
-        setTimeout(() => {
-          lightbox.classList.add('opacity-100');
-          lightboxImg.classList.remove('scale-95');
-          lightboxImg.classList.add('scale-100');
-        }, 10);
-        document.body.style.overflow = 'hidden';
-        window.history.pushState({ lightboxOpen: true }, '');
-      }
-    };
-
-    document.removeEventListener('click', handleGlobalClick);
-    document.addEventListener('click', handleGlobalClick);
-
-    lightboxClose.addEventListener('click', (e) => {
-      e.stopPropagation();
-      closeLightbox();
-    });
-
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) closeLightbox();
-    });
-
-    const handlePopState = () => {
-      if (!lightbox.classList.contains('hidden')) {
-        lightbox.classList.remove('opacity-100');
-        lightboxImg.classList.remove('scale-100');
-        lightboxImg.classList.add('scale-95');
-        lightbox.classList.add('pointer-events-none');
-        setTimeout(() => {
-          lightbox.classList.add('hidden');
-          lightboxImg.src = "";
-        }, 300);
-        document.body.style.overflow = '';
-      }
-    };
-
-    window.removeEventListener('popstate', handlePopState);
-    window.addEventListener('popstate', handlePopState);
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
-        closeLightbox();
-      }
-    };
-    window.removeEventListener('keydown', handleKeyDown);
-    window.addEventListener('keydown', handleKeyDown);
-  }
-
-  initGlobalLightbox();
-  document.addEventListener('astro:page-load', initGlobalLightbox);
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') window.closeNeuroLightbox();
+  });
 </script>

@@ -10,10 +10,21 @@ import type { BlogPostSummary } from "@/types/blog";
 const getLatestPosts = async (): Promise<BlogPostSummary[]> => {
   try {
     const supabase = createSupabaseClient();
+
     const { data, error } = await withTimeout(
       supabase
         .from("blog_posts")
-        .select("id, slug, title, excerpt, cover_image_url, cover_image_alt, created_at, updated_at, is_published")
+        .select(`
+          id,
+          slug,
+          title,
+          excerpt,
+          cover_image_url,
+          cover_image_alt,
+          created_at,
+          updated_at,
+          is_published
+        `)
         .eq("is_published", true)
         .order("created_at", { ascending: false })
         .limit(2),
@@ -32,131 +43,85 @@ const getLatestPosts = async (): Promise<BlogPostSummary[]> => {
       "Unable to load latest blog posts:",
       error instanceof Error ? error.message : "Unknown error"
     );
+
     return [];
   }
 };
 
 const latestPosts = await getLatestPosts();
 ---
-
-<style>
-/* Animasi opacity dioptimalkan via hardware acceleration memanfaatkan properti will-change */
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity;
-}
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>
-
-<script>
-  function initHomeAnimations() {
-    const mainElement = document.querySelector("main");
-    const revealElements = document.querySelectorAll(".reveal");
-    
-    // Konfigurasi observer dengan threshold yang aman untuk mobile device layar pendek
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { rootMargin: "0px 0px -50px 0px" });
-
-    mainElement?.classList.add("fade-in");
-    revealElements.forEach((element) => observer.observe(element));
-
-    // Bersihkan instansi memori observer saat berpindah halaman di ekosistem Astro
-    document.addEventListener("astro:before-swap", () => observer.disconnect(), { once: true });
-  }
-
-  // Amankan siklus hidup rendering dari interupsi navigasi Astro View Transitions
-  initHomeAnimations();
-  document.addEventListener("astro:page-load", initHomeAnimations);
-</script>
-
 <Layout>
-  <main class="mx-auto flex w-full max-w-[540px] flex-col gap-20 px-4 md:px-0 pb-24 box-border min-w-0 overflow-x-hidden">
-    
-    <article class="flex flex-col gap-8 reveal">
-      
-      <header>
-        <h1 class="flex items-center gap-2 text-3xl font-bold text-neutral-900 dark:text-neutral-100 transition-colors duration-200">
-          <img 
-            src="/star.gif" 
-            alt="star" 
-            width="24" 
-            height="24" 
-            class="w-6 h-6 object-contain pointer-events-none" 
-          />
-          Fuji 
-          <span class="text-sm font-normal text-neutral-500 dark:text-neutral-400 ml-1 select-none">
-            /<span class="font-bold underline tracking-wide">Waltahh</span>
-          </span>
-        </h1>
-      </header>
+  <main
+    class="mx-auto flex w-full max-w-[720px] flex-col gap-14 px-5 pb-28 pt-6 md:px-0"
+  >
+    <section class="flex flex-col gap-6">
+      <h1
+        class="flex items-center gap-2 text-[32px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100"
+      >
+        <img
+          src="/star.gif"
+          alt=""
+          width="20"
+          height="20"
+          class="pointer-events-none h-5 w-5 object-contain"
+        />
 
-      <div class="space-y-5 text-sm leading-7 text-neutral-700 dark:text-neutral-300">
+        Fuji
+
+        <span
+          class="select-none text-sm font-normal text-neutral-400 dark:text-neutral-500"
+        >
+          / Waltahh
+        </span>
+      </h1>
+
+      <div
+        class="space-y-4 text-[15px] leading-8 text-neutral-700 dark:text-neutral-300"
+      >
         <p>Halo, saya Fuji.</p>
 
-        <div class="space-y-4">
-          <p>
-            Tempat ini semacam arsip kecil buat menaruh cerita, duka,
-            dan keseharian seada-adanya.
-          </p>
+        <p>Saya kadang nulis di sini.</p>
 
-          <p>
-            Di luar itu, saya manusia yang menghabiskan waktu
-            dengan bermain internet, menonton anime, olahraga,
-            dan hal-hal lainnya :3
-          </p>
-        </div>
-
-        <p class="font-medium">Senang Anda mampir :)</p>
+        <p>
+          Kadang serius.<br />
+          Kadang nggak penting juga :)
+        </p>
       </div>
-      
+
       <SocialLinks />
-    </article>
+    </section>
 
-    <article class="flex flex-col gap-8 reveal">
-      <header class="flex w-full justify-between items-center gap-2">
-        <h3 class="text-base font-semibold text-neutral-900 dark:text-neutral-100">Latest posts</h3>
-        <Link href="/blog" label="See all posts" isUnderline target="_self" class="text-xs transition-all duration-200 hover:opacity-80" />
-      </header>
-      
-      {latestPosts.length === 0 && (
-        <p class="text-xs text-neutral-400 dark:text-neutral-500 italic">Soon, stay connected 👀...</p>
-      )}
-      
-      <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 w-full min-w-0">
-        {latestPosts.length !== 0 &&
-          latestPosts.map((post) => (
-            <div class="flex flex-col w-full min-w-0 reveal">
-              <BlogListItem post={post} basePath="/blog" />
-            </div>
+    <section class="flex flex-col gap-5">
+      <div class="flex items-center justify-between">
+        <span
+          class="text-xs text-neutral-400 dark:text-neutral-500"
+        >
+          Recent things
+        </span>
+
+        <Link
+          href="/blog"
+          label="View all"
+          isUnderline
+          target="_self"
+          class="text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
+        />
+      </div>
+
+      {latestPosts.length === 0 ? (
+        <p class="text-sm text-neutral-400 dark:text-neutral-500">
+          Nothing here yet.
+        </p>
+      ) : (
+        <div class="flex flex-col gap-4">
+          {latestPosts.map((post) => (
+            <BlogListItem
+              post={post}
+              basePath="/blog"
+            />
           ))}
-      </section>
-    </article>
-
-    <article class="flex flex-col gap-8 reveal">
-      <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-6">
-        📩 Email me at <Link href="mailto:fujihalimrabani1601@gmail.com" label="fujihalimrabani1601@gmail.com" class="font-medium text-neutral-800 dark:text-neutral-200 hover:underline transition-colors" />
-      </p>
-    </article>
-
+        </div>
+      )}
+    </section>
   </main>
 </Layout>
