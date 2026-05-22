@@ -138,9 +138,10 @@ export const prerender = false;
       <button
         id="publish-button"
         type="button"
-        class="rounded-lg bg-neutral-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300"
+        class="flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300 disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        Save blog post
+        <span id="btn-text">Save blog post</span>
+        <span id="btn-spinner" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white dark:border-neutral-400/30 dark:border-t-neutral-950"></span>
       </button>
 
       <p id="form-status" class="min-h-6 text-sm text-neutral-500 dark:text-neutral-400" aria-live="polite"></p>
@@ -156,6 +157,8 @@ export const prerender = false;
   const slugInput = document.querySelector("#blog-slug");
   const contentInput = document.querySelector("#blog-content");
   const publishButton = document.querySelector("#publish-button");
+  const btnText = document.querySelector("#btn-text");
+  const btnSpinner = document.querySelector("#btn-spinner");
   const previewToggle = document.querySelector("#preview-toggle");
   const previewPanel = document.querySelector("#preview-panel");
   const previewContent = document.querySelector("#preview-content");
@@ -317,7 +320,8 @@ export const prerender = false;
     -------------------------- */
     const setLoading = (loading) => {
       publishButton.disabled = loading;
-      publishButton.textContent = loading ? "Saving..." : "Save blog post";
+      if (btnText) btnText.textContent = loading ? "Saving..." : "Save blog post";
+      if (btnSpinner) btnSpinner.classList.toggle("hidden", !loading);
     };
 
     const setStatus = (message) => {

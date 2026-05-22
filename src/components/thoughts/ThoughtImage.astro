@@ -2,7 +2,7 @@
 import { getOptimizedMedia } from "@/lib/thoughts";
 interface Props { src: string; isSingleMedia?: boolean; }
 const { src, isSingleMedia = false } = Astro.props;
-const optimizedSrc = src ? getOptimizedMedia(src, "1200") : "";
+const optimizedSrc = src ? getOptimizedMedia(src, 1200) : "";
 ---
 
 <neuro-image class="relative flex h-full w-full items-center justify-center overflow-hidden bg-neutral-100 dark:bg-[#0d0d0d]" data-src={src}>

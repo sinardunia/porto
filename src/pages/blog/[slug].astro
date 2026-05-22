@@ -91,13 +91,15 @@ const safeTags = Array.isArray(post.tags) ? post.tags.filter((t): t is string =>
       </header>
 
       {post.cover_image_url && (
-        <img
-          src={post.cover_image_url}
-          alt={post.cover_image_alt || ""}
-          class="w-full rounded-lg object-cover"
-          loading="eager"
-          decoding="async"
-        />
+        <div class="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-900">
+          <img
+            src={post.cover_image_url}
+            alt={post.cover_image_alt || ""}
+            class="absolute inset-0 h-full w-full object-cover"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
       )}
 
       <div
