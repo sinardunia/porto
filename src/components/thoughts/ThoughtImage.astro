@@ -10,11 +10,10 @@ const optimizedSrc = src ? getOptimizedMedia(src, "1200") : "";
   {src && (
     <img
       src={optimizedSrc}
+      data-raw-src={src}
       loading="lazy"
       decoding="async"
       alt=""
-      {/* FORCE GLOBAL CLICK - Pastikan nama fungsi window.openNeuroLightbox */}
-      onclick={`window.openNeuroLightbox && window.openNeuroLightbox('${src}')`}
       class:list={[
         "clickable-image opacity-0 transition-opacity duration-500 ease-out z-10 cursor-zoom-in pointer-events-auto",
         isSingleMedia ? "max-h-[600px] w-full object-contain shadow-md" : "absolute inset-0 h-full w-full object-cover",

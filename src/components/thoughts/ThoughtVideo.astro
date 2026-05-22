@@ -1,8 +1,5 @@
 ---
-/**
- * NEURO-STREAM ENGINE v2.0
- * Fokus: Neurosains, Performa Hardware, & Keamanan Tipe
- */
+
 interface Props {
   src: string;
   isSingleMedia?: boolean; 
@@ -11,20 +8,21 @@ const { src, isSingleMedia } = Astro.props;
 ---
 
 <neuro-stream
-  class="relative block h-[100dvh] w-full bg-black snap-start overflow-hidden select-none touch-none"
+  class:list={[
+    "relative block w-full bg-black snap-start overflow-hidden select-none",
+    isSingleMedia ? "h-[100dvh]" : "h-full"
+  ]}
   data-src={src}
 >
-  <!-- SKELETON: Mencegah jank visual saat loading -->
   <div class="video-skeleton absolute inset-0 bg-neutral-900 animate-pulse"></div>
 
-  <!-- VIDEO: Menggunakan camelCase untuk properti TypeScript/JSX -->
   <video
     class="video-el h-full w-full object-contain opacity-0 transition-opacity duration-700 ease-out"
     loop
     playsinline
     disablepictureinpicture
     disableRemotePlayback
-    preload="auto"
+    preload="metadata"
   ></video>
 
   <!-- LAYER INTERAKSI -->
@@ -34,12 +32,10 @@ const { src, isSingleMedia } = Astro.props;
     </div>
   </div>
 
-  <!-- NEURO-UX: AUDIO CONTROL (Area jangkauan jempol) -->
+  <!-- AUDIO CONTROL -->
   <div class="absolute bottom-24 right-4 z-30 flex flex-col items-center gap-3">
     <button class="audio-toggle p-4 rounded-full bg-red-600 shadow-[0_0_30px_rgba(255,0,0,0.4)] active:scale-90 transition-all border-2 border-white/20">
-      <div class="icon-container text-white flex items-center justify-center">
-        <!-- SVG di-inject via TS -->
-      </div>
+      <div class="icon-container text-white flex items-center justify-center"></div>
     </button>
     <div class="audio-hint-box opacity-0 transition-opacity duration-500">
         <span class="text-[10px] font-black text-white uppercase bg-red-600 px-2 py-1 rounded-sm shadow-lg animate-bounce">
@@ -48,17 +44,10 @@ const { src, isSingleMedia } = Astro.props;
     </div>
   </div>
 
-  <!-- ERROR HANDLING -->
-  <div class="error-overlay absolute inset-0 z-40 bg-black/90 backdrop-blur-lg flex-col items-center justify-center hidden p-6 text-center">
-    <svg class="w-12 h-12 text-red-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-    <p class="text-white font-bold tracking-tight text-sm">Signal Lost</p>
-    <button class="retry-btn mt-4 text-[10px] font-black text-red-500 uppercase tracking-[0.2em] border border-red-500/30 px-6 py-2 hover:bg-red-500/10 transition-all">Reconnect</button>
-  </div>
-
-  <!-- NEURO-RED SCRUBBER -->
+  <!-- SCRUBBER -->
   <div class="scrub-container absolute bottom-0 left-0 w-full h-16 z-30 flex items-end cursor-pointer group">
-    <div class="h-[4px] w-full bg-white/10 group-hover:h-[8px] transition-all relative">
-      <div class="progress-bar h-full bg-[#FF0000] w-0 shadow-[0_0_20px_rgba(255,0,0,0.8)] relative transition-all duration-75">
+    <div class="h-[4px] w-full bg-white/10 group-hover:h-[6px] transition-all relative">
+      <div class="progress-bar h-full bg-[#FF0000] w-0 shadow-[0_0_20px_rgba(255,0,0,0.8)] relative">
         <div class="absolute right-0 top-1/2 -translate-y-1/2 w-4 h-4 bg-[#FF0000] rounded-full scale-0 group-hover:scale-100 transition-transform shadow-[0_0_15px_rgba(255,0,0,1)]"></div>
       </div>
     </div>
@@ -66,98 +55,141 @@ const { src, isSingleMedia } = Astro.props;
 </neuro-stream>
 
 <script>
-  // --- TYPE DEFINITIONS & GLOBAL STATE ---
-  interface GlobalNeuroState {
-    isMuted: boolean;
-    subscribers: Set<any>;
-    toggleAudio(): void;
-  }
-
-  const GlobalState: GlobalNeuroState = {
+  // STATE MANAGEMENT
+  const GlobalState = {
     isMuted: true,
-    subscribers: new Set(),
+    activeInstance: null as any,
+    subscribers: new Set<any>(),
     toggleAudio() {
       this.isMuted = !this.isMuted;
       this.subscribers.forEach(s => s.syncAudio());
     }
   };
 
-  class NeuroStream extends HTMLElement {
-    private video!: HTMLVideoElement;
-    private audioBtn!: HTMLButtonElement;
-    private progress!: HTMLElement;
-    private errorOverlay!: HTMLElement;
-    private skeleton!: HTMLElement;
-    private layer!: HTMLElement;
-    private retryBtn!: HTMLButtonElement;
-    private isDragging = false;
+  // SINGLETON OBSERVER (Hemat Resource)
+  const sharedObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const target = entry.target as any;
+      if (entry.isIntersecting) target.playInstance();
+      else target.pauseInstance();
+    });
+  }, { threshold: 0.6 });
 
-    constructor() {
-      super();
-    }
+  class NeuroStream extends HTMLElement {
+    public video!: HTMLVideoElement;
+    private progress!: HTMLElement;
+    private skeleton!: HTMLElement;
+    private audioBtn!: HTMLButtonElement;
+    private interactionLayer: HTMLElement | null = null;
+    private scrubContainer: HTMLElement | null = null;
+    private isDragging = false;
+    private onMouseMove: ((e: MouseEvent) => void) | null = null;
+    private onMouseUp: (() => void) | null = null;
 
     connectedCallback() {
-      this.bindElements();
+      this.video = this.querySelector('.video-el') as HTMLVideoElement;
+      this.progress = this.querySelector('.progress-bar') as HTMLElement;
+      this.skeleton = this.querySelector('.video-skeleton') as HTMLElement;
+      this.audioBtn = this.querySelector('.audio-toggle') as HTMLButtonElement;
+      this.interactionLayer = this.querySelector('.interaction-layer') as HTMLElement;
+      this.scrubContainer = this.querySelector('.scrub-container') as HTMLElement;
+
       GlobalState.subscribers.add(this);
       this.initEvents();
-      this.setupObserver();
       this.syncAudio();
+      sharedObserver.observe(this);
     }
 
     disconnectedCallback() {
+      sharedObserver.unobserve(this);
       GlobalState.subscribers.delete(this);
+
+      if (GlobalState.activeInstance === this) {
+        GlobalState.activeInstance = null;
+      }
+
+      if (this.video) {
+        this.video.pause();
+        this.video.src = "";
+        this.video.load();
+        this.video.ontimeupdate = null;
+        this.video.onplaying = null;
+      }
+
+      if (this.audioBtn) this.audioBtn.onclick = null;
+      if (this.interactionLayer) this.interactionLayer.onclick = null;
+      if (this.scrubContainer) this.scrubContainer.onmousedown = null;
+
+      if (this.onMouseMove) window.removeEventListener('mousemove', this.onMouseMove);
+      if (this.onMouseUp) window.removeEventListener('mouseup', this.onMouseUp);
+
+      this.video = null!;
+      this.progress = null!;
+      this.skeleton = null!;
+      this.audioBtn = null!;
+      this.interactionLayer = null;
+      this.scrubContainer = null;
     }
 
-    private bindElements() {
-      // Explicit Type Casting untuk menghindari error 'onclick' dan atribut lainnya
-      this.video = this.querySelector('.video-el') as HTMLVideoElement;
-      this.audioBtn = this.querySelector('.audio-toggle') as HTMLButtonElement;
-      this.progress = this.querySelector('.progress-bar') as HTMLElement;
-      this.errorOverlay = this.querySelector('.error-overlay') as HTMLElement;
-      this.skeleton = this.querySelector('.video-skeleton') as HTMLElement;
-      this.layer = this.querySelector('.interaction-layer') as HTMLElement;
-      this.retryBtn = this.querySelector('.retry-btn') as HTMLButtonElement;
+    public async playInstance() {
+      if (GlobalState.activeInstance && GlobalState.activeInstance !== this) {
+        GlobalState.activeInstance.pauseInstance();
+      }
+      
+      GlobalState.activeInstance = this;
+      if (!this.video.src) this.video.src = this.dataset.src!;
+      
+      try {
+        this.video.muted = GlobalState.isMuted;
+        await this.video.play();
+      } catch {
+        this.video.muted = true;
+        this.video.play();
+      }
+    }
+
+    public pauseInstance() {
+      this.video.pause();
+      if (GlobalState.activeInstance === this) GlobalState.activeInstance = null;
     }
 
     private initEvents() {
-      // Audio Control
-      this.audioBtn.onclick = (e: MouseEvent) => {
+      this.audioBtn.onclick = (e) => {
         e.stopPropagation();
         GlobalState.toggleAudio();
       };
 
-      // Play/Pause
-      this.layer.onclick = () => {
-        this.video.paused ? this.video.play() : this.video.pause();
-        this.animateFeedback();
+      if (this.interactionLayer) {
+        this.interactionLayer.onclick = () => {
+          this.video.paused ? this.playInstance() : this.video.pause();
+          this.animateFeedback();
+        };
+      }
+
+      const handleScrub = (e: any) => {
+        if (!this.scrubContainer) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const rect = this.scrubContainer.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (x - rect.left) / rect.width));
+        if (isFinite(this.video.duration)) this.video.currentTime = pct * this.video.duration;
       };
 
-      // Scrubber Logic
-      const scrubContainer = this.querySelector('.scrub-container') as HTMLElement;
+      if (this.scrubContainer) {
+        this.scrubContainer.onmousedown = (e) => {
+          this.isDragging = true;
+          this.progress.style.transition = 'none';
+          handleScrub(e);
+        };
+      }
       
-      const handleScrub = (e: MouseEvent | TouchEvent) => {
-        const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
-        const rect = scrubContainer.getBoundingClientRect();
-        const pos = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-        if (isFinite(this.video.duration)) {
-          this.video.currentTime = pos * this.video.duration;
-        }
-      };
-
-      scrubContainer.onmousedown = (e: MouseEvent) => {
-        this.isDragging = true;
-        handleScrub(e);
-      };
-
-      window.addEventListener('mousemove', (e: MouseEvent) => {
-        if (this.isDragging) handleScrub(e);
-      });
-
-      window.addEventListener('mouseup', () => {
+      this.onMouseMove = (e: MouseEvent) => { if (this.isDragging) handleScrub(e); };
+      this.onMouseUp = () => {
         this.isDragging = false;
-      });
+        this.progress.style.transition = 'width 0.1s linear';
+      };
+      window.addEventListener('mousemove', this.onMouseMove);
+      window.addEventListener('mouseup', this.onMouseUp);
 
-      // Video Lifecycle
       this.video.ontimeupdate = () => {
         if (!this.isDragging) {
           const pct = (this.video.currentTime / this.video.duration) * 100;
@@ -169,16 +201,6 @@ const { src, isSingleMedia } = Astro.props;
         this.video.classList.remove('opacity-0');
         this.skeleton.classList.add('opacity-0');
       };
-
-      this.video.onerror = () => {
-        this.errorOverlay.classList.replace('hidden', 'flex');
-      };
-
-      this.retryBtn.onclick = () => {
-        this.errorOverlay.classList.replace('flex', 'hidden');
-        this.video.load();
-        this.video.play();
-      };
     }
 
     public syncAudio() {
@@ -189,10 +211,10 @@ const { src, isSingleMedia } = Astro.props;
       this.audioBtn.classList.toggle('bg-red-600', GlobalState.isMuted);
       this.audioBtn.classList.toggle('bg-white/20', !GlobalState.isMuted);
 
-      const iconContainer = this.querySelector('.icon-container') as HTMLElement;
-      iconContainer.innerHTML = GlobalState.isMuted 
+      const icon = GlobalState.isMuted 
         ? `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636M12 5v14m0-14L7.707 9.293M12 19l-4.293-4.293M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586" stroke-linecap="round" stroke-linejoin="round"/></svg>`
         : `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      this.querySelector('.icon-container')!.innerHTML = icon;
     }
 
     private animateFeedback() {
@@ -204,38 +226,14 @@ const { src, isSingleMedia } = Astro.props;
         icon.classList.remove('opacity-100', 'scale-100');
       }, 400);
     }
-
-    private setupObserver() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            if (!this.video.src) this.video.src = this.dataset.src!;
-            this.video.muted = GlobalState.isMuted;
-            this.video.play().catch(() => {
-              this.video.muted = true;
-              this.video.play();
-            });
-          } else {
-            this.video.pause();
-          }
-        });
-      }, { threshold: 0.6 });
-      observer.observe(this);
-    }
   }
 
   customElements.define('neuro-stream', NeuroStream);
 </script>
 
 <style>
-  /* Akselerasi Hardware GPU */
   .video-el { transform: translateZ(0); }
-  
-  /* Red Scrubber Physics */
-  .progress-bar {
-    transition: width 0.1s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
+  .progress-bar { transition: width 0.1s linear; will-change: width; }
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
