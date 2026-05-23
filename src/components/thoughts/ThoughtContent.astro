@@ -43,3 +43,26 @@ const isLongText = content && content.length > 500;
     </div>
   )
 }
+
+<script>
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+
+    const btn = target.closest<HTMLElement>('.read-more-btn');
+    if (!btn) return;
+
+    const id = btn.getAttribute('data-id');
+    if (!id) return;
+
+    const contentDiv = document.getElementById(`content-${id}`);
+    if (!contentDiv) return;
+
+    // Expand: remove max-height and padding constraint
+    contentDiv.classList.remove('max-h-[320px]', 'pb-12');
+
+    // Hide gradient + button
+    const overlay = contentDiv.querySelector('.absolute.bottom-0');
+    if (overlay) overlay.remove();
+  });
+</script>
