@@ -2,21 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage -->
   <url>
-    <loc>https://fuji.is-a.dev/</loc>
+    <loc>https://waltahh.is-a.dev/</loc>
     <priority>1.00</priority>
     <changefreq>daily</changefreq>
   </url>
 
   <!-- Livestream Page -->
   <!-- <url>
-    <loc>https://fuji.is-a.dev/livestream/</loc>
+    <loc>https://waltahh.is-a.dev/livestream/</loc>
     <priority>0.80</priority>
     <changefreq>monthly</changefreq>
   </url> -->
 
   <!-- Chatango Page -->
   <url>
-    <loc>https://fuji.is-a.dev/chatango/</loc>
+    <loc>https://waltahh.is-a.dev/chatango/</loc>
     <priority>0.80</priority>
     <changefreq>monthly</changefreq>
   </url>

@@ -3,4 +3,4 @@ Disallow: /admin/
 Disallow: /private/
 Allow: /public/
 
-Sitemap: https://fuji.is-a.dev/sitemap.xml
+Sitemap: https://waltahh.is-a.dev/sitemap.xml

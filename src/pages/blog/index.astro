@@ -17,7 +17,7 @@ const clearHref = activeTag ? `/blog?tag=${encodeURIComponent(activeTag)}` : "/b
 
 <Layout
   title={activeTag ? `${activeTag} — Blog` : "Blog"}
-  description={activeTag ? `Tulisan yang ditandai dengan "${activeTag}".` : "Tulisan yang lebih pelan; tempat pikiran dirapikan setelah cukup lama tinggal di kepala."}
+  description={activeTag ? `Tulisan yang ditandai dengan "${activeTag}".` : "Blog"}
 >
   <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-8 px-5 pb-24 pt-0 min-w-0 overflow-x-hidden box-border md:px-0">
     <header class="pt-16 pb-10 w-full min-w-0 overflow-hidden border-b border-neutral-100/50 dark:border-neutral-900/30 mb-10">
@@ -30,20 +30,13 @@ const clearHref = activeTag ? `/blog?tag=${encodeURIComponent(activeTag)}` : "/b
         )}
       </div>
 
-      <div class="max-w-[420px] space-y-3">
-        <p class="text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-medium italic">
-          {activeTag
-            ? `Tulisan yang ditandai dengan "${activeTag}".`
-            : "Tulisan yang lebih pelan; tempat pikiran dirapikan setelah cukup lama tinggal di kepala."}
-        </p>
-        {!activeTag && (
-          <div class="space-y-1.5">
-            <p class="text-xs leading-relaxed text-neutral-400 dark:text-neutral-500">
-              Kadang serius. Kadang nggak penting juga. Semuanya tinggal di sini tanpa perlu sempurna.
-            </p>
-          </div>
-        )}
-      </div>
+      {activeTag && (
+        <div class="max-w-[420px] space-y-3">
+          <p class="text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-medium italic">
+            Tulisan yang ditandai dengan "{activeTag}".
+          </p>
+        </div>
+      )}
     </header>
 
     <SearchInput
