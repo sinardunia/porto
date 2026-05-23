@@ -349,7 +349,9 @@ export const prerender = false;
         }
         return null;
       };
-      return html.replace(
+
+      // Step 1: Replace <a> tags that are plain YouTube links
+      let result = html.replace(
         /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
         (match, href, text) => {
           const id = extractId(href);
@@ -357,6 +359,18 @@ export const prerender = false;
           return `<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
         }
       );
+
+      // Step 2: Replace standalone plain-text YouTube URLs
+      result = result.replace(
+        /(^|>|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}))(?=[\s<.,;:!?)\]"']|$)/g,
+        (match, before, url) => {
+          const id = extractId(url);
+          if (!id) return match;
+          return `${before}<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
+        }
+      );
+
+      return result;
     };
 
     const mdToHtml = (md) => {

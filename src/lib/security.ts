@@ -124,8 +124,8 @@ export const extractYouTubeId = (url: string): string | null => {
 };
 
 export const convertYouTubeLinks = (html: string): string => {
-  // Find <a> tags that contain YouTube URLs and replace with embed div
-  return html.replace(
+  // Step 1: Replace <a> tags that are plain YouTube links
+  let result = html.replace(
     /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
     (match, href: string, text: string) => {
       const id = extractYouTubeId(href);
@@ -135,6 +135,18 @@ export const convertYouTubeLinks = (html: string): string => {
       return `<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
     }
   );
+
+  // Step 2: Replace standalone plain-text YouTube URLs
+  result = result.replace(
+    /(^|>|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}))(?=[\s<.,;:!?)\]"']|$)/g,
+    (match, before: string, url: string) => {
+      const id = extractYouTubeId(url);
+      if (!id) return match;
+      return `${before}<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
+    }
+  );
+
+  return result;
 };
 
 /* =========================
