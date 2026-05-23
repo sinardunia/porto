@@ -34,6 +34,8 @@ const ogImage = post.cover_image_url || undefined;
 
 const { marked } = await import("marked");
 const renderedContent = await marked.parse(post.content);
+const sanitizedContent = await sanitizeRenderedHtml(renderedContent);
+const finalContent = convertYouTubeLinks(sanitizedContent);
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -125,7 +127,7 @@ const jsonLd = {
       <div
         class="prose prose-neutral prose-lg dark:prose-invert post"
         itemprop="articleBody"
-        set:html={convertYouTubeLinks(sanitizeRenderedHtml(renderedContent))}
+        set:html={finalContent}
       />
     </article>
   </main>

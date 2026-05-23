@@ -30,19 +30,22 @@ export const GET: APIRoute = async () => {
 
     if (error) throw error;
 
-    const items = (data ?? []).map((post) => {
-      const url = new URL(`/blog/${post.slug}`, SITE_URL).toString();
-      const description = sanitizeRenderedHtml(escapeXml(post.excerpt || ""));
+    const items = await Promise.all(
+      (data ?? []).map(async (post) => {
+        const url = new URL(`/blog/${post.slug}`, SITE_URL).toString();
+        const description = await sanitizeRenderedHtml(escapeXml(post.excerpt || ""));
 
-      return `
-        <item>
-          <title>${escapeXml(post.title)}</title>
-          <link>${url}</link>
-          <guid>${url}</guid>
-          <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
-          <description>${description}</description>
-        </item>`;
-    }).join("");
+        return `
+          <item>
+            <title>${escapeXml(post.title)}</title>
+            <link>${url}</link>
+            <guid>${url}</guid>
+            <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
+            <description>${description}</description>
+          </item>`;
+      })
+    );
+    const itemsXml = items.join("");
 
     const xml = `<?xml version="1.0" encoding="UTF-8" ?>
       <rss version="2.0">
