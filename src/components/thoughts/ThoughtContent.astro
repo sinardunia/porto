@@ -16,7 +16,7 @@ const isLongText = content && content.length > 500;
       <div
         class:list={[
           "relative overflow-hidden transition-all duration-300",
-          isLongText ? "max-h-[320px] pb-12" : "",
+          isLongText ? "max-h-[400px] pb-12 md:max-h-[320px]" : "",
         ]}
         id={`content-${thoughtId}`}
       >
@@ -27,9 +27,9 @@ const isLongText = content && content.length > 500;
 
         {
           isLongText && (
-            <div class="absolute bottom-0 left-0 flex h-24 w-full items-end justify-center bg-gradient-to-t from-white to-transparent dark:from-[#0a0a0a]">
+            <div class="absolute bottom-0 left-0 flex h-16 w-full items-end justify-center bg-gradient-to-t from-white to-transparent dark:from-[#0a0a0a] md:h-20">
               <button
-                class="read-more-btn pb-2 text-[10px] font-bold uppercase tracking-widest text-neutral-400 transition-colors hover:text-orange-500"
+                class="read-more-btn py-1.5 px-2 text-[11px] font-bold uppercase tracking-widest text-neutral-400 transition-colors hover:text-orange-500 md:text-[10px]"
                 data-id={thoughtId}
               >
                 baca selengkapnya
@@ -58,8 +58,9 @@ const isLongText = content && content.length > 500;
     const contentDiv = document.getElementById(`content-${id}`);
     if (!contentDiv) return;
 
-    // Expand: remove max-height and padding constraint
-    contentDiv.classList.remove('max-h-[320px]', 'pb-12');
+    // Expand: override any responsive max-height class with inline style
+    contentDiv.style.maxHeight = 'none';
+    contentDiv.classList.remove('pb-12');
 
     // Hide gradient + button
     const overlay = contentDiv.querySelector('.absolute.bottom-0');
