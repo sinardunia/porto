@@ -6,6 +6,12 @@ import Link from "@/components/shared/Link.astro";
 import { getPublishedBlogPosts } from "@/lib/blog";
 
 const latestPosts = await getPublishedBlogPosts(2);
+
+// Cache response at Vercel Edge Network
+Astro.response.headers.set(
+  "Cache-Control",
+  "public, max-age=60, stale-while-revalidate=600"
+);
 ---
 <Layout description="A quiet personal archive of thoughts, writing, and experiments by Fuji Halim Rabani.">
   <main

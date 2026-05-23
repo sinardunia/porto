@@ -9,7 +9,6 @@ import Cookie from "@/components/Cookie.astro";
 import "@fontsource/open-sans";
 
 import "@/styles/tailwind.css";
-import "@/styles/post.css";
 
 export interface Props {
   title?: string;
@@ -38,6 +37,8 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
       og={og}
       jsonLd={jsonLd}
     />
+    <!-- THEME DETECTION -->
+    <script src="../scripts/theme.ts"></script>
   </head>
 
   <body
@@ -145,124 +146,7 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
       }
     </style>
 
-    <!-- THEME -->
-    <script is:inline>
-      (function () {
-        var savedTheme = localStorage.getItem("theme") || "dark";
-        if (
-          savedTheme === "dark" ||
-          (!savedTheme &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
-      })();
-    </script>
-
     <!-- SOUND -->
-    <script is:inline>
-      document.addEventListener(
-        "DOMContentLoaded",
-        () => {
-          const audio =
-            document.getElementById(
-              "button-sound"
-            );
-
-          const isInternalLink = (href) =>
-            href &&
-            href.startsWith("/") &&
-            !href.startsWith("//");
-
-          const playClickSound = () => {
-            if (
-              !(audio instanceof HTMLAudioElement)
-            ) {
-              return;
-            }
-
-            audio.currentTime = 0;
-
-            audio.play().catch(() => {});
-          };
-
-          document.body.addEventListener(
-            "click",
-            (event) => {
-              const target =
-                event.target.closest(
-                  "button, a"
-                );
-
-              if (!target) return;
-
-              if (
-                event.metaKey ||
-                event.ctrlKey ||
-                event.shiftKey ||
-                event.altKey
-              ) {
-                return;
-              }
-
-              // BUTTON
-              if (target.tagName !== "A") {
-                playClickSound();
-                return;
-              }
-
-              // LINK
-              const href =
-                target.getAttribute("href");
-
-              if (!isInternalLink(href)) {
-                playClickSound();
-                return;
-              }
-
-              event.preventDefault();
-
-              playClickSound();
-
-              setTimeout(() => {
-                window.location.href = href;
-              }, 90);
-            }
-          );
-
-          // unlock audio
-          const unlockAudio = () => {
-            if (
-              !(audio instanceof HTMLAudioElement)
-            ) {
-              return;
-            }
-
-            audio
-              .play()
-              .catch(() => {})
-              .finally(() => {
-                audio.pause();
-                audio.currentTime = 0;
-              });
-
-            document.removeEventListener(
-              "click",
-              unlockAudio
-            );
-          };
-
-          document.addEventListener(
-            "click",
-            unlockAudio,
-            {
-              once: true,
-            }
-          );
-        }
-      );
-    </script>
+    <script src="../scripts/click-sound.ts"></script>
   </body>
 </html>

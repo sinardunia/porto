@@ -1,7 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel";
 
 export default defineConfig({
   output: "server",
@@ -11,9 +11,14 @@ export default defineConfig({
     checkOrigin: false,
   },
 
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover",
+  },
+
   integrations: [tailwind(), sitemap()],
 
-  site: process.env.SITE_URL,
+  site: process.env.SITE_URL || "http://localhost:4321",
 
   vite: {
     server: {

@@ -1,5 +1,3 @@
-import imageCompression from "browser-image-compression";
-
 /* ---------------------------------
    IMAGE COMPRESSION
    Canvas-based, max 1200px long edge
@@ -9,6 +7,7 @@ export async function compressImage(
   file: File,
   onProgress?: (percent: number) => void
 ): Promise<File> {
+  const imageCompression = (await import("browser-image-compression")).default;
   const options = {
     maxWidthOrHeight: 1200,
     useWebWorker: true,
