@@ -1,138 +1,57 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import ThoughtCard from "@/components/thoughts/ThoughtCard.astro";
-import { queryThoughts } from "@/lib/search"; 
-import type { Thought } from "@/types/thoughts";
+import SearchInput from "@/components/shared/SearchInput.astro";
+import ThoughtFeed from "@/components/thoughts/ThoughtFeed.astro";
+import ThoughtSkeleton from "@/components/skeletons/ThoughtSkeleton.astro";
 
 export const prerender = false;
 
 const searchQuery = Astro.url.searchParams.get("q")?.trim() || "";
 const cursorQuery = Astro.url.searchParams.get("before")?.trim() || "";
-
-const thoughts = await queryThoughts({ query: searchQuery, cursor: cursorQuery });
-
-const groupedThoughts = thoughts.reduce<
-  { month: string; thoughts: Thought[] }[]
->((groups, thought) => {
-  const date = new Date(thought.created_at);
-  const month = Number.isNaN(date.getTime())
-    ? "Waktu Lampau"
-    : new Intl.DateTimeFormat("id-ID", { month: "long", year: "numeric" }).format(date);
-
-  const last = groups.at(-1);
-  if (last?.month === month) {
-    last.thoughts.push(thought);
-  } else {
-    groups.push({ month, thoughts: [thought] });
-  }
-
-  return groups;
-}, []);
 ---
 
-<Layout title="Thoughts">
+<Layout title="Thoughts" description="Kumpulan hal acak yang lewat di kepala — catatan pribadi Fuji Halim Rabani.">
   <main class="mx-auto flex w-full max-w-[500px] flex-col px-4 pb-24 min-w-0 overflow-x-hidden box-border">
-    
-   <header class="pt-16 pb-10 w-full min-w-0 overflow-hidden border-b border-neutral-100/50 dark:border-neutral-900/30 mb-10">
-  <!-- Title dengan Aksen Titik -->
-  <div class="flex items-center gap-2 mb-4">
-    <h1 class="text-sm font-black uppercase tracking-[0.2em] text-neutral-800 dark:text-neutral-100">
-      Thoughts
-    </h1>
-    <span class="h-1 w-1 rounded-full bg-orange-500 animate-pulse"></span>
-  </div>
+    <header class="pt-16 pb-10 w-full min-w-0 overflow-hidden border-b border-neutral-100/50 dark:border-neutral-900/30 mb-10">
+      <div class="flex items-center gap-2 mb-4">
+        <h1 class="text-sm font-black uppercase tracking-[0.2em] text-neutral-800 dark:text-neutral-100">
+          Thoughts
+        </h1>
+        <span class="h-1 w-1 rounded-full bg-orange-500 animate-pulse"></span>
+      </div>
 
-  <!-- Deskripsi Personal -->
-  <div class="max-w-[420px] space-y-3">
-    <p class="text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-medium italic">
-      Maaf, isinya cuma kumpulan hal acak yang lewat di kepala saja
-    </p>
-    
-    <div class="space-y-1.5">
-      <p class="text-xs leading-relaxed text-neutral-400 dark:text-neutral-500">
-        Apa yang ditulis di sini memang pas lagi kepikiran hari itu aja.
-        Terkadang saya juga merasa cringe kalau baca tulisan dulu.
-      </p>
-    </div>
-  </div>
-</header>
+      <div class="max-w-[420px] space-y-3">
+        <p class="text-[13px] leading-relaxed text-neutral-400 dark:text-neutral-500 font-medium italic">
+          Kumpulan hal acak yang lewat di kepala
+        </p>
+        <div class="space-y-1.5">
+          <p class="text-xs leading-relaxed text-neutral-400/80 dark:text-neutral-600">
+            Apa yang ditulis di sini memang pas lagi kepikiran hari itu aja.
+            Terkadang saya juga merasa cringe kalau baca tulisan dulu.
+          </p>
+        </div>
+      </div>
+    </header>
 
     <div class="mb-10 w-full min-w-0 overflow-hidden">
-      <form method="get" action="/thoughts" class="flex items-center gap-3 w-full min-w-0">
-        <div class="relative flex-1 border-b border-neutral-200 dark:border-neutral-800 pb-1 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-200 min-w-0">
-          <input
-            type="text"
-            name="q"
-            value={searchQuery}
-            inputmode="search"
-            placeholder="Cari potongan memori..."
-            class="w-full text-xs bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400"
-            autocomplete="off"
-          />
-          
-          {searchQuery && (
-            <a 
-              href="/thoughts" 
-              class="absolute right-0 bottom-1 p-0.5 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-              aria-label="Clear search"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </a>
-          )}
-        </div>
-
-        <button 
-          type="submit" 
-          class="text-[11px] font-bold text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors duration-200"
-        >
-          Cari
-        </button>
-      </form>
+      <SearchInput
+        action="/thoughts"
+        value={searchQuery}
+        placeholder="Cari potongan memori..."
+        clearHref={searchQuery ? "/thoughts" : undefined}
+      />
     </div>
 
-    <div id="feed-container" class="w-full min-w-0">
-      {thoughts.length > 0 ? (
-        <div class="flex flex-col gap-14 w-full min-w-0">
-          {groupedThoughts.map((group) => (
-            <section class="flex flex-col gap-5 month-section w-full min-w-0">
-              
-              <div class="w-full min-w-0 border-b border-neutral-100/70 dark:border-neutral-900/60 pb-1">
-                <h2 class="text-[9px] font-bold uppercase tracking-[0.15em] text-neutral-400 dark:text-neutral-500">
-                  {group.month}
-                </h2>
-              </div>
-
-              <div class="flex flex-col gap-8 w-full min-w-0">
-                {group.thoughts.map((thought) => (
-                  <div class="thought-card-wrapper w-full min-w-0 block">
-                    <ThoughtCard thought={thought} />
-                  </div>
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
-      ) : (
-        <div class="py-16 select-none w-full border-t border-neutral-100 dark:border-neutral-900">
-          <p class="text-xs text-neutral-400 dark:text-neutral-500">
-            Tidak ditemukan hasil pencarian.
-          </p>
-          <a href="/thoughts" class="text-[10px] uppercase tracking-wider font-bold text-orange-500 mt-2 inline-block hover:underline">
-            Reset
-          </a>
-        </div>
-      )}
-    </div>
-
+    <ThoughtFeed server:defer query={searchQuery} cursor={cursorQuery}>
+      <ThoughtSkeleton slot="fallback" count={2} />
+    </ThoughtFeed>
   </main>
 </Layout>
 
 <div id="image-lightbox" class="fixed inset-0 z-[999999] bg-black/95 backdrop-blur-md hidden opacity-0 flex items-center justify-center transition-all duration-300 select-none pointer-events-auto" onclick="window.closeNeuroLightbox()">
-  
-  <!-- TOMBOL X: Pake z-index tertinggi dan stopPropagation -->
-  <button 
-    id="lightbox-close" 
-    type="button" 
+  <button
+    id="lightbox-close"
+    type="button"
     class="absolute top-6 right-6 z-[1000001] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 border border-white/10 cursor-pointer pointer-events-auto"
     onclick="event.stopPropagation(); window.closeNeuroLightbox();"
     aria-label="Close"
@@ -142,39 +61,25 @@ const groupedThoughts = thoughts.reduce<
     </svg>
   </button>
 
-  <!-- IMAGE CONTAINER -->
   <div class="relative flex h-full w-full items-center justify-center p-4">
-    <img 
-      id="lightbox-img" 
-      class="max-w-[95vw] max-h-[90vh] object-contain rounded-sm shadow-2xl transition-all duration-300 scale-95 pointer-events-auto" 
-      src="" 
-      alt="" 
-      onclick="event.stopPropagation()" 
+    <img
+      id="lightbox-img"
+      class="max-w-[95vw] max-h-[90vh] object-contain rounded-sm shadow-2xl transition-all duration-300 scale-95 pointer-events-auto"
+      src=""
+      alt=""
+      onclick="event.stopPropagation()"
     />
   </div>
 </div>
 
 <style>
-  main { 
-    -webkit-tap-highlight-color: transparent; 
-  }
-  .thought-card-wrapper {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 400px;
-  }
-  
+  main { -webkit-tap-highlight-color: transparent; }
   #image-lightbox {
     position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
+    top: 0 !important; left: 0 !important;
+    width: 100vw !important; height: 100vh !important;
   }
-
-  /* Memastikan elemen interaktif beneran bisa diklik */
-  #lightbox-close, #lightbox-img {
-    pointer-events: auto !important;
-  }
+  #lightbox-close, #lightbox-img { pointer-events: auto !important; }
 </style>
 
 <script is:inline>
@@ -182,17 +87,14 @@ const groupedThoughts = thoughts.reduce<
     const lb = document.getElementById('image-lightbox');
     const img = document.getElementById('lightbox-img');
     if (!lb || !img) return;
-
     img.src = src;
     lb.classList.remove('hidden');
     lb.style.display = 'flex';
     document.body.style.overflow = 'hidden';
-
     setTimeout(() => {
       lb.classList.add('opacity-100');
       img.classList.replace('scale-95', 'scale-100');
     }, 10);
-    
     window.history.pushState({ lightboxOpen: true }, '');
   };
 
@@ -200,20 +102,16 @@ const groupedThoughts = thoughts.reduce<
     const lb = document.getElementById('image-lightbox');
     const img = document.getElementById('lightbox-img');
     if (!lb || !img) return;
-
     lb.classList.remove('opacity-100');
     img.classList.replace('scale-100', 'scale-95');
-    
     setTimeout(() => {
       lb.classList.add('hidden');
       lb.style.display = 'none';
       img.src = "";
     }, 300);
-    
     document.body.style.overflow = '';
   };
 
-  // Event delegation tunggal untuk lightbox
   document.addEventListener('click', (e) => {
     const target = e.target;
     if (!(target instanceof HTMLElement)) return;
@@ -226,9 +124,7 @@ const groupedThoughts = thoughts.reduce<
 
   window.addEventListener('popstate', () => {
     const lb = document.getElementById('image-lightbox');
-    if (lb && lb.style.display === 'flex') {
-      window.closeNeuroLightbox();
-    }
+    if (lb && lb.style.display === 'flex') window.closeNeuroLightbox();
   });
 
   window.addEventListener('keydown', (e) => {

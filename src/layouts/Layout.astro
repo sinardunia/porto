@@ -13,15 +13,31 @@ import "@/styles/post.css";
 
 export interface Props {
   title?: string;
+  description?: string;
+  noindex?: boolean;
+  og?: {
+    title?: string;
+    description?: string;
+    image?: string;
+    alt?: string;
+    type?: string;
+  };
+  jsonLd?: Record<string, any>;
 }
 
-const { title } = Astro.props;
+const { title, description, noindex, og, jsonLd } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <SEOTags title={title} />
+    <SEOTags
+      title={title}
+      description={description}
+      noindex={noindex}
+      og={og}
+      jsonLd={jsonLd}
+    />
   </head>
 
   <body

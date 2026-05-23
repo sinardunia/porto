@@ -1,0 +1,45 @@
+---
+interface Props {
+  action: string;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  clearHref?: string;
+  hiddenInputs?: { name: string; value: string }[];
+}
+
+const { action, name = "q", value = "", placeholder = "Search...", clearHref, hiddenInputs = [] } = Astro.props;
+---
+
+<form action={action} method="get" class="flex items-center gap-3 w-full">
+  <div class="relative flex-1 border-b border-neutral-200 dark:border-neutral-800 pb-1 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-200 min-w-0">
+    <input
+      type="text"
+      name={name}
+      value={value}
+      inputmode="search"
+      placeholder={placeholder}
+      class="w-full text-xs bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400"
+      autocomplete="off"
+    />
+    {hiddenInputs.map((h) => (
+      <input type="hidden" name={h.name} value={h.value} />
+    ))}
+    {value && clearHref && (
+      <a
+        href={clearHref}
+        class="absolute right-0 bottom-1 p-0.5 text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
+        aria-label="Clear search"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </a>
+    )}
+  </div>
+
+  <button
+    type="submit"
+    class="text-[11px] font-bold text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors duration-200"
+  >
+    Cari
+  </button>
+</form>

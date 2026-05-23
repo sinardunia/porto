@@ -1,8 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { createSupabaseClient } from "@/lib/supabase";
-import { withTimeout, sanitizeRenderedHtml } from "@/lib/security";
+import { getBlogPostBySlug, estimateReadTime } from "@/lib/blog";
+import { sanitizeRenderedHtml } from "@/lib/security";
 import { marked } from "marked";
+import { SITE_URL } from "@/data/config";
 
 export const prerender = false;
 
@@ -12,72 +13,82 @@ if (!slug || typeof slug !== "string") {
   return Astro.redirect("/blog");
 }
 
-const getPost = async () => {
-  try {
-    const supabase = createSupabaseClient();
-    const { data, error } = await withTimeout(
-      supabase
-        .from("blog_posts")
-        .select("id, slug, title, excerpt, content, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published")
-        .eq("slug", slug)
-        .eq("is_published", true)
-        .single(),
-      10000,
-      "Blog post fetch"
-    );
-
-    if (error || !data) {
-      console.warn("Blog post not found:", error?.message || slug);
-      return null;
-    }
-
-    return data;
-  } catch (error) {
-    console.warn(
-      "Blog post fetch failed:",
-      error instanceof Error ? error.message : "Unknown error"
-    );
-    return null;
-  }
-};
-
-const post = await getPost();
+const post = await getBlogPostBySlug(slug);
 
 if (!post) {
   return Astro.redirect("/blog");
 }
 
 const safeTags = Array.isArray(post.tags) ? post.tags.filter((t): t is string => typeof t === "string") : [];
+const readTime = estimateReadTime(post.content || "");
+const dateStr = new Date(post.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+const isoDate = new Date(post.created_at).toISOString();
+const description = post.excerpt || `${post.title}. A ${readTime}-minute read.`;
+const ogImage = post.cover_image_url || undefined;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: post.title,
+  description,
+  image: ogImage,
+  datePublished: isoDate,
+  dateModified: post.updated_at ? new Date(post.updated_at).toISOString() : isoDate,
+  author: {
+    "@type": "Person",
+    name: "Fuji Halim Rabani",
+    url: SITE_URL,
+  },
+  publisher: {
+    "@type": "Person",
+    name: "Fuji Halim Rabani",
+    url: SITE_URL,
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": new URL(`/blog/${post.slug}`, SITE_URL).toString(),
+  },
+  keywords: safeTags.join(", "),
+};
 ---
 
-<Layout title={post.title}>
+<Layout
+  title={post.title}
+  description={description}
+  og={{ title: post.title, description, image: ogImage, type: "article" }}
+  jsonLd={jsonLd}
+>
   <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-8 pb-24">
-    <article class="flex flex-col gap-8">
-      <header class="flex flex-col gap-3">
-        <a
-          href="/blog"
-          class="text-sm text-neutral-400 transition-colors hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300"
-        >
-          &larr; Back to blog
-        </a>
+    <article class="flex flex-col gap-8" itemscope itemtype="https://schema.org/Article">
+      <header class="pt-16 pb-10 w-full min-w-0 overflow-hidden border-b border-neutral-100/50 dark:border-neutral-900/30">
+        <div class="flex items-center gap-2 mb-4">
+          <a
+            href="/blog"
+            class="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300 transition-colors"
+          >
+            Blog
+          </a>
+          <span class="text-neutral-300 dark:text-neutral-700">/</span>
+          <span class="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400 dark:text-neutral-500">Article</span>
+        </div>
 
-        <h1 class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        <h1
+          class="text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100"
+          itemprop="headline"
+        >
           {post.title}
         </h1>
 
-        <time
-          datetime={post.created_at}
-          class="text-sm text-neutral-400 dark:text-neutral-500"
-        >
-          {new Date(post.created_at).toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
-        </time>
+        <div class="mt-3 flex items-center gap-2 text-xs text-neutral-400 dark:text-neutral-500">
+          <time datetime={post.created_at} itemprop="datePublished">
+            {dateStr}
+          </time>
+          <span class="text-neutral-300 dark:text-neutral-700">·</span>
+          <span>{readTime} min read</span>
+        </div>
 
         {safeTags.length > 0 && (
-          <div class="flex flex-wrap gap-2">
+          <div class="mt-4 flex flex-wrap gap-2">
             {safeTags.map((tag) => (
               <a
                 href={`/blog?tag=${encodeURIComponent(tag)}`}
@@ -91,19 +102,20 @@ const safeTags = Array.isArray(post.tags) ? post.tags.filter((t): t is string =>
       </header>
 
       {post.cover_image_url && (
-        <div class="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-900">
+        <figure class="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-900" itemprop="image">
           <img
             src={post.cover_image_url}
-            alt={post.cover_image_alt || ""}
+            alt={post.cover_image_alt || post.title}
             class="absolute inset-0 h-full w-full object-cover"
             loading="eager"
             decoding="async"
           />
-        </div>
+        </figure>
       )}
 
       <div
-        class="prose prose-neutral max-w-none dark:prose-invert"
+        class="prose prose-neutral prose-lg max-w-none dark:prose-invert"
+        itemprop="articleBody"
         set:html={sanitizeRenderedHtml(marked.parse(post.content))}
       />
     </article>

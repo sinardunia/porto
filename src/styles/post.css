@@ -68,7 +68,6 @@
 
 @media (prefers-color-scheme: dark) {
   .stars .star {
-    animation-duration: calc(3s + (random() * 2s));
-    left: calc(random() * 100vw);
+    animation-duration: 4s;
   }
 }

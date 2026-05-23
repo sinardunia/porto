@@ -1,0 +1,83 @@
+---
+import BlogListItem from "./BlogListItem.astro";
+import { getPublishedBlogPosts, matchesSearch, matchesTag, getAllTags } from "@/lib/blog";
+import type { BlogPostSummary } from "@/types/blog";
+
+interface Props {
+  search?: string;
+  tag?: string;
+}
+
+const { search = "", tag = "" } = Astro.props;
+
+let posts: BlogPostSummary[] = [];
+try {
+  const allPosts = await getPublishedBlogPosts(50);
+  posts = allPosts;
+  if (search) posts = posts.filter((p) => matchesSearch(p, search));
+  if (tag) posts = posts.filter((p) => matchesTag(p, tag));
+} catch {
+  posts = [];
+}
+
+const shouldUseCarousel = posts.length > 6 && !search && !tag;
+const allTags = getAllTags(posts);
+---
+
+<div class="flex flex-col gap-8">
+  {allTags.length > 0 && (
+    <div class="no-scrollbar -mx-6 flex snap-x gap-2 overflow-x-auto px-6 md:-mx-10 md:px-10">
+      {allTags.map((t) => (
+        <a
+          href={`/blog?tag=${encodeURIComponent(t)}`}
+          class:list={[
+            "shrink-0 snap-start rounded-full border px-3 py-1 text-xs transition-colors",
+            tag === t
+              ? "border-text-light bg-text-light text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-950"
+              : "border-border-light bg-secondary-light text-neutral-500 hover:border-neutral-400 hover:text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-neutral-200",
+          ]}
+        >
+          {t}
+        </a>
+      ))}
+      {tag && (
+        <a
+          href="/blog"
+          class="shrink-0 snap-start rounded-full border border-border-light px-3 py-1 text-xs text-neutral-400 transition-colors hover:text-neutral-700 dark:border-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200"
+        >
+          &times; Clear
+        </a>
+      )}
+    </div>
+  )}
+
+  {posts.length > 0 ? (
+    <section aria-label="Blog posts" class:list={[
+      shouldUseCarousel
+        ? "-mx-6 flex snap-x gap-4 overflow-x-auto px-6 pb-4 md:-mx-10 md:px-10"
+        : "flex flex-col",
+    ]}>
+      {posts.map((post) => (
+        <div class={shouldUseCarousel ? "w-[82vw] max-w-[24rem] shrink-0 snap-start sm:w-[22rem]" : ""}>
+          <BlogListItem post={post} basePath="/blog" />
+        </div>
+      ))}
+    </section>
+  ) : (
+    <div class="py-16 select-none w-full border-t border-neutral-100 dark:border-neutral-900">
+      <p class="text-xs text-neutral-400 dark:text-neutral-500">
+        {search || tag ? "Tidak ditemukan hasil pencarian." : "Belum ada blog post dari Supabase di sini."}
+      </p>
+      {(search || tag) && (
+        <a href="/blog" class="text-[10px] uppercase tracking-wider font-bold text-orange-500 mt-2 inline-block hover:underline">
+          Reset
+        </a>
+      )}
+    </div>
+  )}
+</div>
+
+<style>
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
