@@ -19,7 +19,7 @@ const securityHeaders = {
     // 🔥 FIX INI JUGA (fetch + dev tools + preview system)
     "connect-src 'self' https: blob:",
 
-    "frame-src https://utteranc.es https://*.cbox.ws",
+    "frame-src https://utteranc.es https://*.cbox.ws https://www.youtube.com https://www.youtube-nocookie.com",
     "form-action 'self'",
   ].join("; "),
   "X-Frame-Options": "DENY",

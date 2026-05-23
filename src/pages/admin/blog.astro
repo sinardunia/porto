@@ -89,6 +89,7 @@ export const prerender = false;
           <button type="button" data-md="code" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Code">Code</button>
           <button type="button" data-md="ul" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Bullet list">List</button>
           <button type="button" data-md="ol" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Numbered list">1.</button>
+          <button type="button" data-md="youtube" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="YouTube embed">YT</button>
         </div>
 
         <textarea
@@ -148,6 +149,61 @@ export const prerender = false;
     </form>
   </main>
 </Layout>
+
+<style is:global>
+  .youtube-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #0a0a0a;
+    margin: 1rem 0;
+  }
+  .youtube-embed iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .youtube-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0a0a0a;
+    cursor: pointer;
+  }
+  .youtube-placeholder::before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: 20px solid rgba(255, 255, 255, 0.9);
+    border-top: 12px solid transparent;
+    border-bottom: 12px solid transparent;
+    margin-left: 4px;
+  }
+</style>
+
+<script>
+  document.addEventListener('click', (e) => {
+    const placeholder = (e.target as HTMLElement).closest('.youtube-placeholder');
+    if (!placeholder) return;
+    const embed = placeholder.closest('.youtube-embed');
+    if (!embed) return;
+    const id = embed.getAttribute('data-id');
+    if (!id) return;
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&autoplay=1`;
+    iframe.title = 'YouTube video player';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+    placeholder.replaceWith(iframe);
+  });
+</script>
 
 <script type="module">
   const form = document.querySelector("#blog-form");
@@ -219,6 +275,11 @@ export const prerender = false;
       code: () => insertAtCursor("```\n", "\n```"),
       ul: () => insertAtCursor("- ", ""),
       ol: () => insertAtCursor("1. ", ""),
+      youtube: () => {
+        const url = prompt("Paste YouTube link:");
+        if (!url) return;
+        insertAtCursor("\n" + url.trim() + "\n", "");
+      },
     };
 
     document.querySelectorAll("[data-md]").forEach((btn) => {
@@ -272,48 +333,97 @@ export const prerender = false;
     });
 
     /* -------------------------
-       LIVE PREVIEW (dynamic import marked)
+       LIVE PREVIEW
     -------------------------- */
-    let marked = null;
-    let markedReady = false;
 
-    const loadMarked = async () => {
-      if (markedReady) return;
-      try {
-        const mod = await import("marked");
-        marked = mod.marked || mod.default || mod;
-        markedReady = true;
-      } catch (err) {
-        console.error("Failed to load marked:", err);
+    const convertYouTubeLinks = (html) => {
+      const patterns = [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+      ];
+      const extractId = (url) => {
+        for (const p of patterns) {
+          const m = url.match(p);
+          if (m) return m[1];
+        }
+        return null;
+      };
+      return html.replace(
+        /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
+        (match, href, text) => {
+          const id = extractId(href);
+          if (!id || text.trim() !== href.trim()) return match;
+          return `<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
+        }
+      );
+    };
+
+    const mdToHtml = (md) => {
+      const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const inline = (s) => esc(s)
+        .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        .replace(/`(.+?)`/g, '<code>$1</code>')
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+
+      const lines = md.split('\n');
+      const out = [];
+      let code = [], inCode = false;
+      let list = [], listType = '';
+
+      const flush = () => {
+        if (code.length) { out.push(`<pre><code>${esc(code.join('\n'))}</code></pre>`); code = []; inCode = false; }
+        if (list.length) { out.push(`<${listType}>${list.join('')}</${listType}>`); list = []; listType = ''; }
+      };
+
+      for (const raw of lines) {
+        const line = raw.trimEnd();
+        if (line.startsWith('```')) { flush(); inCode = !inCode; continue; }
+        if (inCode) { code.push(line); continue; }
+
+        const b = line.match(/^([-*+]) (.+)$/);
+        const n = line.match(/^(\d+)\. (.+)$/);
+        if (b) {
+          if (listType !== 'ul') flush();
+          listType = 'ul'; list.push(`<li>${inline(b[2])}</li>`);
+          continue;
+        }
+        if (n) {
+          if (listType !== 'ol') flush();
+          listType = 'ol'; list.push(`<li>${inline(n[2])}</li>`);
+          continue;
+        }
+
+        flush();
+        if (!line) continue;
+        if (line.startsWith('### ')) { out.push(`<h3>${inline(line.slice(4))}</h3>`); continue; }
+        if (line.startsWith('## ')) { out.push(`<h2>${inline(line.slice(3))}</h2>`); continue; }
+        if (line.startsWith('# ')) { out.push(`<h1>${inline(line.slice(2))}</h1>`); continue; }
+        if (line.startsWith('> ')) { out.push(`<blockquote>${inline(line.slice(2))}</blockquote>`); continue; }
+        out.push(`<p>${inline(line)}</p>`);
       }
+      flush();
+      return out.join('\n');
     };
 
     const updatePreview = () => {
       if (!previewContent) return;
-      if (!markedReady || !marked) {
-        previewContent.innerHTML = "<p class=\"text-neutral-400 italic\">Loading preview renderer...</p>";
-        return;
-      }
-      const html = marked.parse(contentInput.value);
-      previewContent.innerHTML = html || "<p class=\"text-neutral-400 italic\">Tidak ada konten untuk dipreview.</p>";
+      const html = mdToHtml(contentInput.value);
+      previewContent.innerHTML = convertYouTubeLinks(html || "") || "<p class=\"text-neutral-400 italic\">Tidak ada konten untuk dipreview.</p>";
     };
 
     contentInput.addEventListener("input", updatePreview);
 
     if (previewToggle && previewPanel) {
-      previewToggle.addEventListener("click", async () => {
+      previewToggle.addEventListener("click", () => {
         const isHidden = previewPanel.classList.contains("hidden");
         previewPanel.classList.toggle("hidden", !isHidden);
         previewToggle.textContent = isHidden ? "Hide preview" : "Show preview";
-        if (isHidden) {
-          await loadMarked();
-          updatePreview();
-        }
+        if (isHidden) updatePreview();
       });
     }
-
-    // Preload marked so it's ready
-    loadMarked().catch(() => {});
 
     /* -------------------------
        SUBMIT

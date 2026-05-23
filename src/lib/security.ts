@@ -106,6 +106,38 @@ export const validateMediaFile = (file: File) => {
 };
 
 /* =========================
+   YOUTUBE EMBED
+========================= */
+
+const YOUTUBE_PATTERNS = [
+  /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+  /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
+  /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+];
+
+export const extractYouTubeId = (url: string): string | null => {
+  for (const pattern of YOUTUBE_PATTERNS) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+};
+
+export const convertYouTubeLinks = (html: string): string => {
+  // Find <a> tags that contain YouTube URLs and replace with embed div
+  return html.replace(
+    /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
+    (match, href: string, text: string) => {
+      const id = extractYouTubeId(href);
+      if (!id) return match;
+      // Only convert if the link text IS the URL (not custom anchor text)
+      if (text.trim() !== href.trim()) return match;
+      return `<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
+    }
+  );
+};
+
+/* =========================
    SANITIZER
 ========================= */
 
