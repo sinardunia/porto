@@ -341,6 +341,7 @@ export const prerender = false;
         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
         /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
       ];
       const extractId = (url) => {
         for (const p of patterns) {
@@ -350,8 +351,20 @@ export const prerender = false;
         return null;
       };
 
+      // Protect content inside <pre>, <code>, <script>, <style>, <textarea>
+      const protectedBlocks = [];
+      let protectedIndex = 0;
+      const protectedHtml = html.replace(
+        /<(pre|code|script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,
+        (match) => {
+          const placeholder = `__PROTECTED_${protectedIndex}__`;
+          protectedBlocks[protectedIndex++] = match;
+          return placeholder;
+        }
+      );
+
       // Step 1: Replace <a> tags that are plain YouTube links
-      let result = html.replace(
+      let result = protectedHtml.replace(
         /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
         (match, href, text) => {
           const id = extractId(href);
@@ -362,13 +375,18 @@ export const prerender = false;
 
       // Step 2: Replace standalone plain-text YouTube URLs
       result = result.replace(
-        /(^|>|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}))(?=[\s<.,;:!?)\]"']|$)/g,
+        /(^|>|\s)((?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}|youtube\.com\/shorts\/[a-zA-Z0-9_-]{11})[^"'<>\s]*)(?=[\s<.,;:!?)\]"']|$)/g,
         (match, before, url) => {
           const id = extractId(url);
           if (!id) return match;
           return `${before}<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
         }
       );
+
+      // Restore protected blocks
+      protectedBlocks.forEach((block, i) => {
+        result = result.split(`__PROTECTED_${i}__`).join(block);
+      });
 
       return result;
     };

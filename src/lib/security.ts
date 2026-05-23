@@ -113,6 +113,7 @@ const YOUTUBE_PATTERNS = [
   /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
   /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
   /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+  /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
 ];
 
 export const extractYouTubeId = (url: string): string | null => {
@@ -124,13 +125,24 @@ export const extractYouTubeId = (url: string): string | null => {
 };
 
 export const convertYouTubeLinks = (html: string): string => {
+  // Protect content inside <pre>, <code>, <script>, <style>, <textarea>
+  const protectedBlocks: string[] = [];
+  let protectedIndex = 0;
+  const protectedHtml = html.replace(
+    /<(pre|code|script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,
+    (match) => {
+      const placeholder = `__PROTECTED_${protectedIndex}__`;
+      protectedBlocks[protectedIndex++] = match;
+      return placeholder;
+    }
+  );
+
   // Step 1: Replace <a> tags that are plain YouTube links
-  let result = html.replace(
+  let result = protectedHtml.replace(
     /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
     (match, href: string, text: string) => {
       const id = extractYouTubeId(href);
       if (!id) return match;
-      // Only convert if the link text IS the URL (not custom anchor text)
       if (text.trim() !== href.trim()) return match;
       return `<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
     }
@@ -138,13 +150,18 @@ export const convertYouTubeLinks = (html: string): string => {
 
   // Step 2: Replace standalone plain-text YouTube URLs
   result = result.replace(
-    /(^|>|\s)(https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}))(?=[\s<.,;:!?)\]"']|$)/g,
+    /(^|>|\s)((?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}|youtube\.com\/shorts\/[a-zA-Z0-9_-]{11})[^"'<>\s]*)(?=[\s<.,;:!?)\]"']|$)/g,
     (match, before: string, url: string) => {
       const id = extractYouTubeId(url);
       if (!id) return match;
       return `${before}<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
     }
   );
+
+  // Restore protected blocks
+  protectedBlocks.forEach((block, i) => {
+    result = result.split(`__PROTECTED_${i}__`).join(block);
+  });
 
   return result;
 };
