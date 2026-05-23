@@ -1,6 +1,6 @@
 import { createSupabaseClient } from "./supabase";
 import { withTimeout } from "./security";
-import type { BlogPostSummary } from "@/types/blog";
+import type { BlogPost, BlogPostSummary } from "@/types/blog";
 
 const BLOG_FIELDS = "id, slug, title, excerpt, content, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published" as const;
 
@@ -31,7 +31,7 @@ export const getAllTags = (posts: BlogPostSummary[]) =>
     )
   ).sort((a, b) => a.localeCompare(b));
 
-export async function getPublishedBlogPosts(limit = 50): Promise<BlogPostSummary[]> {
+export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
   try {
     const supabase = createSupabaseClient();
     const { data, error } = await withTimeout(
@@ -48,7 +48,7 @@ export async function getPublishedBlogPosts(limit = 50): Promise<BlogPostSummary
       console.warn("Unable to load blog posts:", error.message);
       return [];
     }
-    return (data ?? []) as BlogPostSummary[];
+    return (data ?? []) as BlogPost[];
   } catch (err) {
     console.warn("Unable to load blog posts:", err instanceof Error ? err.message : "Unknown error");
     return [];
@@ -60,7 +60,7 @@ export function estimateReadTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
-export async function getBlogPostBySlug(slug: string): Promise<BlogPostSummary | null> {
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
     const supabase = createSupabaseClient();
     const { data, error } = await withTimeout(
@@ -77,7 +77,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPostSummary |
       console.warn("Blog post not found:", error?.message || slug);
       return null;
     }
-    return data as BlogPostSummary;
+    return data as BlogPost;
   } catch (err) {
     console.warn("Blog post fetch failed:", err instanceof Error ? err.message : "Unknown error");
     return null;

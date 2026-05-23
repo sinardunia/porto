@@ -19,7 +19,7 @@ const securityHeaders = {
     // 🔥 FIX INI JUGA (fetch + dev tools + preview system)
     "connect-src 'self' https: blob:",
 
-    "frame-src https://utteranc.es",
+    "frame-src https://utteranc.es https://*.cbox.ws",
     "form-action 'self'",
   ].join("; "),
   "X-Frame-Options": "DENY",
