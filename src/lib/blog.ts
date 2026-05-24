@@ -41,7 +41,7 @@ export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
         .eq("is_published", true)
         .order("created_at", { ascending: false })
         .limit(limit),
-      10000,
+      5000,
       "Blog posts fetch"
     );
     if (error) {
@@ -70,7 +70,7 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
         .eq("slug", slug)
         .eq("is_published", true)
         .single(),
-      10000,
+      5000,
       "Blog post fetch"
     );
     if (error || !data) {

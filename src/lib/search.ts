@@ -68,7 +68,7 @@ export async function queryThoughts({
 
     const { data, error } = (await withTimeout(
       supabaseQuery,
-      8000,
+      5000,
       "Thoughts Multi-Index Search"
     )) as SupabaseResponse;
 
@@ -109,7 +109,7 @@ async function fetchDefaultThoughts(
 
   const { data } = (await withTimeout(
     defaultQuery,
-    8000,
+    5000,
     "Default Thoughts Stream"
   )) as SupabaseResponse;
 

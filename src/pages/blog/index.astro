@@ -13,6 +13,14 @@ const hiddenInputs: { name: string; value: string }[] = [];
 if (activeTag) hiddenInputs.push({ name: "tag", value: activeTag });
 
 const clearHref = activeTag ? `/blog?tag=${encodeURIComponent(activeTag)}` : "/blog";
+
+// Cache: lebih pendek kalau ada filter aktif
+Astro.response.headers.set(
+  "Cache-Control",
+  query || activeTag
+    ? "public, max-age=30, stale-while-revalidate=300"
+    : "public, max-age=60, stale-while-revalidate=600"
+);
 ---
 
 <Layout

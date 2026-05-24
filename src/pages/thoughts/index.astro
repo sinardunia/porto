@@ -9,6 +9,14 @@ export const prerender = false;
 
 const searchQuery = Astro.url.searchParams.get("q")?.trim() || "";
 const cursorQuery = Astro.url.searchParams.get("before")?.trim() || "";
+
+// Cache: lebih pendek kalau ada filter aktif
+Astro.response.headers.set(
+  "Cache-Control",
+  searchQuery || cursorQuery
+    ? "public, max-age=30, stale-while-revalidate=300"
+    : "public, max-age=60, stale-while-revalidate=600"
+);
 ---
 
 <Layout title="Thoughts" description="Things">
