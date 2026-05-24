@@ -33,6 +33,7 @@ export const prerender = false;
       <label class="flex flex-col gap-2">
         <span class="text-sm text-muted-light dark:text-neutral-400">Thought</span>
         <textarea
+          id="thought-content"
           name="content"
           rows="8"
           placeholder="Apa yang ingin disimpan hari ini?"
@@ -41,13 +42,26 @@ export const prerender = false;
         ></textarea>
       </label>
 
+      <!-- YOUTUBE LINK -->
+      <label class="flex flex-col gap-2">
+        <span class="text-sm text-muted-light dark:text-neutral-400">YouTube link (opsional)</span>
+        <input
+          id="yt-link"
+          name="ytLink"
+          type="url"
+          placeholder="https://youtube.com/watch?v=..."
+          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-text-light outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
+        />
+        <span class="text-[10px] text-muted-light">Embed 1 video YouTube saja. Tidak bisa digabung dengan media upload.</span>
+      </label>
+
       <!-- MEDIA UPLOAD -->
       <div class="flex flex-col gap-3">
         <label
           for="media-input"
           class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border-light bg-secondary-light px-6 py-10 text-center"
         >
-          <span class="text-sm text-muted-light">Upload images / videos</span>
+          <span class="text-sm text-muted-light">Upload images / videos / GIF</span>
           <span class="text-xs text-muted-light">max 6 files</span>
         </label>
 
@@ -68,6 +82,7 @@ export const prerender = false;
       <label class="flex flex-col gap-2">
         <span class="text-sm text-muted-light dark:text-neutral-400">Media alt text</span>
         <input
+          id="image-alt"
           name="imageAlt"
           type="text"
           placeholder="Deskripsi singkat"
@@ -186,61 +201,98 @@ export const prerender = false;
       renderPreview(selectedFiles);
     });
 
+    const extractYouTubeId = (url) => {
+      const patterns = [
+        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+        /^([a-zA-Z0-9_-]{11})$/,
+      ];
+      for (const p of patterns) {
+        const m = url.match(p);
+        if (m) return m[1];
+      }
+      return null;
+    };
+
     const submitThought = async () => {
-      const adminSecret = secretInput.value.trim();
-
-      if (!adminSecret) {
-        setStatus("Admin secret required");
-        return;
-      }
-
-      const formData = new FormData();
-
-      formData.append("adminSecret", adminSecret);
-      formData.append(
-        "content",
-        form.elements.namedItem("content").value
-      );
-
-      const alt = form.elements.namedItem("imageAlt")?.value;
-      if (alt) formData.append("imageAlt", alt);
-
-      // COMPRESSION PHASE
-      let filesToUpload = selectedFiles;
-      const hasMedia = selectedFiles.length > 0;
-
-      if (hasMedia) {
-        setCompressing(true, "Mengompresi media...", 0);
-
-        try {
-          const results = await compressMedia(selectedFiles, (index, percent) => {
-            const fileName = selectedFiles[index]?.name || "";
-            setCompressing(true, `Mengompresi ${fileName}...`, percent);
-          });
-
-          filesToUpload = results.map((r) => r.file);
-
-          const totalOriginal = results.reduce((s, r) => s + r.originalSize, 0);
-          const totalCompressed = results.reduce((s, r) => s + r.compressedSize, 0);
-          const saved = totalOriginal - totalCompressed;
-          const savedMb = (saved / 1024 / 1024).toFixed(1);
-
-          setStatus(`Dihematkan ${savedMb}MB`);
-        } catch (err) {
-          console.error("Compression failed:", err);
-          setStatus("Kompresi gagal, upload asli saja...");
-        } finally {
-          setCompressing(false);
-        }
-      }
-
-      filesToUpload.forEach((file) => {
-        formData.append("media", file);
-      });
-
       try {
+        setStatus("Memulai submit...");
+
+        const adminSecret = secretInput.value.trim();
+        if (!adminSecret) {
+          setStatus("Admin secret required");
+          return;
+        }
+
+        const ytInput = document.getElementById("yt-link");
+        const ytLink = ytInput && ytInput.value ? ytInput.value.trim() : "";
+        const hasMedia = selectedFiles.length > 0;
+
+        setStatus(`ytLink="${ytLink}" media=${hasMedia}`);
+
+        if (ytLink && hasMedia) {
+          setStatus("Pilih salah satu: YouTube link atau media upload.");
+          return;
+        }
+
+        if (ytLink) {
+          const ytId = extractYouTubeId(ytLink);
+          if (!ytId) {
+            setStatus("URL YouTube tidak valid.");
+            return;
+          }
+          setStatus(`YouTube ID: ${ytId} — mengirim...`);
+        }
+
+        const contentEl = document.getElementById("thought-content");
+        const content = contentEl && contentEl.value ? contentEl.value.trim() : "";
+        if (!content) {
+          setStatus("Content is required.");
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("adminSecret", adminSecret);
+        formData.append("content", content);
+        if (ytLink) formData.append("ytLink", ytLink);
+
+        const altEl = document.getElementById("image-alt");
+        const alt = altEl && altEl.value ? altEl.value.trim() : "";
+        if (alt) formData.append("imageAlt", alt);
+
+        // COMPRESSION PHASE
+        let filesToUpload = selectedFiles;
+
+        if (hasMedia) {
+          setCompressing(true, "Mengompresi media...", 0);
+
+          try {
+            const results = await compressMedia(selectedFiles, (index, percent) => {
+              const fileName = selectedFiles[index]?.name || "";
+              setCompressing(true, `Mengompresi ${fileName}...`, percent);
+            });
+
+            filesToUpload = results.map((r) => r.file);
+
+            const totalOriginal = results.reduce((s, r) => s + r.originalSize, 0);
+            const totalCompressed = results.reduce((s, r) => s + r.compressedSize, 0);
+            const saved = totalOriginal - totalCompressed;
+            const savedMb = (saved / 1024 / 1024).toFixed(1);
+
+            setStatus(`Dihematkan ${savedMb}MB`);
+          } catch (err) {
+            console.error("Compression failed:", err);
+            setStatus("Kompresi gagal, upload asli saja...");
+          } finally {
+            setCompressing(false);
+          }
+        }
+
+        filesToUpload.forEach((file) => {
+          formData.append("media", file);
+        });
+
         setLoading(true);
-        if (!hasMedia) setStatus("");
+        setStatus("Mengirim ke server...");
 
         const res = await fetch("/api/thoughts", {
           method: "POST",
@@ -253,7 +305,7 @@ export const prerender = false;
         const data = await res.json().catch(() => null);
 
         if (!res.ok) {
-          throw new Error(data?.message || "Failed");
+          throw new Error(data?.message || `HTTP ${res.status}`);
         }
 
         form.reset();
@@ -262,9 +314,11 @@ export const prerender = false;
         previewUrls = [];
         if (mediaPreview) mediaPreview.innerHTML = "";
 
-        setStatus("Published!");
+        setStatus(`Published! ID: ${data?.id || "?"}`);
       } catch (err) {
-        setStatus(err.message || "Error");
+        const msg = err instanceof Error ? err.message : String(err);
+        console.error("[THOUGHTS_SUBMIT] Error:", msg);
+        setStatus(`Error: ${msg}`);
       } finally {
         setLoading(false);
       }

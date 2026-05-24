@@ -12,6 +12,6 @@ export type Thought = {
   id: string;
   content: string;
   created_at: string;
-
+  yt_link: string | null;
   thought_media: ThoughtMedia[];
 };

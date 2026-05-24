@@ -11,6 +11,23 @@ import {
   withTimeout,
 } from "@/lib/security";
 
+/* ---------------------------------
+   YOUTUBE HELPERS
+---------------------------------- */
+
+const YOUTUBE_PATTERNS = [
+  /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+  /^([a-zA-Z0-9_-]{11})$/,
+];
+
+const extractYouTubeId = (url: string): string | null => {
+  for (const p of YOUTUBE_PATTERNS) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+};
+
 export const prerender = false;
 
 const THOUGHT_MEDIA_BUCKET =
@@ -192,6 +209,25 @@ export const POST: APIRoute =
           300
         );
 
+      const rawYtLink =
+        cleanText(
+          formData.get("ytLink"),
+          300
+        );
+
+      let ytLink: string | null = null;
+      if (rawYtLink) {
+        const ytId = extractYouTubeId(rawYtLink);
+        console.log("[THOUGHTS_API] rawYtLink:", rawYtLink, "extractedId:", ytId);
+        if (!ytId) {
+          return json(
+            { message: "Invalid YouTube URL." },
+            400
+          );
+        }
+        ytLink = `https://www.youtube-nocookie.com/embed/${ytId}`;
+      }
+
       const mediaFiles =
         formData
           .getAll("media")
@@ -369,7 +405,7 @@ export const POST: APIRoute =
 const { data, error } = await withTimeout(
   supabase
     .from("thoughts")
-    .insert({ content })
+    .insert({ content, yt_link: ytLink })
     .select("id")
     .single(),
 
@@ -378,7 +414,7 @@ const { data, error } = await withTimeout(
 );
 
 if (error || !data) {
-  console.error("[THOUGHTS_API] Insert failed:", error);
+  console.error("[THOUGHTS_API] Insert failed:", error, "ytLink:", ytLink, "content length:", content?.length);
   return json(
     {
       message: error?.message

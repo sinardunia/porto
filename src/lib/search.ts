@@ -43,7 +43,7 @@ export async function queryThoughts({
     let supabaseQuery = supabase
       .from("thoughts")
       .select(`
-        id, content, created_at,
+        id, content, created_at, yt_link,
         thought_media (id, media_type, media_url, media_alt, position)
       `)
       .is("deleted_at", null);
@@ -95,7 +95,7 @@ async function fetchDefaultThoughts(
   let defaultQuery = supabase
     .from("thoughts")
     .select(`
-      id, content, created_at,
+      id, content, created_at, yt_link,
       thought_media (id, media_type, media_url, media_alt, position)
     `)
     .is("deleted_at", null)

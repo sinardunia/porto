@@ -3,5 +3,6 @@
  */
 export const getOptimizedMedia = (url: string, width = 800) => {
   if (!url || !url.includes("supabase.co")) return url;
-  return `${url}?width=${width}&quality=70&format=webp`;
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}width=${width}&quality=70&format=webp`;
 };

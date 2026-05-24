@@ -52,8 +52,10 @@ if (post) {
     const sanitizedContent = await sanitizeRenderedHtml(renderedContent);
     finalContent = convertYouTubeLinks(sanitizedContent);
   } catch (err) {
-    console.error("[BLOG_RENDER] Failed to render content:", err instanceof Error ? err.message : err);
-    finalContent = `<p class="text-neutral-400 italic">Tidak bisa menampilkan konten.</p>`;
+    const msg = err instanceof Error ? err.message : String(err);
+    const stack = err instanceof Error ? err.stack : "";
+    console.error("[BLOG_RENDER] Failed to render content:", msg, stack);
+    finalContent = `<p class="text-neutral-400 italic">Tidak bisa menampilkan konten. (${msg})</p>`;
   }
 }
 
@@ -170,6 +172,76 @@ const jsonLd = post ? {
     )}
   </main>
 </Layout>
+
+<!-- Lightbox untuk gambar blog -->
+<div id="image-lightbox" class="fixed inset-0 z-[999999] bg-black/95 backdrop-blur-md hidden opacity-0 flex items-center justify-center transition-all duration-300 select-none pointer-events-auto" onclick="window.closeBlogLightbox()">
+  <button
+    type="button"
+    class="absolute top-6 right-6 z-[1000001] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 border border-white/10 cursor-pointer pointer-events-auto"
+    onclick="event.stopPropagation(); window.closeBlogLightbox();"
+    aria-label="Close"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
+  <div class="relative flex h-full w-full items-center justify-center p-4">
+    <img
+      id="lightbox-img"
+      class="max-w-[95vw] max-h-[90vh] object-contain rounded-sm shadow-2xl transition-all duration-300 scale-95 pointer-events-auto"
+      src=""
+      alt=""
+      onclick="event.stopPropagation()"
+    />
+  </div>
+</div>
+
+<script is:inline>
+  window.openBlogLightbox = function(src) {
+    const lb = document.getElementById('image-lightbox');
+    const img = document.getElementById('lightbox-img');
+    if (!lb || !img) return;
+    img.src = src;
+    lb.classList.remove('hidden');
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      lb.classList.add('opacity-100');
+      img.classList.replace('scale-95', 'scale-100');
+    }, 10);
+    window.history.pushState({ lightboxOpen: true }, '');
+  };
+  window.closeBlogLightbox = function() {
+    const lb = document.getElementById('image-lightbox');
+    const img = document.getElementById('lightbox-img');
+    if (!lb || !img) return;
+    lb.classList.remove('opacity-100');
+    img.classList.replace('scale-100', 'scale-95');
+    setTimeout(() => {
+      lb.classList.add('hidden');
+      lb.style.display = 'none';
+      img.src = '';
+    }, 300);
+    document.body.style.overflow = '';
+  };
+  // Attach click handler to .post images
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) return;
+    if (target.tagName === 'IMG' && target.closest('.post')) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.openBlogLightbox(target.src);
+    }
+  });
+  window.addEventListener('popstate', () => {
+    const lb = document.getElementById('image-lightbox');
+    if (lb && lb.style.display === 'flex') window.closeBlogLightbox();
+  });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') window.closeBlogLightbox();
+  });
+</script>
 
 <style is:global>
   .youtube-embed {
