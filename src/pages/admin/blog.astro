@@ -90,6 +90,7 @@ export const prerender = false;
           <button type="button" data-md="ul" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Bullet list">List</button>
           <button type="button" data-md="ol" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Numbered list">1.</button>
           <button type="button" data-md="youtube" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="YouTube embed">YT</button>
+          <button type="button" data-md="image" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Insert image">Img</button>
         </div>
 
         <textarea
@@ -100,6 +101,8 @@ export const prerender = false;
           placeholder="# Judul&#10;&#10;Tulis pelan-pelan di sini..."
           class="min-h-[20rem] resize-y rounded-b-lg rounded-t-none border border-border-light bg-secondary-light px-4 py-3 font-mono text-sm leading-7 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
         ></textarea>
+
+        <input type="file" id="inline-image-upload" accept="image/jpeg,image/png,image/webp" hidden />
 
         <!-- PREVIEW TOGGLE -->
         <button type="button" id="preview-toggle" class="self-start text-xs text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300">
@@ -212,6 +215,7 @@ export const prerender = false;
   const titleInput = document.querySelector("#blog-title");
   const slugInput = document.querySelector("#blog-slug");
   const contentInput = document.querySelector("#blog-content");
+  const imageUploadInput = document.querySelector("#inline-image-upload");
   const publishButton = document.querySelector("#publish-button");
   const btnText = document.querySelector("#btn-text");
   const btnSpinner = document.querySelector("#btn-spinner");
@@ -280,6 +284,12 @@ export const prerender = false;
         if (!url) return;
         insertAtCursor("\n" + url.trim() + "\n", "");
       },
+      image: () => {
+        if (imageUploadInput instanceof HTMLInputElement) {
+          imageUploadInput.value = "";
+          imageUploadInput.click();
+        }
+      },
     };
 
     document.querySelectorAll("[data-md]").forEach((btn) => {
@@ -289,6 +299,58 @@ export const prerender = false;
         if (key && toolbarActions[key]) toolbarActions[key]();
       });
     });
+
+    /* -------------------------
+       INLINE IMAGE UPLOAD
+    -------------------------- */
+    if (imageUploadInput instanceof HTMLInputElement) {
+      imageUploadInput.addEventListener("change", async (e) => {
+        const target = e.target;
+        if (!(target instanceof HTMLInputElement)) return;
+        const file = target.files?.[0];
+        if (!file) return;
+
+        const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+        if (file.size > MAX_IMAGE_SIZE) {
+          setStatus("Image must be smaller than 5MB.");
+          target.value = "";
+          return;
+        }
+
+        const adminSecret = secretInput.value.trim();
+        if (!adminSecret) {
+          setStatus("Admin secret belum diisi.");
+          imageUploadInput.value = "";
+          return;
+        }
+
+        setLoading(true);
+        setStatus("Uploading image...");
+
+        try {
+          const uploadForm = new FormData();
+          uploadForm.append("image", file);
+
+          const res = await fetch("/api/upload-image", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${adminSecret}` },
+            body: uploadForm,
+          });
+
+          const result = await res.json().catch(() => null);
+          if (!res.ok) throw new Error(result?.message || "Upload failed.");
+
+          const alt = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
+          insertAtCursor(`\n![${alt}](${result.url})\n`, "");
+          setStatus("Image inserted.");
+        } catch (err) {
+          setStatus(err instanceof Error ? err.message : "Image upload failed.");
+        } finally {
+          setLoading(false);
+          imageUploadInput.value = "";
+        }
+      });
+    }
 
     /* -------------------------
        AUTO-CONTINUE LIST ON ENTER
@@ -394,6 +456,7 @@ export const prerender = false;
     const mdToHtml = (md) => {
       const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       const inline = (s) => esc(s)
+        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" decoding="async" class="max-w-full h-auto rounded-lg my-4" />')
         .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
         .replace(/\*(.+?)\*/g, '<em>$1</em>')

@@ -60,6 +60,35 @@ export function estimateReadTime(content: string): number {
   return Math.max(1, Math.ceil(words / 200));
 }
 
+export function getRelatedPosts(
+  currentPost: BlogPost,
+  allPosts: BlogPostSummary[],
+  limit = 3
+): BlogPostSummary[] {
+  const currentSlug = currentPost.slug;
+  const currentTags = new Set(
+    (currentPost.tags ?? []).map((t) => (typeof t === "string" ? t.toLowerCase() : "")).filter(Boolean)
+  );
+
+  const scored = allPosts
+    .filter((p) => p.slug !== currentSlug)
+    .map((p) => {
+      const tags = (p.tags ?? []).map((t) => (typeof t === "string" ? t.toLowerCase() : "")).filter(Boolean);
+      const overlap = tags.filter((t) => currentTags.has(t)).length;
+      return {
+        post: p,
+        overlap,
+        createdAt: new Date(p.created_at).getTime(),
+      };
+    })
+    .sort((a, b) => {
+      if (b.overlap !== a.overlap) return b.overlap - a.overlap;
+      return b.createdAt - a.createdAt;
+    });
+
+  return scored.slice(0, limit).map((s) => s.post);
+}
+
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
     const supabase = createSupabaseClient();

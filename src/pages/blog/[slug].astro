@@ -1,6 +1,8 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import { getBlogPostBySlug, estimateReadTime } from "@/lib/blog";
+import RelatedPosts from "@/components/blog/RelatedPosts.astro";
+import Utterances from "@/components/blog/Utterances.astro";
+import { getBlogPostBySlug, getPublishedBlogPosts, getRelatedPosts, estimateReadTime } from "@/lib/blog";
 import { sanitizeRenderedHtml, convertYouTubeLinks } from "@/lib/security";
 import { SITE_URL } from "@/data/config";
 import "@/styles/post.css";
@@ -13,7 +15,12 @@ if (!slug || typeof slug !== "string") {
   return Astro.redirect("/blog");
 }
 
-const post = await getBlogPostBySlug(slug);
+const [post, allPosts] = await Promise.all([
+  getBlogPostBySlug(slug),
+  getPublishedBlogPosts(50),
+]);
+
+const relatedPosts = post ? getRelatedPosts(post, allPosts, 3) : [];
 
 if (!post) {
   Astro.response.status = 404;
@@ -140,6 +147,9 @@ const jsonLd = post ? {
           set:html={finalContent}
         />
       </article>
+
+      <RelatedPosts posts={relatedPosts} />
+      <Utterances />
     ) : (
       <div class="pt-10 pb-6 border-b border-neutral-100/50 dark:border-neutral-900/30">
         <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 mb-2">

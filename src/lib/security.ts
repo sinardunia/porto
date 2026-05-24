@@ -177,7 +177,7 @@ export const sanitizeRenderedHtml = async (html: string): Promise<string> => {
       "p", "br", "strong", "em", "code", "pre", "h1", "h2", "h3", "h4", "h5", "h6",
       "ul", "ol", "li", "blockquote", "a", "img", "span", "div", "iframe"
     ],
-    ALLOWED_ATTR: ["href", "src", "alt", "title", "class", "id", "target", "allowfullscreen", "frameborder", "data-id"]
+    ALLOWED_ATTR: ["href", "src", "alt", "title", "class", "id", "target", "allowfullscreen", "frameborder", "data-id", "loading", "decoding"]
   });
 };
 

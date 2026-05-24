@@ -3,6 +3,15 @@
   @apply leading-7;
 }
 
+.post img {
+  @apply max-w-full h-auto max-h-[70vh] rounded-lg my-4;
+  background-color: rgb(245 245 245);
+}
+
+html.dark .post img {
+  background-color: rgb(23 23 23);
+}
+
 .post code {
   @apply rounded-sm px-1 py-[2px];
 }

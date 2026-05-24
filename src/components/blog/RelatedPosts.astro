@@ -1,0 +1,50 @@
+---
+import type { BlogPostSummary } from "@/types/blog";
+
+type Props = {
+  posts: BlogPostSummary[];
+};
+
+const { posts } = Astro.props;
+---
+
+{posts.length > 0 && (
+  <aside class="border-t border-neutral-100/50 dark:border-neutral-900/30 pt-8">
+    <h2 class="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400 dark:text-neutral-500 mb-5">
+      Bacaan lainnya
+    </h2>
+    <ul class="flex flex-col gap-5">
+      {posts.map((p) => {
+        const date = new Date(p.created_at);
+        const dateStr = Number.isNaN(date.getTime())
+          ? p.created_at
+          : new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" }).format(date);
+        return (
+          <li>
+            <a href={`/blog/${p.slug}`} class="group block">
+              <article class="flex gap-4 items-start">
+                {p.cover_image_url && (
+                  <img
+                    src={p.cover_image_url}
+                    alt={p.cover_image_alt || ""}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-14 w-14 shrink-0 rounded-md object-cover opacity-80 group-hover:opacity-100 transition-opacity sm:h-16 sm:w-16"
+                  />
+                )}
+                <div class="min-w-0 flex-1">
+                  <h3 class="text-sm font-semibold leading-snug text-neutral-800 group-hover:text-neutral-600 dark:text-neutral-200 dark:group-hover:text-neutral-300 transition-colors line-clamp-2">
+                    {p.title}
+                  </h3>
+                  <time class="mt-1 block text-[11px] text-neutral-400 dark:text-neutral-500">
+                    {dateStr}
+                  </time>
+                </div>
+              </article>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </aside>
+)}
