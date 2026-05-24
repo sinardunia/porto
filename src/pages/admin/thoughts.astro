@@ -115,36 +115,36 @@ export const prerender = false;
   </main>
 </Layout>
 
-<script type="module">
-  import { compressMedia } from "../../lib/compression";
+<script is:inline>
+  (function() {
+    const form = document.getElementById("thought-form");
+    const status = document.getElementById("form-status");
+    const secretInput = document.getElementById("admin-secret");
+    const publishButton = document.getElementById("publish-button");
+    const mediaInput = document.getElementById("media-input");
+    const mediaPreview = document.getElementById("media-preview");
+    const compressionUi = document.getElementById("compression-ui");
+    const compressionLabel = document.getElementById("compression-label");
+    const compressionPercent = document.getElementById("compression-percent");
+    const compressionBar = document.getElementById("compression-bar");
 
-  const form = document.querySelector("#thought-form");
-  const status = document.querySelector("#form-status");
-  const secretInput = document.querySelector("#admin-secret");
-  const publishButton = document.querySelector("#publish-button");
-  const mediaInput = document.querySelector("#media-input");
-  const mediaPreview = document.querySelector("#media-preview");
-  const compressionUi = document.querySelector("#compression-ui");
-  const compressionLabel = document.querySelector("#compression-label");
-  const compressionPercent = document.querySelector("#compression-percent");
-  const compressionBar = document.querySelector("#compression-bar");
+    if (!form || !publishButton || !secretInput) {
+      if (status) status.textContent = "[DEBUG] Elemen form tidak ditemukan";
+      console.error("[THOUGHTS] Missing critical elements", { form, publishButton, secretInput });
+      return;
+    }
 
-  let selectedFiles = [];
-  let previewUrls = [];
-  const MAX_FILES = 6;
+    if (status) status.textContent = "[DEBUG] Script aktif";
 
-  if (
-    !(form instanceof HTMLFormElement) ||
-    !(secretInput instanceof HTMLInputElement) ||
-    !(publishButton instanceof HTMLButtonElement) ||
-    !(mediaInput instanceof HTMLInputElement)
-  ) {
-    console.error("Missing elements");
-  } else {
+    let selectedFiles = [];
+    let previewUrls = [];
+    const MAX_FILES = 6;
+
     secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
 
     const setStatus = (msg) => {
       if (status) status.textContent = msg;
+      console.log("[THOUGHTS_STATUS]", msg);
     };
 
     const setLoading = (loading) => {
@@ -152,31 +152,26 @@ export const prerender = false;
       publishButton.textContent = loading ? "Publishing..." : "Publish";
     };
 
-    const setCompressing = (show, label = "", percent = 0) => {
-      if (compressionUi) compressionUi.classList.toggle("hidden", !show);
-      if (compressionUi) compressionUi.classList.toggle("flex", show);
-      if (compressionLabel) compressionLabel.textContent = label;
-      if (compressionPercent) compressionPercent.textContent = `${percent}%`;
-      if (compressionBar) compressionBar.style.width = `${percent}%`;
+    const setCompressing = (show, label, percent) => {
+      if (compressionUi) {
+        compressionUi.classList.toggle("hidden", !show);
+        compressionUi.classList.toggle("flex", show);
+      }
+      if (compressionLabel) compressionLabel.textContent = label || "";
+      if (compressionPercent) compressionPercent.textContent = (percent || 0) + "%";
+      if (compressionBar) compressionBar.style.width = (percent || 0) + "%";
     };
 
     const renderPreview = (files) => {
       if (!mediaPreview) return;
-
-      // Revoke old URLs to prevent memory leak
       previewUrls.forEach((url) => URL.revokeObjectURL(url));
       previewUrls = [];
-
       mediaPreview.innerHTML = "";
-
       files.slice(0, MAX_FILES).forEach((file) => {
         const url = URL.createObjectURL(file);
         previewUrls.push(url);
-
         const wrapper = document.createElement("div");
-        wrapper.className =
-          "overflow-hidden rounded-lg border border-border-light bg-neutral-100";
-
+        wrapper.className = "overflow-hidden rounded-lg border border-border-light bg-neutral-100";
         if (file.type.startsWith("image/")) {
           const img = document.createElement("img");
           img.src = url;
@@ -189,17 +184,17 @@ export const prerender = false;
           video.className = "h-28 w-full object-cover";
           wrapper.appendChild(video);
         }
-
         mediaPreview.appendChild(wrapper);
       });
     };
 
-    mediaInput.addEventListener("change", () => {
-      if (!mediaInput.files) return;
-
-      selectedFiles = Array.from(mediaInput.files).slice(0, MAX_FILES);
-      renderPreview(selectedFiles);
-    });
+    if (mediaInput) {
+      mediaInput.addEventListener("change", () => {
+        if (!mediaInput.files) return;
+        selectedFiles = Array.from(mediaInput.files).slice(0, MAX_FILES);
+        renderPreview(selectedFiles);
+      });
+    }
 
     const extractYouTubeId = (url) => {
       const patterns = [
@@ -211,6 +206,20 @@ export const prerender = false;
         if (m) return m[1];
       }
       return null;
+    };
+
+    const compressMediaFallback = async (files, onItemProgress) => {
+      // Try to load module; if it fails, return files as-is
+      try {
+        const mod = await import("../../lib/compression.ts");
+        if (mod && typeof mod.compressMedia === "function") {
+          return await mod.compressMedia(files, onItemProgress);
+        }
+      } catch (e) {
+        console.warn("[THOUGHTS] Compression module failed:", e);
+      }
+      // Fallback: no compression
+      return files.map((f) => ({ file: f, originalSize: f.size, compressedSize: f.size }));
     };
 
     const submitThought = async () => {
@@ -227,7 +236,7 @@ export const prerender = false;
         const ytLink = ytInput && ytInput.value ? ytInput.value.trim() : "";
         const hasMedia = selectedFiles.length > 0;
 
-        setStatus(`ytLink="${ytLink}" media=${hasMedia}`);
+        setStatus('ytLink="' + ytLink + '" media=' + hasMedia);
 
         if (ytLink && hasMedia) {
           setStatus("Pilih salah satu: YouTube link atau media upload.");
@@ -240,7 +249,7 @@ export const prerender = false;
             setStatus("URL YouTube tidak valid.");
             return;
           }
-          setStatus(`YouTube ID: ${ytId} — mengirim...`);
+          setStatus("YouTube ID: " + ytId + " — mengirim...");
         }
 
         const contentEl = document.getElementById("thought-content");
@@ -264,21 +273,17 @@ export const prerender = false;
 
         if (hasMedia) {
           setCompressing(true, "Mengompresi media...", 0);
-
           try {
-            const results = await compressMedia(selectedFiles, (index, percent) => {
+            const results = await compressMediaFallback(selectedFiles, (index, percent) => {
               const fileName = selectedFiles[index]?.name || "";
-              setCompressing(true, `Mengompresi ${fileName}...`, percent);
+              setCompressing(true, "Mengompresi " + fileName + "...", percent);
             });
-
             filesToUpload = results.map((r) => r.file);
-
             const totalOriginal = results.reduce((s, r) => s + r.originalSize, 0);
             const totalCompressed = results.reduce((s, r) => s + r.compressedSize, 0);
             const saved = totalOriginal - totalCompressed;
             const savedMb = (saved / 1024 / 1024).toFixed(1);
-
-            setStatus(`Dihematkan ${savedMb}MB`);
+            setStatus("Dihematkan " + savedMb + "MB");
           } catch (err) {
             console.error("Compression failed:", err);
             setStatus("Kompresi gagal, upload asli saja...");
@@ -297,7 +302,7 @@ export const prerender = false;
         const res = await fetch("/api/thoughts", {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${adminSecret}`,
+            Authorization: "Bearer " + adminSecret,
           },
           body: formData,
         });
@@ -305,7 +310,7 @@ export const prerender = false;
         const data = await res.json().catch(() => null);
 
         if (!res.ok) {
-          throw new Error(data?.message || `HTTP ${res.status}`);
+          throw new Error((data && data.message) || ("HTTP " + res.status));
         }
 
         form.reset();
@@ -314,16 +319,21 @@ export const prerender = false;
         previewUrls = [];
         if (mediaPreview) mediaPreview.innerHTML = "";
 
-        setStatus(`Published! ID: ${data?.id || "?"}`);
+        setStatus("Published! ID: " + (data && data.id ? data.id : "?"));
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
         console.error("[THOUGHTS_SUBMIT] Error:", msg);
-        setStatus(`Error: ${msg}`);
+        setStatus("Error: " + msg);
       } finally {
         setLoading(false);
       }
     };
 
-    publishButton.addEventListener("click", submitThought);
-  }
+    publishButton.addEventListener("click", function() {
+      console.log("[THOUGHTS] Publish button clicked");
+      submitThought();
+    });
+
+    if (status) status.textContent = "";
+  })();
 </script>
