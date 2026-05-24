@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import "easymde/dist/easymde.min.css";
 
 export const prerender = false;
 ---
@@ -78,42 +79,11 @@ export const prerender = false;
       <!-- EDITOR -->
       <div class="flex flex-col gap-2">
         <span class="text-sm text-neutral-500 dark:text-neutral-400">Content</span>
-
-        <!-- TOOLBAR -->
-        <div class="flex flex-wrap gap-1 rounded-t-lg border border-b-0 border-border-light bg-neutral-50 px-2 py-2 dark:border-neutral-800 dark:bg-neutral-900">
-          <button type="button" data-md="bold" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Bold">Bold</button>
-          <button type="button" data-md="italic" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Italic">Italic</button>
-          <button type="button" data-md="heading" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Heading">H2</button>
-          <button type="button" data-md="link" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Link">Link</button>
-          <button type="button" data-md="quote" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Quote">Quote</button>
-          <button type="button" data-md="code" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Code">Code</button>
-          <button type="button" data-md="ul" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Bullet list">List</button>
-          <button type="button" data-md="ol" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Numbered list">1.</button>
-          <button type="button" data-md="youtube" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="YouTube embed">YT</button>
-          <button type="button" data-md="image" class="rounded-md px-2 py-1 text-sm text-neutral-600 hover:bg-neutral-200 dark:text-neutral-300 dark:hover:bg-neutral-800" title="Insert image">Img</button>
-        </div>
-
         <textarea
           id="blog-content"
           name="content"
-          rows="16"
-          required
           placeholder="# Judul&#10;&#10;Tulis pelan-pelan di sini..."
-          class="min-h-[20rem] resize-y rounded-b-lg rounded-t-none border border-border-light bg-secondary-light px-4 py-3 font-mono text-sm leading-7 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
         ></textarea>
-
-        <input type="file" id="inline-image-upload" accept="image/jpeg,image/png,image/webp" hidden />
-
-        <!-- PREVIEW TOGGLE -->
-        <button type="button" id="preview-toggle" class="self-start text-xs text-neutral-400 hover:text-neutral-700 dark:text-neutral-500 dark:hover:text-neutral-300">
-          Show preview
-        </button>
-
-        <!-- LIVE PREVIEW -->
-        <div id="preview-panel" class="hidden rounded-lg border border-border-light bg-white p-5 text-sm leading-7 text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200">
-          <p class="text-xs text-neutral-400 dark:text-neutral-500 mb-3">Preview</p>
-          <div id="preview-content" class="prose prose-neutral max-w-none dark:prose-invert"></div>
-        </div>
       </div>
 
       <!-- COVER IMAGE -->
@@ -188,6 +158,104 @@ export const prerender = false;
     border-bottom: 12px solid transparent;
     margin-left: 4px;
   }
+
+  /* Textarea before EasyMDE init */
+  #blog-content {
+    width: 100%;
+    min-height: 320px;
+    box-sizing: border-box;
+  }
+
+  /* EasyMDE container full width + proper height */
+  .EasyMDEContainer {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+  .EasyMDEContainer .CodeMirror {
+    min-height: 320px !important;
+    height: auto;
+    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .EasyMDEContainer .editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1px;
+    padding: 4px;
+    border-radius: 8px 8px 0 0;
+    border-bottom: 1px solid #ddd;
+  }
+  .EasyMDEContainer .editor-toolbar button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    color: #333;
+    font-size: 14px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .EasyMDEContainer .editor-toolbar button:hover {
+    background: #e5e5e5;
+  }
+  .EasyMDEContainer .editor-toolbar .separator {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    margin: 6px 4px;
+    background: #ccc;
+  }
+
+  /* EasyMDE toolbar icons (no FA) */
+  .EasyMDEContainer .editor-toolbar button::before {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 13px;
+  }
+  .EasyMDEContainer .editor-toolbar .icon-bold::before { content: "B"; font-weight: 700; }
+  .EasyMDEContainer .editor-toolbar .icon-italic::before { content: "I"; font-style: italic; }
+  .EasyMDEContainer .editor-toolbar .icon-heading::before { content: "H"; }
+  .EasyMDEContainer .editor-toolbar .icon-quote::before { content: "❝"; }
+  .EasyMDEContainer .editor-toolbar .icon-list::before { content: "•"; font-size: 16px; }
+  .EasyMDEContainer .editor-toolbar .icon-list-ol::before { content: "1."; }
+  .EasyMDEContainer .editor-toolbar .icon-link::before { content: "🔗"; font-size: 12px; }
+  .EasyMDEContainer .editor-toolbar .icon-image::before { content: "🖼"; font-size: 12px; }
+  .EasyMDEContainer .editor-toolbar .icon-youtube::before { content: "▶"; }
+  .EasyMDEContainer .editor-toolbar .icon-preview::before { content: "👁"; font-size: 12px; }
+  .EasyMDEContainer .editor-toolbar .icon-sidebyside::before { content: "◫"; }
+  .EasyMDEContainer .editor-toolbar .icon-guide::before { content: "?"; }
+
+  /* EasyMDE dark mode */
+  html.dark .EasyMDEContainer .CodeMirror {
+    background: #171717;
+    color: #e5e5e5;
+    border-color: #404040;
+  }
+  html.dark .EasyMDEContainer .editor-toolbar {
+    background: #171717;
+    border-color: #404040;
+  }
+  html.dark .EasyMDEContainer .editor-toolbar button {
+    color: #e5e5e5 !important;
+  }
+  html.dark .EasyMDEContainer .editor-toolbar button:hover,
+  html.dark .EasyMDEContainer .editor-toolbar button.active {
+    background: #404040;
+  }
+  html.dark .EasyMDEContainer .editor-preview {
+    background: #171717;
+  }
+  html.dark .EasyMDEContainer .CodeMirror-cursor {
+    border-color: #e5e5e5;
+  }
+  html.dark .EasyMDEContainer .CodeMirror-selected {
+    background: #404040;
+  }
 </style>
 
 <script>
@@ -208,31 +276,33 @@ export const prerender = false;
   });
 </script>
 
-<script type="module">
-  const form = document.querySelector("#blog-form");
-  const status = document.querySelector("#form-status");
-  const secretInput = document.querySelector("#admin-secret");
-  const titleInput = document.querySelector("#blog-title");
-  const slugInput = document.querySelector("#blog-slug");
-  const contentInput = document.querySelector("#blog-content");
-  const imageUploadInput = document.querySelector("#inline-image-upload");
-  const publishButton = document.querySelector("#publish-button");
-  const btnText = document.querySelector("#btn-text");
-  const btnSpinner = document.querySelector("#btn-spinner");
-  const previewToggle = document.querySelector("#preview-toggle");
-  const previewPanel = document.querySelector("#preview-panel");
-  const previewContent = document.querySelector("#preview-content");
+<script>
+  // @ts-nocheck
+  import EasyMDE from "easymde";
 
-  if (
-    !(form instanceof HTMLFormElement) ||
-    !(secretInput instanceof HTMLInputElement) ||
-    !(titleInput instanceof HTMLInputElement) ||
-    !(slugInput instanceof HTMLInputElement) ||
-    !(contentInput instanceof HTMLTextAreaElement) ||
-    !(publishButton instanceof HTMLButtonElement)
-  ) {
-    console.error("Blog admin form elements missing.");
-  } else {
+  (() => {
+    const form = document.querySelector("#blog-form");
+    const status = document.querySelector("#form-status");
+    const secretInput = document.querySelector("#admin-secret");
+    const titleInput = document.querySelector("#blog-title");
+    const slugInput = document.querySelector("#blog-slug");
+    const contentInput = document.querySelector("#blog-content");
+    const publishButton = document.querySelector("#publish-button");
+    const btnText = document.querySelector("#btn-text");
+    const btnSpinner = document.querySelector("#btn-spinner");
+
+    if (
+      !(form instanceof HTMLFormElement) ||
+      !(secretInput instanceof HTMLInputElement) ||
+      !(titleInput instanceof HTMLInputElement) ||
+      !(slugInput instanceof HTMLInputElement) ||
+      !(contentInput instanceof HTMLTextAreaElement) ||
+      !(publishButton instanceof HTMLButtonElement)
+    ) {
+      console.error("Blog admin form elements missing.");
+      return;
+    }
+
     secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
 
     /* -------------------------
@@ -255,149 +325,8 @@ export const prerender = false;
     });
 
     /* -------------------------
-       MARKDOWN TOOLBAR
+       MARKDOWN HELPERS (preview)
     -------------------------- */
-    const insertAtCursor = (before, after = "") => {
-      contentInput.focus();
-      const start = contentInput.selectionStart;
-      const end = contentInput.selectionEnd;
-      const text = contentInput.value;
-      const selected = text.slice(start, end);
-      const replacement = before + selected + after;
-
-      contentInput.setRangeText(replacement, start, end, "end");
-      contentInput.setSelectionRange(start + before.length, start + before.length + selected.length);
-      contentInput.dispatchEvent(new Event("input"));
-    };
-
-    const toolbarActions = {
-      bold: () => insertAtCursor("**", "**"),
-      italic: () => insertAtCursor("*", "*"),
-      heading: () => insertAtCursor("## ", ""),
-      link: () => insertAtCursor("[", "](url)"),
-      quote: () => insertAtCursor("> ", ""),
-      code: () => insertAtCursor("```\n", "\n```"),
-      ul: () => insertAtCursor("- ", ""),
-      ol: () => insertAtCursor("1. ", ""),
-      youtube: () => {
-        const url = prompt("Paste YouTube link:");
-        if (!url) return;
-        insertAtCursor("\n" + url.trim() + "\n", "");
-      },
-      image: () => {
-        if (imageUploadInput instanceof HTMLInputElement) {
-          imageUploadInput.value = "";
-          imageUploadInput.click();
-        }
-      },
-    };
-
-    document.querySelectorAll("[data-md]").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const key = btn.getAttribute("data-md");
-        if (key && toolbarActions[key]) toolbarActions[key]();
-      });
-    });
-
-    /* -------------------------
-       INLINE IMAGE UPLOAD
-    -------------------------- */
-    if (imageUploadInput instanceof HTMLInputElement) {
-      imageUploadInput.addEventListener("change", async (e) => {
-        const target = e.target;
-        if (!(target instanceof HTMLInputElement)) return;
-        const file = target.files?.[0];
-        if (!file) return;
-
-        const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-        if (file.size > MAX_IMAGE_SIZE) {
-          setStatus("Image must be smaller than 5MB.");
-          target.value = "";
-          return;
-        }
-
-        const adminSecret = secretInput.value.trim();
-        if (!adminSecret) {
-          setStatus("Admin secret belum diisi.");
-          imageUploadInput.value = "";
-          return;
-        }
-
-        setLoading(true);
-        setStatus("Uploading image...");
-
-        try {
-          const uploadForm = new FormData();
-          uploadForm.append("image", file);
-
-          const res = await fetch("/api/upload-image", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${adminSecret}` },
-            body: uploadForm,
-          });
-
-          const result = await res.json().catch(() => null);
-          if (!res.ok) throw new Error(result?.message || "Upload failed.");
-
-          const alt = file.name.replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
-          insertAtCursor(`\n![${alt}](${result.url})\n`, "");
-          setStatus("Image inserted.");
-        } catch (err) {
-          setStatus(err instanceof Error ? err.message : "Image upload failed.");
-        } finally {
-          setLoading(false);
-          imageUploadInput.value = "";
-        }
-      });
-    }
-
-    /* -------------------------
-       AUTO-CONTINUE LIST ON ENTER
-    -------------------------- */
-    contentInput.addEventListener("keydown", (e) => {
-      if (e.key !== "Enter") return;
-
-      const start = contentInput.selectionStart;
-      const text = contentInput.value;
-      const lineStart = text.lastIndexOf("\n", start - 1) + 1;
-      const line = text.slice(lineStart, start);
-
-      const bulletMatch = line.match(/^(-|\*|\+)\s/);
-      const numberMatch = line.match(/^(\d+)\.\s/);
-
-      if (!bulletMatch && !numberMatch) return;
-
-      const prefix = bulletMatch ? bulletMatch[0] : numberMatch[0];
-      const body = line.slice(prefix.length).trim();
-
-      // If line is empty except prefix, remove prefix (user wants to exit list)
-      if (!body) {
-        e.preventDefault();
-        const before = text.slice(0, lineStart);
-        const after = text.slice(start);
-        contentInput.value = before + after;
-        contentInput.setSelectionRange(lineStart, lineStart);
-        contentInput.dispatchEvent(new Event("input"));
-        return;
-      }
-
-      e.preventDefault();
-      const nextPrefix = bulletMatch
-        ? prefix
-        : String(Number(numberMatch[1]) + 1) + ". ";
-      const before = text.slice(0, start);
-      const after = text.slice(start);
-      contentInput.value = before + "\n" + nextPrefix + after;
-      const newCursor = start + 1 + nextPrefix.length;
-      contentInput.setSelectionRange(newCursor, newCursor);
-      contentInput.dispatchEvent(new Event("input"));
-    });
-
-    /* -------------------------
-       LIVE PREVIEW
-    -------------------------- */
-
     const convertYouTubeLinks = (html) => {
       const patterns = [
         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
@@ -413,7 +342,6 @@ export const prerender = false;
         return null;
       };
 
-      // Protect content inside <pre>, <code>, <script>, <style>, <textarea>
       const protectedBlocks = [];
       let protectedIndex = 0;
       const protectedHtml = html.replace(
@@ -425,7 +353,6 @@ export const prerender = false;
         }
       );
 
-      // Step 1: Replace <a> tags that are plain YouTube links
       let result = protectedHtml.replace(
         /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
         (match, href, text) => {
@@ -435,7 +362,6 @@ export const prerender = false;
         }
       );
 
-      // Step 2: Replace standalone plain-text YouTube URLs
       result = result.replace(
         /(^|>|\s)((?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}|youtube\.com\/shorts\/[a-zA-Z0-9_-]{11})[^"'<>\s]*)(?=[\s<.,;:!?)\]"']|$)/g,
         (match, before, url) => {
@@ -445,10 +371,10 @@ export const prerender = false;
         }
       );
 
-      // Restore protected blocks
-      protectedBlocks.forEach((block, i) => {
-        result = result.split(`__PROTECTED_${i}__`).join(block);
-      });
+      result = result.replace(
+        /__PROTECTED_(\d+)__/g,
+        (_, i) => protectedBlocks[Number(i)] ?? _
+      );
 
       return result;
     };
@@ -493,6 +419,7 @@ export const prerender = false;
 
         flush();
         if (!line) continue;
+        if (line.match(/^-{3,}$/)) { out.push('<hr>'); continue; }
         if (line.startsWith('### ')) { out.push(`<h3>${inline(line.slice(4))}</h3>`); continue; }
         if (line.startsWith('## ')) { out.push(`<h2>${inline(line.slice(3))}</h2>`); continue; }
         if (line.startsWith('# ')) { out.push(`<h1>${inline(line.slice(2))}</h1>`); continue; }
@@ -503,25 +430,8 @@ export const prerender = false;
       return out.join('\n');
     };
 
-    const updatePreview = () => {
-      if (!previewContent) return;
-      const html = mdToHtml(contentInput.value);
-      previewContent.innerHTML = convertYouTubeLinks(html || "") || "<p class=\"text-neutral-400 italic\">Tidak ada konten untuk dipreview.</p>";
-    };
-
-    contentInput.addEventListener("input", updatePreview);
-
-    if (previewToggle && previewPanel) {
-      previewToggle.addEventListener("click", () => {
-        const isHidden = previewPanel.classList.contains("hidden");
-        previewPanel.classList.toggle("hidden", !isHidden);
-        previewToggle.textContent = isHidden ? "Hide preview" : "Show preview";
-        if (isHidden) updatePreview();
-      });
-    }
-
     /* -------------------------
-       SUBMIT
+       HELPERS (before EasyMDE)
     -------------------------- */
     const setLoading = (loading) => {
       publishButton.disabled = loading;
@@ -533,6 +443,123 @@ export const prerender = false;
       if (status) status.textContent = message;
     };
 
+    /* -------------------------
+       EASYMDE INIT
+    -------------------------- */
+    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+    if (!EasyMDE) {
+      setStatus("Editor gagal dimuat. Cek console (F12) untuk detail.");
+      console.error("[ADMIN] EasyMDE module not loaded.");
+      return;
+    }
+
+    /* -------------------------
+       IMAGE UPLOAD HELPER
+    -------------------------- */
+    const uploadImageToSupabase = (file, onSuccess, onError) => {
+      if (file.size > MAX_IMAGE_SIZE) {
+        onError("Image must be smaller than 5MB.");
+        return;
+      }
+      const adminSecret = secretInput.value.trim();
+      if (!adminSecret) {
+        onError("Admin secret belum diisi.");
+        return;
+      }
+      const uploadForm = new FormData();
+      uploadForm.append("image", file);
+      fetch("/api/upload-image", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${adminSecret}` },
+        body: uploadForm,
+      })
+      .then(res => res.json().then(result => ({ res, result })))
+      .then(({ res, result }) => {
+        if (!res.ok) throw new Error(result?.message || "Upload failed.");
+        onSuccess(result.url);
+      })
+      .catch(err => onError(err.message || "Upload failed."));
+    };
+
+    const insertImageFromFile = (editor) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "image/*";
+      input.style.display = "none";
+      input.onchange = () => {
+        const file = input.files?.[0];
+        if (!file) return;
+        uploadImageToSupabase(
+          file,
+          (url) => {
+            editor.codemirror.replaceSelection(`![image](${url})\n`);
+          },
+          (err) => {
+            alert(err);
+          }
+        );
+      };
+      document.body.appendChild(input);
+      input.click();
+      document.body.removeChild(input);
+    };
+
+    let easyMDE;
+    try {
+      easyMDE = new EasyMDE({
+        element: contentInput,
+        autofocus: false,
+        spellChecker: false,
+        autosave: { enabled: false },
+        status: false,
+        forceSync: true,
+        minHeight: "320px",
+        placeholder: "# Judul\n\nTulis pelan-pelan di sini...",
+        toolbar: [
+          { name: "bold", action: EasyMDE.toggleBold, className: "icon-bold", title: "Bold" },
+          { name: "italic", action: EasyMDE.toggleItalic, className: "icon-italic", title: "Italic" },
+          { name: "heading", action: EasyMDE.toggleHeadingSmaller, className: "icon-heading", title: "Heading" },
+          "|",
+          { name: "quote", action: EasyMDE.toggleBlockquote, className: "icon-quote", title: "Quote" },
+          { name: "unordered-list", action: EasyMDE.toggleUnorderedList, className: "icon-list", title: "List" },
+          { name: "ordered-list", action: EasyMDE.toggleOrderedList, className: "icon-list-ol", title: "Numbered List" },
+          "|",
+          { name: "link", action: EasyMDE.drawLink, className: "icon-link", title: "Link" },
+          { name: "image", action: insertImageFromFile, className: "icon-image", title: "Image" },
+          "|",
+          {
+            name: "youtube",
+            action: (editor) => {
+              const url = prompt("Paste YouTube link:");
+              if (url) editor.codemirror.replaceSelection("\n" + url.trim() + "\n");
+            },
+            className: "icon-youtube",
+            title: "YouTube",
+          },
+          "|",
+          { name: "preview", action: EasyMDE.togglePreview, className: "icon-preview no-disable", title: "Preview" },
+          { name: "side-by-side", action: EasyMDE.toggleSideBySide, className: "icon-sidebyside no-disable no-mobile", title: "Side by side" },
+          "|",
+          { name: "guide", action: "https://www.markdownguide.org/basic-syntax/", className: "icon-guide", title: "Markdown Guide" }
+        ],
+        previewRender: (plainText) => {
+          const html = mdToHtml(plainText);
+          return convertYouTubeLinks(html);
+        },
+        imageUploadFunction: (file, onSuccess, onError) => {
+          uploadImageToSupabase(file, onSuccess, onError);
+        },
+      });
+    } catch (err) {
+      console.error("[ADMIN] EasyMDE failed to load:", err);
+      setStatus("Editor gagal dimuat. Silakan refresh halaman.");
+      return;
+    }
+
+    /* -------------------------
+       SUBMIT
+    -------------------------- */
     const submitBlogPost = async () => {
       const adminSecret = secretInput.value.trim();
 
@@ -540,6 +567,15 @@ export const prerender = false;
         setStatus("Admin secret belum diisi.");
         return;
       }
+
+      const content = easyMDE ? easyMDE.value().trim() : "";
+      if (!content) {
+        setStatus("Content is required.");
+        return;
+      }
+
+      // Sync EasyMDE value back to textarea for FormData
+      if (easyMDE) contentInput.value = easyMDE.value();
 
       localStorage.setItem("thoughts_admin_secret", adminSecret);
 
@@ -566,7 +602,7 @@ export const prerender = false;
 
         form.reset();
         secretInput.value = adminSecret;
-        if (previewContent) previewContent.innerHTML = "";
+        if (easyMDE) easyMDE.value("");
 
         setStatus(result?.message || "Blog post published successfully.");
       } catch (error) {
@@ -591,5 +627,5 @@ export const prerender = false;
       event.stopPropagation();
       await submitBlogPost();
     });
-  }
+  })();
 </script>

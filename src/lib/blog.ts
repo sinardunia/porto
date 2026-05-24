@@ -3,6 +3,7 @@ import { withTimeout } from "./security";
 import type { BlogPost, BlogPostSummary } from "@/types/blog";
 
 const BLOG_FIELDS = "id, slug, title, excerpt, content, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published" as const;
+const BLOG_SUMMARY_FIELDS = "id, slug, title, excerpt, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published" as const;
 
 export const normalizeSearch = (value: string) =>
   value.trim().toLowerCase();
@@ -55,10 +56,55 @@ export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
   }
 }
 
+export async function getPublishedBlogPostSummaries(limit = 50): Promise<BlogPostSummary[]> {
+  try {
+    const supabase = createSupabaseClient();
+    const { data, error } = await withTimeout(
+      supabase
+        .from("blog_posts")
+        .select(BLOG_SUMMARY_FIELDS)
+        .eq("is_published", true)
+        .order("created_at", { ascending: false })
+        .limit(limit),
+      5000,
+      "Blog summaries fetch"
+    );
+    if (error) {
+      console.warn("Unable to load blog summaries:", error.message);
+      return [];
+    }
+    return (data ?? []) as BlogPostSummary[];
+  } catch (err) {
+    console.warn("Unable to load blog summaries:", err instanceof Error ? err.message : "Unknown error");
+    return [];
+  }
+}
+
 export function estimateReadTime(content: string): number {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 200));
 }
+
+/* Safe date helpers — never crash on invalid/missing dates */
+export const safeDate = (value: string | null | undefined): Date | null => {
+  if (!value || typeof value !== "string") return null;
+  const d = new Date(value.trim());
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+
+export const safeIsoDate = (value: string | null | undefined): string => {
+  const d = safeDate(value);
+  return d ? d.toISOString() : "";
+};
+
+export const safeLocaleDate = (
+  value: string | null | undefined,
+  locale = "en-US",
+  options: Intl.DateTimeFormatOptions = { month: "long", day: "numeric", year: "numeric" }
+): string => {
+  const d = safeDate(value);
+  return d ? new Intl.DateTimeFormat(locale, options).format(d) : "";
+};
 
 export function getRelatedPosts(
   currentPost: BlogPost,
@@ -75,10 +121,11 @@ export function getRelatedPosts(
     .map((p) => {
       const tags = (p.tags ?? []).map((t) => (typeof t === "string" ? t.toLowerCase() : "")).filter(Boolean);
       const overlap = tags.filter((t) => currentTags.has(t)).length;
+      const createdAt = safeDate(p.created_at);
       return {
         post: p,
         overlap,
-        createdAt: new Date(p.created_at).getTime(),
+        createdAt: createdAt ? createdAt.getTime() : 0,
       };
     })
     .sort((a, b) => {

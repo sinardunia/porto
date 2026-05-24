@@ -21,11 +21,14 @@ export default defineConfig({
   site: process.env.SITE_URL || "http://localhost:4321",
 
   vite: {
+    optimizeDeps: {
+      include: ["easymde"],
+    },
     server: {
       allowedHosts: true,
       headers: {
         "Content-Security-Policy":
-          "default-src 'self'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https:;",
+          "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https:;",
       },
     },
   },

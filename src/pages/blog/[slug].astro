@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
 import Utterances from "@/components/blog/Utterances.astro";
-import { getBlogPostBySlug, getPublishedBlogPosts, getRelatedPosts, estimateReadTime } from "@/lib/blog";
+import { getBlogPostBySlug, getPublishedBlogPostSummaries, getRelatedPosts, estimateReadTime, safeLocaleDate, safeIsoDate } from "@/lib/blog";
 import { sanitizeRenderedHtml, convertYouTubeLinks } from "@/lib/security";
 import { SITE_URL } from "@/data/config";
 import "@/styles/post.css";
@@ -17,7 +17,7 @@ if (!slug || typeof slug !== "string") {
 
 const [post, allPosts] = await Promise.all([
   getBlogPostBySlug(slug),
-  getPublishedBlogPosts(50),
+  getPublishedBlogPostSummaries(50),
 ]);
 
 const relatedPosts = post ? getRelatedPosts(post, allPosts, 3) : [];
@@ -39,17 +39,22 @@ if (post) {
 
 const safeTags = post && Array.isArray(post.tags) ? post.tags.filter((t): t is string => typeof t === "string") : [];
 const readTime = post ? estimateReadTime(post.content || "") : 0;
-const dateStr = post ? new Date(post.created_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : "";
-const isoDate = post ? new Date(post.created_at).toISOString() : "";
+const dateStr = post ? safeLocaleDate(post.created_at) : "";
+const isoDate = post ? safeIsoDate(post.created_at) : "";
 const description = post?.excerpt || (post ? `${post.title}. A ${readTime}-minute read.` : "The requested post could not be found.");
 const ogImage = post?.cover_image_url || undefined;
 
 let finalContent = "";
 if (post) {
-  const { marked } = await import("marked");
-  const renderedContent = await marked.parse(post.content);
-  const sanitizedContent = await sanitizeRenderedHtml(renderedContent);
-  finalContent = convertYouTubeLinks(sanitizedContent);
+  try {
+    const { marked } = await import("marked");
+    const renderedContent = await marked.parse(post.content || "");
+    const sanitizedContent = await sanitizeRenderedHtml(renderedContent);
+    finalContent = convertYouTubeLinks(sanitizedContent);
+  } catch (err) {
+    console.error("[BLOG_RENDER] Failed to render content:", err instanceof Error ? err.message : err);
+    finalContent = `<p class="text-neutral-400 italic">Tidak bisa menampilkan konten.</p>`;
+  }
 }
 
 const jsonLd = post ? {
@@ -59,7 +64,7 @@ const jsonLd = post ? {
   description,
   image: ogImage,
   datePublished: isoDate,
-  dateModified: post.updated_at ? new Date(post.updated_at).toISOString() : isoDate,
+  dateModified: safeIsoDate(post.updated_at) || isoDate,
   author: {
     "@type": "Person",
     name: "Fuji Halim Rabani",

@@ -382,7 +382,7 @@ export const POST: APIRoute =
 
             .single(),
 
-          10000,
+          5000,
 
           "Blog insert"
         );
