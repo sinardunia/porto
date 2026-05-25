@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
+import ShareButtons from "@/components/blog/ShareButtons.astro";
 import Utterances from "@/components/blog/Utterances.astro";
 import { getBlogPostBySlug, getPublishedBlogPostSummaries, getRelatedPosts, estimateReadTime, safeLocaleDate, safeIsoDate } from "@/lib/blog";
 import { sanitizeRenderedHtml, convertYouTubeLinks } from "@/lib/security";
@@ -155,7 +156,8 @@ const jsonLd = post ? {
         />
       </article>
 
-      <RelatedPosts posts={relatedPosts} />
+      <RelatedPosts posts={relatedPosts} currentTags={safeTags} />
+      <ShareButtons title={post.title} slug={post.slug} />
       <Utterances />
     ) : (
       <div class="pt-10 pb-6 border-b border-neutral-100/50 dark:border-neutral-900/30">

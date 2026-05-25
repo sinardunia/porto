@@ -106,21 +106,35 @@ export const safeLocaleDate = (
   return d ? new Intl.DateTimeFormat(locale, options).format(d) : "";
 };
 
+/**
+ * Suggest related posts by shared tag overlap (primary) and recency (tie-breaker).
+ * If no tags overlap, falls back to most recent posts excluding current.
+ */
 export function getRelatedPosts(
   currentPost: BlogPost,
   allPosts: BlogPostSummary[],
   limit = 3
 ): BlogPostSummary[] {
-  const currentSlug = currentPost.slug;
+  const currentSlug = currentPost?.slug;
+  if (!currentSlug) return [];
+
   const currentTags = new Set(
-    (currentPost.tags ?? []).map((t) => (typeof t === "string" ? t.toLowerCase() : "")).filter(Boolean)
+    (currentPost.tags ?? [])
+      .map((t) => (typeof t === "string" ? t.toLowerCase().trim() : ""))
+      .filter(Boolean)
   );
 
   const scored = allPosts
-    .filter((p) => p.slug !== currentSlug)
+    .filter((p) => p && p.slug !== currentSlug)
     .map((p) => {
-      const tags = (p.tags ?? []).map((t) => (typeof t === "string" ? t.toLowerCase() : "")).filter(Boolean);
-      const overlap = tags.filter((t) => currentTags.has(t)).length;
+      const postTags = (p.tags ?? [])
+        .map((t) => (typeof t === "string" ? t.toLowerCase().trim() : ""))
+        .filter(Boolean);
+
+      const overlap = currentTags.size > 0
+        ? postTags.filter((t) => currentTags.has(t)).length
+        : 0;
+
       const createdAt = safeDate(p.created_at);
       return {
         post: p,

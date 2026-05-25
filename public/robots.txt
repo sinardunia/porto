@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /admin/
-Disallow: /private/
-Allow: /public/
-
-Sitemap: https://waltahh.is-a.dev/sitemap.xml
