@@ -172,13 +172,19 @@ export const convertYouTubeLinks = (html: string): string => {
 ========================= */
 
 export const sanitizeRenderedHtml = async (html: string): Promise<string> => {
-  const DOMPurify = (await import("isomorphic-dompurify")).default;
-  return DOMPurify.sanitize(html, {
-    ALLOWED_TAGS: [
-      "p", "br", "strong", "em", "code", "pre", "h1", "h2", "h3", "h4", "h5", "h6",
-      "ul", "ol", "li", "blockquote", "a", "img", "span", "div", "iframe"
-    ],
-    ALLOWED_ATTR: ["href", "src", "alt", "title", "class", "id", "target", "allowfullscreen", "frameborder", "data-id", "loading", "decoding"]
+  const { default: filterXSS } = await import("xss");
+  return filterXSS(html, {
+    whiteList: {
+      p: [], br: [], strong: [], em: [], code: [], pre: [],
+      h1: [], h2: [], h3: [], h4: [], h5: [], h6: [],
+      ul: [], ol: [], li: [], blockquote: [],
+      a: ["href", "title", "target"],
+      img: ["src", "alt", "title", "loading", "decoding", "class"],
+      span: ["class", "id"], div: ["class", "id", "data-id"],
+      iframe: ["src", "allowfullscreen", "frameborder", "title", "allow"],
+    },
+    stripIgnoreTag: true,
+    stripIgnoreTagBody: ["script"],
   });
 };
 
