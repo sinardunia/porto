@@ -155,7 +155,7 @@ export const OPTIONS: APIRoute =
           "*",
 
         "Access-Control-Allow-Methods":
-          "GET, POST, OPTIONS",
+          "GET, POST, PUT, DELETE, OPTIONS",
 
         "Access-Control-Allow-Headers":
           "Content-Type, Authorization",
@@ -499,3 +499,109 @@ if (error || !data) {
       );
     }
   };
+
+/* ---------------------------------
+   PUT (update thought)
+---------------------------------- */
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export const PUT: APIRoute = async ({ request }) => {
+  try {
+    const auth = verifyAdminSecret(request);
+    if (!auth.ok) return auth.response;
+
+    let body: Record<string, unknown>;
+    try {
+      body = await request.json();
+    } catch {
+      return json({ message: "Invalid JSON body." }, 400);
+    }
+
+    const id = typeof body.id === "string" ? body.id.trim() : "";
+    if (!id || !UUID_RE.test(id)) {
+      return json({ message: "Invalid thought ID." }, 400);
+    }
+
+    const content = cleanText(String(body.content ?? ""), 5000);
+    const rawYtLink = cleanText(String(body.ytLink ?? ""), 300);
+
+    let ytLink: string | null = null;
+    if (rawYtLink) {
+      const ytId = extractYouTubeId(rawYtLink);
+      if (!ytId) return json({ message: "Invalid YouTube URL." }, 400);
+      ytLink = `https://www.youtube-nocookie.com/embed/${ytId}`;
+    }
+
+    if (!content) {
+      return json({ message: "Thought content is required." }, 400);
+    }
+
+    const supabase = createSupabaseAdminClient();
+
+    const { error } = await withTimeout(
+      supabase
+        .from("thoughts")
+        .update({ content, yt_link: ytLink })
+        .eq("id", id),
+      10000,
+      "Thought update"
+    );
+
+    if (error) {
+      console.error("[THOUGHTS_API] Update failed:", error);
+      return json({ message: "Thought update failed." }, 500);
+    }
+
+    return json({ ok: true, message: "Thought updated." });
+  } catch (error) {
+    console.error("[THOUGHTS_API] PUT fatal error:", error);
+    return json({ message: "Server error." }, 500);
+  }
+};
+
+/* ---------------------------------
+   DELETE
+---------------------------------- */
+
+export const DELETE: APIRoute = async ({ request }) => {
+  try {
+    const auth = verifyAdminSecret(request);
+    if (!auth.ok) return auth.response;
+
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id")?.trim() || "";
+    if (!id || !UUID_RE.test(id)) {
+      return json({ message: "Invalid thought ID." }, 400);
+    }
+
+    const supabase = createSupabaseAdminClient();
+
+    // Delete media metadata first (FK cascade would handle this, but explicit is safer)
+    const { error: mediaError } = await withTimeout(
+      supabase.from("thought_media").delete().eq("thought_id", id),
+      10000,
+      "Thought media delete"
+    );
+
+    if (mediaError) {
+      console.error("[THOUGHTS_API] Media delete failed:", mediaError);
+    }
+
+    const { error } = await withTimeout(
+      supabase.from("thoughts").delete().eq("id", id),
+      10000,
+      "Thought delete"
+    );
+
+    if (error) {
+      console.error("[THOUGHTS_API] Delete failed:", error);
+      return json({ message: "Thought delete failed." }, 500);
+    }
+
+    return json({ ok: true, message: "Thought deleted." });
+  } catch (error) {
+    console.error("[THOUGHTS_API] DELETE fatal error:", error);
+    return json({ message: "Server error." }, 500);
+  }
+};

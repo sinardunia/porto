@@ -1,0 +1,97 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+export const prerender = false;
+
+let error = "";
+let success = false;
+let secretValue = "";
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    const secret = formData.get("secret")?.toString().trim() || "";
+    const expectedSecret = import.meta.env.THOUGHTS_ADMIN_SECRET;
+
+    if (expectedSecret && secret === expectedSecret) {
+      Astro.cookies.set("admin_secret", secret, {
+        path: "/",
+        maxAge: 31536000, // 1 year
+        sameSite: "strict",
+        secure: true,
+        httpOnly: true,
+      });
+      success = true;
+      secretValue = secret;
+    } else {
+      error = "Secret key salah.";
+    }
+  } catch (e) {
+    error = "Terjadi kesalahan.";
+  }
+}
+---
+
+<Layout title="Admin Login" noindex={true}>
+  <main class="mx-auto flex w-full max-w-[28rem] flex-col gap-8 pb-32 pt-16 px-5 box-border">
+    {success ? (
+      <div class="flex flex-col items-center gap-4 text-center py-12">
+        <div class="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h1 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100">
+          Login Berhasil
+        </h1>
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+          Mengarahkan ke dashboard...
+        </p>
+        <script is:inline define:vars={{ secretValue }}>
+          localStorage.setItem("thoughts_admin_secret", secretValue);
+          window.location.href = "/admin/dashboard";
+        </script>
+      </div>
+    ) : (
+      <div class="flex flex-col gap-6">
+        <header class="flex flex-col gap-2">
+          <h1 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+            Admin Portal
+          </h1>
+          <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            Masukkan admin secret untuk mengelola thoughts dan blog posts.
+          </p>
+        </header>
+
+        <form method="POST" class="flex flex-col gap-4">
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Admin Secret</span>
+            <input
+              id="secret"
+              name="secret"
+              type="password"
+              required
+              autofocus
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="rounded-lg border border-neutral-200 bg-white dark:bg-neutral-900 dark:border-neutral-800 px-4 py-3 text-neutral-900 dark:text-neutral-100 outline-none focus:border-neutral-400 dark:focus:border-neutral-600 transition-colors"
+            />
+          </label>
+
+          {error && (
+            <p class="text-xs font-medium text-red-600 dark:text-red-400" role="alert">
+              {error}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            class="mt-2 rounded-lg bg-neutral-900 dark:bg-neutral-100 text-white dark:text-neutral-900 py-3 text-sm font-medium transition-colors hover:bg-neutral-800 dark:hover:bg-neutral-200"
+          >
+            Masuk
+          </button>
+        </form>
+      </div>
+    )}
+  </main>
+</Layout>

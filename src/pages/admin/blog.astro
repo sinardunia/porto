@@ -1,631 +1,153 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import "easymde/dist/easymde.min.css";
+import { createSupabaseAdminClient } from "@/lib/supabase";
+import { withTimeout } from "@/lib/security";
 
 export const prerender = false;
+
+const adminSecret = Astro.cookies.get("admin_secret")?.value;
+const expectedSecret = import.meta.env.THOUGHTS_ADMIN_SECRET;
+
+if (!adminSecret || adminSecret !== expectedSecret) {
+  return Astro.redirect("/admin/login");
+}
+
+const supabase = createSupabaseAdminClient();
+
+const { data: postsData, error: postsError } = await withTimeout(
+  supabase
+    .from("blog_posts")
+    .select("id, slug, title, excerpt, content, cover_image_url, cover_image_alt, tags, created_at, is_published")
+    .order("created_at", { ascending: false })
+    .limit(50),
+  5000,
+  "Blog posts list"
+);
+
+const posts = postsError ? [] : (postsData ?? []);
 ---
 
-<Layout title="Write Blog Post" noindex={true}>
+<Layout title="Blog Admin" noindex={true}>
   <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-8 pb-24">
-    <header class="flex flex-col gap-2">
-      <h1 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
-        New blog post
-      </h1>
-      <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-400">
-        Tempat menulis yang lebih panjang. Tidak perlu rapi sekaligus.
-      </p>
+    <header class="flex items-center justify-between">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-2xl font-semibold text-neutral-900 dark:text-neutral-100">
+          Blog
+        </h1>
+        <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-400">
+          Kelola tulisan panjang Anda.
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a
+          href="/admin/blog/new"
+          class="inline-flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Tulis Baru
+        </a>
+        <a
+          href="/admin/dashboard"
+          class="text-xs text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
+        >
+          ← Dashboard
+        </a>
+      </div>
     </header>
 
-    <form id="blog-form" novalidate class="flex flex-col gap-5">
-      <!-- ADMIN SECRET -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Admin secret</span>
-        <input
-          id="admin-secret"
-          type="password"
-          autocomplete="current-password"
-          required
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-      </label>
+    <!-- LIST -->
+    <section class="flex flex-col gap-3">
+      <h2 class="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400 dark:text-neutral-500">
+        Semua Posts ({posts.length})
+      </h2>
 
-      <!-- TITLE -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Title</span>
-        <input
-          id="blog-title"
-          name="title"
-          type="text"
-          required
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-      </label>
+      <p id="status-message" class="min-h-6 text-sm text-neutral-500 dark:text-neutral-400" aria-live="polite"></p>
 
-      <!-- SLUG -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Slug</span>
-        <input
-          id="blog-slug"
-          name="slug"
-          type="text"
-          required
-          placeholder="contoh-tulisan-panjang"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-      </label>
-
-      <!-- EXCERPT -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Excerpt (optional)</span>
-        <textarea
-          name="excerpt"
-          rows="3"
-          maxlength="500"
-          class="resize-y rounded-lg border border-border-light bg-secondary-light px-4 py-3 leading-7 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        ></textarea>
-      </label>
-
-      <!-- TAGS -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Tags (comma separated)</span>
-        <input
-          name="tags"
-          type="text"
-          placeholder="tech, personal, opinion"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-      </label>
-
-      <!-- EDITOR -->
-      <div class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Content</span>
-        <textarea
-          id="blog-content"
-          name="content"
-          placeholder="# Judul&#10;&#10;Tulis pelan-pelan di sini..."
-        ></textarea>
-      </div>
-
-      <!-- COVER IMAGE -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Cover image (optional)</span>
-        <input
-          name="coverImage"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-sm text-neutral-600 outline-none file:mr-4 file:rounded-md file:border-0 file:bg-neutral-900 file:px-3 file:py-2 file:text-sm file:text-white focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:file:bg-neutral-100 dark:file:text-neutral-950"
-        />
-      </label>
-
-      <!-- COVER ALT -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-neutral-500 dark:text-neutral-400">Cover image alt (optional)</span>
-        <input
-          name="coverImageAlt"
-          type="text"
-          placeholder="Deskripsi singkat gambar"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-neutral-900 outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-      </label>
-
-      <!-- SUBMIT -->
-      <button
-        id="publish-button"
-        type="button"
-        class="flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300 disabled:opacity-60 disabled:cursor-not-allowed"
-      >
-        <span id="btn-text">Save blog post</span>
-        <span id="btn-spinner" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white dark:border-neutral-400/30 dark:border-t-neutral-950"></span>
-      </button>
-
-      <p id="form-status" class="min-h-6 text-sm text-neutral-500 dark:text-neutral-400" aria-live="polite"></p>
-    </form>
+      {posts.length === 0 ? (
+        <p class="text-sm text-neutral-400 dark:text-neutral-500">Belum ada blog posts.</p>
+      ) : (
+        <ul class="flex flex-col gap-2" id="blog-list">
+          {posts.map((p) => (
+            <li
+              class="blog-row flex items-start justify-between gap-3 rounded-lg border border-neutral-100 dark:border-neutral-800 p-3"
+              data-slug={p.slug}
+            >
+              <div class="min-w-0 flex-1">
+                <p class="text-sm text-neutral-800 dark:text-neutral-200 truncate">
+                  {p.title}
+                </p>
+                <div class="mt-1 flex items-center gap-2 text-[11px] text-neutral-400 dark:text-neutral-500">
+                  <time>{new Date(p.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })}</time>
+                  {p.is_published ? (
+                    <span class="rounded-full bg-green-100 px-1.5 py-0.5 text-[10px] text-green-700 dark:bg-green-900/30 dark:text-green-400">Published</span>
+                  ) : (
+                    <span class="rounded-full bg-neutral-100 px-1.5 py-0.5 text-[10px] text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">Draft</span>
+                  )}
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={`/admin/blog/edit?slug=${p.slug}`}
+                  class="rounded-md border border-neutral-200 px-2.5 py-1 text-xs text-neutral-500 transition-colors hover:border-neutral-400 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-neutral-200"
+                >
+                  Edit
+                </a>
+                <button
+                  type="button"
+                  class="blog-delete-btn rounded-md border border-red-200 px-2.5 py-1 text-xs text-red-500 transition-colors hover:border-red-400 hover:text-red-700 dark:border-red-900/30 dark:text-red-400 dark:hover:border-red-700 dark:hover:text-red-300"
+                  data-slug={p.slug}
+                >
+                  Hapus
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   </main>
 </Layout>
 
-<style is:global>
-  .youtube-embed {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 8px;
-    overflow: hidden;
-    background: #0a0a0a;
-    margin: 1rem 0;
-  }
-  .youtube-embed iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: 0;
-  }
-  .youtube-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #0a0a0a;
-    cursor: pointer;
-  }
-  .youtube-placeholder::before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: 20px solid rgba(255, 255, 255, 0.9);
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
-    margin-left: 4px;
-  }
+<script is:inline>
+  (function() {
+    const statusEl = document.getElementById("status-message");
 
-  /* Textarea before EasyMDE init */
-  #blog-content {
-    width: 100%;
-    min-height: 320px;
-    box-sizing: border-box;
-  }
-
-  /* EasyMDE container full width + proper height */
-  .EasyMDEContainer {
-    width: 100% !important;
-    box-sizing: border-box;
-  }
-  .EasyMDEContainer .CodeMirror {
-    min-height: 320px !important;
-    height: auto;
-    font-family: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo, Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .EasyMDEContainer .editor-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1px;
-    padding: 4px;
-    border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid #ddd;
-  }
-  .EasyMDEContainer .editor-toolbar button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border: 0;
-    border-radius: 4px;
-    background: transparent;
-    cursor: pointer;
-    color: #333;
-    font-size: 14px;
-    padding: 0;
-    overflow: hidden;
-  }
-  .EasyMDEContainer .editor-toolbar button:hover {
-    background: #e5e5e5;
-  }
-  .EasyMDEContainer .editor-toolbar .separator {
-    display: inline-block;
-    width: 1px;
-    height: 20px;
-    margin: 6px 4px;
-    background: #ccc;
-  }
-
-  /* EasyMDE toolbar icons (no FA) */
-  .EasyMDEContainer .editor-toolbar button::before {
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    font-size: 13px;
-  }
-  .EasyMDEContainer .editor-toolbar .icon-bold::before { content: "B"; font-weight: 700; }
-  .EasyMDEContainer .editor-toolbar .icon-italic::before { content: "I"; font-style: italic; }
-  .EasyMDEContainer .editor-toolbar .icon-heading::before { content: "H"; }
-  .EasyMDEContainer .editor-toolbar .icon-quote::before { content: "❝"; }
-  .EasyMDEContainer .editor-toolbar .icon-list::before { content: "•"; font-size: 16px; }
-  .EasyMDEContainer .editor-toolbar .icon-list-ol::before { content: "1."; }
-  .EasyMDEContainer .editor-toolbar .icon-link::before { content: "🔗"; font-size: 12px; }
-  .EasyMDEContainer .editor-toolbar .icon-image::before { content: "🖼"; font-size: 12px; }
-  .EasyMDEContainer .editor-toolbar .icon-youtube::before { content: "▶"; }
-  .EasyMDEContainer .editor-toolbar .icon-preview::before { content: "👁"; font-size: 12px; }
-  .EasyMDEContainer .editor-toolbar .icon-sidebyside::before { content: "◫"; }
-  .EasyMDEContainer .editor-toolbar .icon-guide::before { content: "?"; }
-
-  /* EasyMDE dark mode */
-  html.dark .EasyMDEContainer .CodeMirror {
-    background: #171717;
-    color: #e5e5e5;
-    border-color: #404040;
-  }
-  html.dark .EasyMDEContainer .editor-toolbar {
-    background: #171717;
-    border-color: #404040;
-  }
-  html.dark .EasyMDEContainer .editor-toolbar button {
-    color: #e5e5e5 !important;
-  }
-  html.dark .EasyMDEContainer .editor-toolbar button:hover,
-  html.dark .EasyMDEContainer .editor-toolbar button.active {
-    background: #404040;
-  }
-  html.dark .EasyMDEContainer .editor-preview {
-    background: #171717;
-  }
-  html.dark .EasyMDEContainer .CodeMirror-cursor {
-    border-color: #e5e5e5;
-  }
-  html.dark .EasyMDEContainer .CodeMirror-selected {
-    background: #404040;
-  }
-</style>
-
-<script>
-  document.addEventListener('click', (e) => {
-    const placeholder = (e.target as HTMLElement).closest('.youtube-placeholder');
-    if (!placeholder) return;
-    const embed = placeholder.closest('.youtube-embed');
-    if (!embed) return;
-    const id = embed.getAttribute('data-id');
-    if (!id) return;
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&autoplay=1`;
-    iframe.title = 'YouTube video player';
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    iframe.allowFullscreen = true;
-    iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
-    placeholder.replaceWith(iframe);
-  });
-</script>
-
-<script>
-  // @ts-nocheck
-  import EasyMDE from "easymde";
-
-  (() => {
-    const form = document.querySelector("#blog-form");
-    const status = document.querySelector("#form-status");
-    const secretInput = document.querySelector("#admin-secret");
-    const titleInput = document.querySelector("#blog-title");
-    const slugInput = document.querySelector("#blog-slug");
-    const contentInput = document.querySelector("#blog-content");
-    const publishButton = document.querySelector("#publish-button");
-    const btnText = document.querySelector("#btn-text");
-    const btnSpinner = document.querySelector("#btn-spinner");
-
-    if (
-      !(form instanceof HTMLFormElement) ||
-      !(secretInput instanceof HTMLInputElement) ||
-      !(titleInput instanceof HTMLInputElement) ||
-      !(slugInput instanceof HTMLInputElement) ||
-      !(contentInput instanceof HTMLTextAreaElement) ||
-      !(publishButton instanceof HTMLButtonElement)
-    ) {
-      console.error("Blog admin form elements missing.");
-      return;
-    }
-
-    secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
-
-    /* -------------------------
-       SLUG AUTO-GENERATE
-    -------------------------- */
-    const slugify = (text) =>
-      text
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, "")
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "")
-        .slice(0, 120);
-
-    titleInput.addEventListener("blur", () => {
-      if (!slugInput.value.trim()) {
-        slugInput.value = slugify(titleInput.value);
-      }
-    });
-
-    /* -------------------------
-       MARKDOWN HELPERS (preview)
-    -------------------------- */
-    const convertYouTubeLinks = (html) => {
-      const patterns = [
-        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-      ];
-      const extractId = (url) => {
-        for (const p of patterns) {
-          const m = url.match(p);
-          if (m) return m[1];
-        }
-        return null;
-      };
-
-      const protectedBlocks = [];
-      let protectedIndex = 0;
-      const protectedHtml = html.replace(
-        /<(pre|code|script|style|textarea)\b[^>]*>[\s\S]*?<\/\1>/gi,
-        (match) => {
-          const placeholder = `__PROTECTED_${protectedIndex}__`;
-          protectedBlocks[protectedIndex++] = match;
-          return placeholder;
-        }
-      );
-
-      let result = protectedHtml.replace(
-        /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
-        (match, href, text) => {
-          const id = extractId(href);
-          if (!id || text.trim() !== href.trim()) return match;
-          return `<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
-        }
-      );
-
-      result = result.replace(
-        /(^|>|\s)((?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}|youtube\.com\/shorts\/[a-zA-Z0-9_-]{11})[^"'<>\s]*)(?=[\s<.,;:!?)\]"']|$)/g,
-        (match, before, url) => {
-          const id = extractId(url);
-          if (!id) return match;
-          return `${before}<div class="youtube-embed" data-id="${id}"><div class="youtube-placeholder"></div></div>`;
-        }
-      );
-
-      result = result.replace(
-        /__PROTECTED_(\d+)__/g,
-        (_, i) => protectedBlocks[Number(i)] ?? _
-      );
-
-      return result;
+    const setStatus = (msg) => {
+      if (statusEl) statusEl.textContent = msg;
     };
 
-    const mdToHtml = (md) => {
-      const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      const inline = (s) => esc(s)
-        .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" loading="lazy" decoding="async" class="max-w-full h-auto rounded-lg my-4" />')
-        .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/`(.+?)`/g, '<code>$1</code>')
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    /* Delete buttons */
+    document.querySelectorAll(".blog-delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async function() {
+        const slug = btn.dataset.slug || "";
+        if (!slug || !confirm("Hapus blog post ini? Tindakan tidak bisa dibatalkan.")) return;
 
-      const lines = md.split('\n');
-      const out = [];
-      let code = [], inCode = false;
-      let list = [], listType = '';
-
-      const flush = () => {
-        if (code.length) { out.push(`<pre><code>${esc(code.join('\n'))}</code></pre>`); code = []; inCode = false; }
-        if (list.length) { out.push(`<${listType}>${list.join('')}</${listType}>`); list = []; listType = ''; }
-      };
-
-      for (const raw of lines) {
-        const line = raw.trimEnd();
-        if (line.startsWith('```')) { flush(); inCode = !inCode; continue; }
-        if (inCode) { code.push(line); continue; }
-
-        const b = line.match(/^([-*+]) (.+)$/);
-        const n = line.match(/^(\d+)\. (.+)$/);
-        if (b) {
-          if (listType !== 'ul') flush();
-          listType = 'ul'; list.push(`<li>${inline(b[2])}</li>`);
-          continue;
-        }
-        if (n) {
-          if (listType !== 'ol') flush();
-          listType = 'ol'; list.push(`<li>${inline(n[2])}</li>`);
-          continue;
+        const adminSecret = localStorage.getItem("thoughts_admin_secret");
+        if (!adminSecret) {
+          setStatus("Error: Admin secret tidak ditemukan. Silakan login ulang.");
+          return;
         }
 
-        flush();
-        if (!line) continue;
-        if (line.match(/^-{3,}$/)) { out.push('<hr>'); continue; }
-        if (line.startsWith('### ')) { out.push(`<h3>${inline(line.slice(4))}</h3>`); continue; }
-        if (line.startsWith('## ')) { out.push(`<h2>${inline(line.slice(3))}</h2>`); continue; }
-        if (line.startsWith('# ')) { out.push(`<h1>${inline(line.slice(2))}</h1>`); continue; }
-        if (line.startsWith('> ')) { out.push(`<blockquote>${inline(line.slice(2))}</blockquote>`); continue; }
-        out.push(`<p>${inline(line)}</p>`);
-      }
-      flush();
-      return out.join('\n');
-    };
+        setStatus("Menghapus...");
+        try {
+          const res = await fetch("/api/blog?slug=" + encodeURIComponent(slug), {
+            method: "DELETE",
+            headers: { Authorization: "Bearer " + adminSecret },
+          });
+          const data = await res.json().catch(() => null);
 
-    /* -------------------------
-       HELPERS (before EasyMDE)
-    -------------------------- */
-    const setLoading = (loading) => {
-      publishButton.disabled = loading;
-      if (btnText) btnText.textContent = loading ? "Saving..." : "Save blog post";
-      if (btnSpinner) btnSpinner.classList.toggle("hidden", !loading);
-    };
+          if (!res.ok) throw new Error((data && data.message) || ("HTTP " + res.status));
 
-    const setStatus = (message) => {
-      if (status) status.textContent = message;
-    };
-
-    /* -------------------------
-       EASYMDE INIT
-    -------------------------- */
-    const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
-
-    if (!EasyMDE) {
-      setStatus("Editor gagal dimuat. Cek console (F12) untuk detail.");
-      console.error("[ADMIN] EasyMDE module not loaded.");
-      return;
-    }
-
-    /* -------------------------
-       IMAGE UPLOAD HELPER
-    -------------------------- */
-    const uploadImageToSupabase = (file, onSuccess, onError) => {
-      if (file.size > MAX_IMAGE_SIZE) {
-        onError("Image must be smaller than 5MB.");
-        return;
-      }
-      const adminSecret = secretInput.value.trim();
-      if (!adminSecret) {
-        onError("Admin secret belum diisi.");
-        return;
-      }
-      const uploadForm = new FormData();
-      uploadForm.append("image", file);
-      fetch("/api/upload-image", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${adminSecret}` },
-        body: uploadForm,
-      })
-      .then(res => res.json().then(result => ({ res, result })))
-      .then(({ res, result }) => {
-        if (!res.ok) throw new Error(result?.message || "Upload failed.");
-        onSuccess(result.url);
-      })
-      .catch(err => onError(err.message || "Upload failed."));
-    };
-
-    const insertImageFromFile = (editor) => {
-      const input = document.createElement("input");
-      input.type = "file";
-      input.accept = "image/*";
-      input.style.display = "none";
-      input.onchange = () => {
-        const file = input.files?.[0];
-        if (!file) return;
-        uploadImageToSupabase(
-          file,
-          (url) => {
-            editor.codemirror.replaceSelection(`![image](${url})\n`);
-          },
-          (err) => {
-            alert(err);
-          }
-        );
-      };
-      document.body.appendChild(input);
-      input.click();
-      document.body.removeChild(input);
-    };
-
-    let easyMDE;
-    try {
-      easyMDE = new EasyMDE({
-        element: contentInput,
-        autofocus: false,
-        spellChecker: false,
-        autosave: { enabled: false },
-        status: false,
-        forceSync: true,
-        minHeight: "320px",
-        placeholder: "# Judul\n\nTulis pelan-pelan di sini...",
-        toolbar: [
-          { name: "bold", action: EasyMDE.toggleBold, className: "icon-bold", title: "Bold" },
-          { name: "italic", action: EasyMDE.toggleItalic, className: "icon-italic", title: "Italic" },
-          { name: "heading", action: EasyMDE.toggleHeadingSmaller, className: "icon-heading", title: "Heading" },
-          "|",
-          { name: "quote", action: EasyMDE.toggleBlockquote, className: "icon-quote", title: "Quote" },
-          { name: "unordered-list", action: EasyMDE.toggleUnorderedList, className: "icon-list", title: "List" },
-          { name: "ordered-list", action: EasyMDE.toggleOrderedList, className: "icon-list-ol", title: "Numbered List" },
-          "|",
-          { name: "link", action: EasyMDE.drawLink, className: "icon-link", title: "Link" },
-          { name: "image", action: insertImageFromFile, className: "icon-image", title: "Image" },
-          "|",
-          {
-            name: "youtube",
-            action: (editor) => {
-              const url = prompt("Paste YouTube link:");
-              if (url) editor.codemirror.replaceSelection("\n" + url.trim() + "\n");
-            },
-            className: "icon-youtube",
-            title: "YouTube",
-          },
-          "|",
-          { name: "preview", action: EasyMDE.togglePreview, className: "icon-preview no-disable", title: "Preview" },
-          { name: "side-by-side", action: EasyMDE.toggleSideBySide, className: "icon-sidebyside no-disable no-mobile", title: "Side by side" },
-          "|",
-          { name: "guide", action: "https://www.markdownguide.org/basic-syntax/", className: "icon-guide", title: "Markdown Guide" }
-        ],
-        previewRender: (plainText) => {
-          const html = mdToHtml(plainText);
-          return convertYouTubeLinks(html);
-        },
-        imageUploadFunction: (file, onSuccess, onError) => {
-          uploadImageToSupabase(file, onSuccess, onError);
-        },
+          const row = btn.closest(".blog-row");
+          if (row) row.remove();
+          setStatus("Blog post berhasil dihapus.");
+          setTimeout(() => setStatus(""), 3000);
+        } catch (err) {
+          setStatus("Error hapus: " + (err instanceof Error ? err.message : String(err)));
+        }
       });
-    } catch (err) {
-      console.error("[ADMIN] EasyMDE failed to load:", err);
-      setStatus("Editor gagal dimuat. Silakan refresh halaman.");
-      return;
-    }
-
-    /* -------------------------
-       SUBMIT
-    -------------------------- */
-    const submitBlogPost = async () => {
-      const adminSecret = secretInput.value.trim();
-
-      if (!adminSecret) {
-        setStatus("Admin secret belum diisi.");
-        return;
-      }
-
-      const content = easyMDE ? easyMDE.value().trim() : "";
-      if (!content) {
-        setStatus("Content is required.");
-        return;
-      }
-
-      // Sync EasyMDE value back to textarea for FormData
-      if (easyMDE) contentInput.value = easyMDE.value();
-
-      localStorage.setItem("thoughts_admin_secret", adminSecret);
-
-      const formData = new FormData(form);
-
-      setLoading(true);
-      setStatus("");
-
-      try {
-        const response = await fetch("/api/blog", {
-          method: "POST",
-          credentials: "same-origin",
-          headers: {
-            Authorization: `Bearer ${adminSecret}`,
-          },
-          body: formData,
-        });
-
-        const result = await response.json().catch(() => null);
-
-        if (!response.ok) {
-          throw new Error(result?.message || "Failed to save blog post.");
-        }
-
-        form.reset();
-        secretInput.value = adminSecret;
-        if (easyMDE) easyMDE.value("");
-
-        setStatus(result?.message || "Blog post published successfully.");
-      } catch (error) {
-        setStatus(
-          error instanceof Error
-            ? error.message
-            : "Failed to save blog post."
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      await submitBlogPost();
-    });
-
-    publishButton.addEventListener("click", async (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      await submitBlogPost();
     });
   })();
 </script>

@@ -1,339 +1,150 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { createSupabaseAdminClient } from "@/lib/supabase";
+import { withTimeout } from "@/lib/security";
 
 export const prerender = false;
+
+const adminSecret = Astro.cookies.get("admin_secret")?.value;
+const expectedSecret = import.meta.env.THOUGHTS_ADMIN_SECRET;
+
+if (!adminSecret || adminSecret !== expectedSecret) {
+  return Astro.redirect("/admin/login");
+}
+
+const supabase = createSupabaseAdminClient();
+
+const { data: thoughtsData, error: thoughtsError } = await withTimeout(
+  supabase
+    .from("thoughts")
+    .select("id, content, yt_link, created_at")
+    .order("created_at", { ascending: false })
+    .limit(50),
+  5000,
+  "Thoughts list"
+);
+
+const thoughts = thoughtsError ? [] : (thoughtsData ?? []);
 ---
 
-<Layout title="Post Thought" noindex={true}>
-  <main class="mx-auto flex w-full max-w-prose flex-col gap-8">
-    <header class="flex flex-col gap-2">
-      <h1 class="text-2xl font-bold text-text-light dark:text-neutral-100">
-        New thought
-      </h1>
-      <p class="text-sm leading-7 text-muted-light dark:text-neutral-400">
-        Tulis singkat saja. Simpan momen sebelum lewat.
-      </p>
+<Layout title="Thoughts Admin" noindex={true}>
+  <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-8 pb-24">
+    <header class="flex items-center justify-between">
+      <div class="flex flex-col gap-2">
+        <h1 class="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
+          Thoughts
+        </h1>
+        <p class="text-sm leading-7 text-neutral-500 dark:text-neutral-400">
+          Kelola thoughts singkat Anda.
+        </p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a
+          href="/admin/thoughts/new"
+          class="inline-flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Tulis Baru
+        </a>
+        <a
+          href="/admin/dashboard"
+          class="text-xs text-neutral-500 hover:text-neutral-800 dark:text-neutral-400 dark:hover:text-neutral-200 transition-colors"
+        >
+          ← Dashboard
+        </a>
+      </div>
     </header>
 
-    <form id="thought-form" novalidate class="flex flex-col gap-5">
-      <!-- ADMIN SECRET -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-muted-light dark:text-neutral-400">Admin secret</span>
-        <input
-          id="admin-secret"
-          name="adminSecret"
-          type="password"
-          autocomplete="current-password"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-text-light outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-          required
-        />
-      </label>
+    <!-- LIST -->
+    <section class="flex flex-col gap-3">
+      <h2 class="text-[10px] font-bold uppercase tracking-[0.15em] text-neutral-400 dark:text-neutral-500">
+        Semua Thoughts ({thoughts.length})
+      </h2>
 
-      <!-- CONTENT -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-muted-light dark:text-neutral-400">Thought</span>
-        <textarea
-          id="thought-content"
-          name="content"
-          rows="8"
-          placeholder="Apa yang ingin disimpan hari ini?"
-          class="min-h-48 resize-y rounded-lg border border-border-light bg-secondary-light px-4 py-3 leading-7 text-text-light outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-          required
-        ></textarea>
-      </label>
+      <p id="status-message" class="min-h-6 text-sm text-neutral-500 dark:text-neutral-400" aria-live="polite"></p>
 
-      <!-- YOUTUBE LINK -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-muted-light dark:text-neutral-400">YouTube link (opsional)</span>
-        <input
-          id="yt-link"
-          name="ytLink"
-          type="url"
-          placeholder="https://youtube.com/watch?v=..."
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-text-light outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-        <span class="text-[10px] text-muted-light">Embed 1 video YouTube saja. Tidak bisa digabung dengan media upload.</span>
-      </label>
-
-      <!-- MEDIA UPLOAD -->
-      <div class="flex flex-col gap-3">
-        <label
-          for="media-input"
-          class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border-light bg-secondary-light px-6 py-10 text-center"
-        >
-          <span class="text-sm text-muted-light">Upload images / videos / GIF</span>
-          <span class="text-xs text-muted-light">max 6 files</span>
-        </label>
-
-        <input
-          id="media-input"
-          name="media"
-          type="file"
-          accept="image/*,video/*"
-          multiple
-          class="hidden"
-        />
-
-        <!-- PREVIEW -->
-        <div id="media-preview" class="grid grid-cols-2 gap-2 sm:grid-cols-3"></div>
-      </div>
-
-      <!-- ALT -->
-      <label class="flex flex-col gap-2">
-        <span class="text-sm text-muted-light dark:text-neutral-400">Media alt text</span>
-        <input
-          id="image-alt"
-          name="imageAlt"
-          type="text"
-          placeholder="Deskripsi singkat"
-          class="rounded-lg border border-border-light bg-secondary-light px-4 py-3 text-text-light outline-none focus:border-accent-light dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-100"
-        />
-      </label>
-
-      <!-- BUTTON -->
-      <button
-        id="publish-button"
-        type="button"
-        class="rounded-lg bg-text-light px-5 py-3 text-sm font-medium text-primary-light"
-      >
-        Publish
-      </button>
-
-      <!-- COMPRESSION PROGRESS -->
-      <div id="compression-ui" class="hidden flex-col gap-2 rounded-lg border border-border-light bg-secondary-light p-4">
-        <div class="flex items-center justify-between">
-          <span id="compression-label" class="text-xs font-medium text-muted-light">Mengompresi...</span>
-          <span id="compression-percent" class="text-xs font-bold text-text-light">0%</span>
-        </div>
-        <div class="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
-          <div id="compression-bar" class="h-full w-0 rounded-full bg-text-light transition-all duration-300"></div>
-        </div>
-      </div>
-
-      <p id="form-status" class="min-h-6 text-sm text-muted-light"></p>
-    </form>
+      {thoughts.length === 0 ? (
+        <p class="text-sm text-neutral-400 dark:text-neutral-500">Belum ada thoughts.</p>
+      ) : (
+        <ul class="flex flex-col gap-2" id="thoughts-list">
+          {thoughts.map((t) => (
+            <li
+              class="thought-row flex items-start justify-between gap-3 rounded-lg border border-neutral-100 dark:border-neutral-800 p-3"
+              data-id={t.id}
+            >
+              <div class="min-w-0 flex-1">
+                <p class="text-sm text-neutral-800 dark:text-neutral-200 truncate">
+                  {t.content}
+                </p>
+                <div class="mt-1 flex items-center gap-2 text-[11px] text-neutral-400 dark:text-neutral-500">
+                  <time>{new Date(t.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })}</time>
+                  {t.yt_link && <span class="text-orange-500 font-semibold text-[10px]">YT</span>}
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={`/admin/thoughts/edit?id=${t.id}`}
+                  class="rounded-md border border-neutral-200 px-2.5 py-1 text-xs text-neutral-500 transition-colors hover:border-neutral-400 hover:text-neutral-800 dark:border-neutral-800 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-neutral-200"
+                >
+                  Edit
+                </a>
+                <button
+                  type="button"
+                  class="thought-delete-btn rounded-md border border-red-200 px-2.5 py-1 text-xs text-red-500 transition-colors hover:border-red-400 hover:text-red-700 dark:border-red-900/30 dark:text-red-400 dark:hover:border-red-700 dark:hover:text-red-300"
+                  data-id={t.id}
+                >
+                  Hapus
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   </main>
 </Layout>
 
 <script is:inline>
   (function() {
-    const form = document.getElementById("thought-form");
-    const status = document.getElementById("form-status");
-    const secretInput = document.getElementById("admin-secret");
-    const publishButton = document.getElementById("publish-button");
-    const mediaInput = document.getElementById("media-input");
-    const mediaPreview = document.getElementById("media-preview");
-    const compressionUi = document.getElementById("compression-ui");
-    const compressionLabel = document.getElementById("compression-label");
-    const compressionPercent = document.getElementById("compression-percent");
-    const compressionBar = document.getElementById("compression-bar");
-
-    if (!form || !publishButton || !secretInput) {
-      if (status) status.textContent = "[DEBUG] Elemen form tidak ditemukan";
-      console.error("[THOUGHTS] Missing critical elements", { form, publishButton, secretInput });
-      return;
-    }
-
-    if (status) status.textContent = "[DEBUG] Script aktif";
-
-    let selectedFiles = [];
-    let previewUrls = [];
-    const MAX_FILES = 6;
-
-    secretInput.value = localStorage.getItem("thoughts_admin_secret") || "";
+    const statusEl = document.getElementById("status-message");
 
     const setStatus = (msg) => {
-      if (status) status.textContent = msg;
-      console.log("[THOUGHTS_STATUS]", msg);
+      if (statusEl) statusEl.textContent = msg;
     };
 
-    const setLoading = (loading) => {
-      publishButton.disabled = loading;
-      publishButton.textContent = loading ? "Publishing..." : "Publish";
-    };
+    /* Delete buttons */
+    document.querySelectorAll(".thought-delete-btn").forEach((btn) => {
+      btn.addEventListener("click", async function() {
+        const id = btn.dataset.id || "";
+        if (!id || !confirm("Hapus thought ini? Tindakan tidak bisa dibatalkan.")) return;
 
-    const setCompressing = (show, label, percent) => {
-      if (compressionUi) {
-        compressionUi.classList.toggle("hidden", !show);
-        compressionUi.classList.toggle("flex", show);
-      }
-      if (compressionLabel) compressionLabel.textContent = label || "";
-      if (compressionPercent) compressionPercent.textContent = (percent || 0) + "%";
-      if (compressionBar) compressionBar.style.width = (percent || 0) + "%";
-    };
-
-    const renderPreview = (files) => {
-      if (!mediaPreview) return;
-      previewUrls.forEach((url) => URL.revokeObjectURL(url));
-      previewUrls = [];
-      mediaPreview.innerHTML = "";
-      files.slice(0, MAX_FILES).forEach((file) => {
-        const url = URL.createObjectURL(file);
-        previewUrls.push(url);
-        const wrapper = document.createElement("div");
-        wrapper.className = "overflow-hidden rounded-lg border border-border-light bg-neutral-100";
-        if (file.type.startsWith("image/")) {
-          const img = document.createElement("img");
-          img.src = url;
-          img.className = "h-28 w-full object-cover";
-          wrapper.appendChild(img);
-        } else if (file.type.startsWith("video/")) {
-          const video = document.createElement("video");
-          video.src = url;
-          video.controls = true;
-          video.className = "h-28 w-full object-cover";
-          wrapper.appendChild(video);
-        }
-        mediaPreview.appendChild(wrapper);
-      });
-    };
-
-    if (mediaInput) {
-      mediaInput.addEventListener("change", () => {
-        if (!mediaInput.files) return;
-        selectedFiles = Array.from(mediaInput.files).slice(0, MAX_FILES);
-        renderPreview(selectedFiles);
-      });
-    }
-
-    const extractYouTubeId = (url) => {
-      const patterns = [
-        /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
-        /^([a-zA-Z0-9_-]{11})$/,
-      ];
-      for (const p of patterns) {
-        const m = url.match(p);
-        if (m) return m[1];
-      }
-      return null;
-    };
-
-    const compressMediaFallback = async (files, onItemProgress) => {
-      // Try to load module; if it fails, return files as-is
-      try {
-        const mod = await import("../../lib/compression.ts");
-        if (mod && typeof mod.compressMedia === "function") {
-          return await mod.compressMedia(files, onItemProgress);
-        }
-      } catch (e) {
-        console.warn("[THOUGHTS] Compression module failed:", e);
-      }
-      // Fallback: no compression
-      return files.map((f) => ({ file: f, originalSize: f.size, compressedSize: f.size }));
-    };
-
-    const submitThought = async () => {
-      try {
-        setStatus("Memulai submit...");
-
-        const adminSecret = secretInput.value.trim();
+        const adminSecret = localStorage.getItem("thoughts_admin_secret");
         if (!adminSecret) {
-          setStatus("Admin secret required");
+          setStatus("Error: Admin secret tidak ditemukan di localStorage. Harap login kembali.");
           return;
         }
 
-        const ytInput = document.getElementById("yt-link");
-        const ytLink = ytInput && ytInput.value ? ytInput.value.trim() : "";
-        const hasMedia = selectedFiles.length > 0;
+        setStatus("Menghapus...");
+        try {
+          const res = await fetch("/api/thoughts?id=" + encodeURIComponent(id), {
+            method: "DELETE",
+            headers: { Authorization: "Bearer " + adminSecret },
+          });
+          const data = await res.json().catch(() => null);
 
-        setStatus('ytLink="' + ytLink + '" media=' + hasMedia);
+          if (!res.ok) throw new Error((data && data.message) || ("HTTP " + res.status));
 
-        if (ytLink && hasMedia) {
-          setStatus("Pilih salah satu: YouTube link atau media upload.");
-          return;
+          const row = btn.closest(".thought-row");
+          if (row) row.remove();
+          setStatus("Thought berhasil dihapus.");
+          setTimeout(() => setStatus(""), 3000);
+        } catch (err) {
+          const msg = err instanceof Error ? err.message : String(err);
+          setStatus("Error hapus: " + msg);
         }
-
-        if (ytLink) {
-          const ytId = extractYouTubeId(ytLink);
-          if (!ytId) {
-            setStatus("URL YouTube tidak valid.");
-            return;
-          }
-          setStatus("YouTube ID: " + ytId + " — mengirim...");
-        }
-
-        const contentEl = document.getElementById("thought-content");
-        const content = contentEl && contentEl.value ? contentEl.value.trim() : "";
-        if (!content) {
-          setStatus("Content is required.");
-          return;
-        }
-
-        const formData = new FormData();
-        formData.append("adminSecret", adminSecret);
-        formData.append("content", content);
-        if (ytLink) formData.append("ytLink", ytLink);
-
-        const altEl = document.getElementById("image-alt");
-        const alt = altEl && altEl.value ? altEl.value.trim() : "";
-        if (alt) formData.append("imageAlt", alt);
-
-        // COMPRESSION PHASE
-        let filesToUpload = selectedFiles;
-
-        if (hasMedia) {
-          setCompressing(true, "Mengompresi media...", 0);
-          try {
-            const results = await compressMediaFallback(selectedFiles, (index, percent) => {
-              const fileName = selectedFiles[index]?.name || "";
-              setCompressing(true, "Mengompresi " + fileName + "...", percent);
-            });
-            filesToUpload = results.map((r) => r.file);
-            const totalOriginal = results.reduce((s, r) => s + r.originalSize, 0);
-            const totalCompressed = results.reduce((s, r) => s + r.compressedSize, 0);
-            const saved = totalOriginal - totalCompressed;
-            const savedMb = (saved / 1024 / 1024).toFixed(1);
-            setStatus("Dihematkan " + savedMb + "MB");
-          } catch (err) {
-            console.error("Compression failed:", err);
-            setStatus("Kompresi gagal, upload asli saja...");
-          } finally {
-            setCompressing(false);
-          }
-        }
-
-        filesToUpload.forEach((file) => {
-          formData.append("media", file);
-        });
-
-        setLoading(true);
-        setStatus("Mengirim ke server...");
-
-        const res = await fetch("/api/thoughts", {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + adminSecret,
-          },
-          body: formData,
-        });
-
-        const data = await res.json().catch(() => null);
-
-        if (!res.ok) {
-          throw new Error((data && data.message) || ("HTTP " + res.status));
-        }
-
-        form.reset();
-        selectedFiles = [];
-        previewUrls.forEach((url) => URL.revokeObjectURL(url));
-        previewUrls = [];
-        if (mediaPreview) mediaPreview.innerHTML = "";
-
-        setStatus("Published! ID: " + (data && data.id ? data.id : "?"));
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        console.error("[THOUGHTS_SUBMIT] Error:", msg);
-        setStatus("Error: " + msg);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    publishButton.addEventListener("click", function() {
-      console.log("[THOUGHTS] Publish button clicked");
-      submitThought();
+      });
     });
-
-    if (status) status.textContent = "";
   })();
 </script>

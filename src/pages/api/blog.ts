@@ -115,7 +115,7 @@ export const OPTIONS: APIRoute = async () => {
       "Access-Control-Allow-Origin": "*",
 
       "Access-Control-Allow-Methods":
-        "GET, POST, OPTIONS",
+        "GET, POST, PUT, DELETE, OPTIONS",
 
       "Access-Control-Allow-Headers":
         "Content-Type, Authorization",
@@ -372,8 +372,7 @@ export const POST: APIRoute =
 
               tags,
 
-              is_published:
-                true,
+              is_published: formData.get("isPublished") === "on",
             })
 
             .select(
@@ -444,3 +443,117 @@ export const POST: APIRoute =
       );
     }
   };
+
+/* ---------------------------------
+   PUT (update blog post)
+---------------------------------- */
+
+export const PUT: APIRoute = async ({ request }) => {
+  try {
+    const auth = verifyAdminSecret(request);
+    if (!auth.ok) return auth.response;
+
+    const formData = await request.formData();
+
+    const slug = cleanText(formData.get("slug"), 160);
+    if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+      return json({ message: "Valid slug is required." }, 400);
+    }
+
+    const title = cleanText(formData.get("title"), 180);
+    const excerpt = cleanText(formData.get("excerpt"), 500);
+    const content = cleanText(formData.get("content"), 200000);
+    const coverImageAlt = cleanText(formData.get("coverImageAlt"), 300);
+
+    const rawTags = cleanText(formData.get("tags"), 500);
+    const tags = rawTags
+      ? rawTags
+          .split(",")
+          .map((t) =>
+            t
+              .trim()
+              .toLowerCase()
+              .replace(/[^a-z0-9\s-]/g, "")
+              .replace(/\s+/g, " ")
+              .trim()
+          )
+          .filter((t) => t.length > 0 && t.length <= 30)
+      : [];
+
+    const updates: Record<string, unknown> = {};
+    if (title) updates.title = title;
+    if (excerpt !== undefined) updates.excerpt = excerpt || null;
+    if (content) updates.content = content;
+    if (formData.has("tags")) updates.tags = tags;
+    if (coverImageAlt !== undefined) updates.cover_image_alt = coverImageAlt || null;
+    if (formData.has("isPublished")) updates.is_published = formData.get("isPublished") === "on";
+
+    if (Object.keys(updates).length === 0) {
+      return json({ message: "Nothing to update." }, 400);
+    }
+
+    const supabase = createSupabaseAdminClient();
+
+    const coverImage = formData.get("coverImage");
+    if (coverImage instanceof File && coverImage.size > 0) {
+      const imageError = validateMediaFile(coverImage);
+      if (imageError) return json({ message: imageError }, 400);
+      try {
+        updates.cover_image_url = await uploadCoverImage(coverImage);
+      } catch {
+        return json({ message: "Cover image upload failed." }, 502);
+      }
+    }
+
+    const { error } = await withTimeout(
+      supabase.from("blog_posts").update(updates).eq("slug", slug),
+      10000,
+      "Blog update"
+    );
+
+    if (error) {
+      console.error("[BLOG_API] Update failed:", error);
+      return json({ message: "Blog update failed." }, 500);
+    }
+
+    return json({ ok: true, message: "Blog post updated." });
+  } catch (error) {
+    console.error("[BLOG_API] PUT fatal error:", error);
+    return json({ message: "Server error." }, 500);
+  }
+};
+
+/* ---------------------------------
+   DELETE
+---------------------------------- */
+
+export const DELETE: APIRoute = async ({ request }) => {
+  try {
+    const auth = verifyAdminSecret(request);
+    if (!auth.ok) return auth.response;
+
+    const url = new URL(request.url);
+    const slug = url.searchParams.get("slug")?.trim() || "";
+    if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+      return json({ message: "Invalid slug." }, 400);
+    }
+
+    const supabase = createSupabaseAdminClient();
+
+    const { error } = await withTimeout(
+      supabase.from("blog_posts").delete().eq("slug", slug),
+      10000,
+      "Blog delete"
+    );
+
+    if (error) {
+      console.error("[BLOG_API] Delete failed:", error);
+      return json({ message: "Blog delete failed." }, 500);
+    }
+
+    return json({ ok: true, message: "Blog post deleted." });
+  } catch (error) {
+    console.error("[BLOG_API] DELETE fatal error:", error);
+    return json({ message: "Server error." }, 500);
+  }
+};
