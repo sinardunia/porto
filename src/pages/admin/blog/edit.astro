@@ -168,7 +168,7 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
           type="button"
           class="flex items-center justify-center gap-2 rounded-lg bg-neutral-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-950 dark:hover:bg-neutral-300 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <span id="btn-text">Perbarui</span>
+          <span id="btn-text">{post.is_published ? 'Simpan Perubahan' : 'Simpan sebagai Draft'}</span>
           <span id="btn-spinner" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white dark:border-neutral-400/30 dark:border-t-neutral-950"></span>
         </button>
         <a
@@ -580,7 +580,17 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
       return;
     }
 
+    const isPublishedCb = document.getElementById("is-published");
+    const updateBtnLabel = () => {
+      const btnText = document.getElementById("btn-text");
+      if (!btnText || !isPublishedCb) return;
+      btnText.textContent = isPublishedCb.checked ? "Simpan Perubahan" : "Simpan sebagai Draft";
+    };
+    if (isPublishedCb) isPublishedCb.addEventListener("change", updateBtnLabel);
+    updateBtnLabel();
+
     const submitUpdate = async () => {
+      if (updateButton.disabled) return;
       const adminSecret = localStorage.getItem("thoughts_admin_secret");
       if (!adminSecret) {
         setStatus("Admin secret belum diisi.");

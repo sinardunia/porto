@@ -61,7 +61,8 @@ function humanizeTime(date: Date) {
   });
 }
 
-const displayTime = humanizeTime(new Date(thought.created_at));
+const rawDate = new Date(thought.created_at ?? "");
+const displayTime = Number.isNaN(rawDate.getTime()) ? "Waktu lampau" : humanizeTime(rawDate);
 ---
 
 <article

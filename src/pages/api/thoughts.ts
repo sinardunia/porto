@@ -218,7 +218,6 @@ export const POST: APIRoute =
       let ytLink: string | null = null;
       if (rawYtLink) {
         const ytId = extractYouTubeId(rawYtLink);
-        console.log("[THOUGHTS_API] rawYtLink:", rawYtLink, "extractedId:", ytId);
         if (!ytId) {
           return json(
             { message: "Invalid YouTube URL." },
@@ -240,6 +239,13 @@ export const POST: APIRoute =
               file.size > 0
           )
           .slice(0, 6);
+
+      if (ytLink && mediaFiles.length > 0) {
+        return json(
+          { message: "Pilih salah satu: YouTube link atau media upload." },
+          400
+        );
+      }
 
       if (!content) {
         return json(

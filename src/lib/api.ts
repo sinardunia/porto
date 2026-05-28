@@ -21,7 +21,7 @@ export const json = (
           "Content-Type, Authorization",
 
         "Access-Control-Allow-Methods":
-          "GET, POST, OPTIONS",
+          "GET, POST, PUT, DELETE, OPTIONS",
       },
     }
   );
@@ -66,24 +66,6 @@ export const verifyAdminSecret = (
     getBearerToken(
       request
     )?.trim();
-
-  console.log(
-    "[ADMIN AUTH]",
-    {
-      hasExpectedSecret:
-        Boolean(expectedSecret),
-
-      expectedLength:
-        expectedSecret?.length,
-
-      providedLength:
-        providedSecret?.length,
-
-      match:
-        expectedSecret ===
-        providedSecret,
-    }
-  );
 
   if (!expectedSecret) {
     console.error(

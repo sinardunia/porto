@@ -138,13 +138,17 @@ const jsonLd = post ? {
         </header>
 
         {post.cover_image_url && (
-          <figure class="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-900" itemprop="image">
+          <figure class="relative aspect-[16/9] w-full overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800" itemprop="image">
             <img
               src={post.cover_image_url}
               alt={post.cover_image_alt || post.title}
-              class="absolute inset-0 h-full w-full object-cover"
+              class="absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
               loading="eager"
               decoding="async"
+              width="880"
+              height="495"
+              onload="this.style.opacity='1'"
+              style="opacity:0"
             />
           </figure>
         )}

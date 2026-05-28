@@ -480,6 +480,18 @@ export const PUT: APIRoute = async ({ request }) => {
           .filter((t) => t.length > 0 && t.length <= 30)
       : [];
 
+    if (!title) return json({ message: "Title is required." }, 400);
+    if (!content) return json({ message: "Content is required." }, 400);
+
+    const supabase = createSupabaseAdminClient();
+
+    const { data: existing } = await withTimeout(
+      supabase.from("blog_posts").select("id").eq("slug", slug).single(),
+      5000,
+      "Blog slug check"
+    );
+    if (!existing) return json({ message: "Blog post not found." }, 404);
+
     const updates: Record<string, unknown> = {};
     if (title) updates.title = title;
     if (excerpt !== undefined) updates.excerpt = excerpt || null;
@@ -487,12 +499,6 @@ export const PUT: APIRoute = async ({ request }) => {
     if (formData.has("tags")) updates.tags = tags;
     if (coverImageAlt !== undefined) updates.cover_image_alt = coverImageAlt || null;
     if (formData.has("isPublished")) updates.is_published = formData.get("isPublished") === "on";
-
-    if (Object.keys(updates).length === 0) {
-      return json({ message: "Nothing to update." }, 400);
-    }
-
-    const supabase = createSupabaseAdminClient();
 
     const coverImage = formData.get("coverImage");
     if (coverImage instanceof File && coverImage.size > 0) {
@@ -539,6 +545,13 @@ export const DELETE: APIRoute = async ({ request }) => {
     }
 
     const supabase = createSupabaseAdminClient();
+
+    const { data: existing } = await withTimeout(
+      supabase.from("blog_posts").select("id").eq("slug", slug).single(),
+      5000,
+      "Blog delete slug check"
+    );
+    if (!existing) return json({ message: "Blog post not found." }, 404);
 
     const { error } = await withTimeout(
       supabase.from("blog_posts").delete().eq("slug", slug),
