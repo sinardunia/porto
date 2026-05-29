@@ -8,16 +8,22 @@ const { currentValue } = Astro.props;
 
 <div class="mb-20 px-4 w-full mx-auto sm:max-w-[340px]">
   <form method="get" action="/thoughts" class="flex flex-col items-center gap-3 w-full">
-    <div class="relative w-full border-b border-neutral-200/60 dark:border-neutral-800/40 pb-1.5 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-300">
+    <div class="relative w-full border-b border-neutral-200/60 dark:border-neutral-800/40 pb-1.5 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-300 group">
       <input
         type="text"
         name="q"
         value={currentValue}
         inputmode="search"
         placeholder="Cari potongan memori..."
-        class="w-full text-center text-xs bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400/50"
+        class="w-full text-center text-xs bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400/50 pr-6"
         autocomplete="off"
       />
+      {/* Keyboard shortcut hint */}
+      {!currentValue && (
+        <span class="absolute right-0 bottom-1.5 text-[10px] text-neutral-300 dark:text-neutral-600 font-mono opacity-0 group-hover:opacity-100 transition-opacity hidden md:inline-block" aria-hidden="true">
+          /
+        </span>
+      )}
       
       {currentValue && (
         <a 

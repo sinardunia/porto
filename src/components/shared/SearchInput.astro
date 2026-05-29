@@ -12,16 +12,22 @@ const { action, name = "q", value = "", placeholder = "Search...", clearHref, hi
 ---
 
 <form action={action} method="get" class="flex items-center gap-3 w-full">
-  <div class="relative flex-1 border-b border-neutral-200 dark:border-neutral-800 pb-1 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-200 min-w-0">
+  <div class="relative flex-1 border-b border-neutral-200 dark:border-neutral-800 pb-1 focus-within:border-neutral-400 dark:focus-within:border-neutral-600 transition-colors duration-200 min-w-0 group">
     <input
       type="text"
       name={name}
       value={value}
       inputmode="search"
       placeholder={placeholder}
-      class="w-full text-sm bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400"
+      class="w-full text-sm bg-transparent focus:outline-none text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 pr-8"
       autocomplete="off"
     />
+    {/* Keyboard shortcut hint - hidden when focused */}
+    {!value && (
+      <span class="absolute right-0 bottom-1 text-[10px] text-neutral-300 dark:text-neutral-600 font-mono opacity-0 group-hover:opacity-100 transition-opacity hidden md:inline-block" aria-hidden="true">
+        /
+      </span>
+    )}
     {hiddenInputs.map((h) => (
       <input type="hidden" name={h.name} value={h.value} />
     ))}

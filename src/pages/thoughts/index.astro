@@ -48,19 +48,22 @@ Astro.response.headers.set(
   </main>
 </Layout>
 
-<div id="image-lightbox" class="fixed inset-0 z-[999999] bg-black/95 backdrop-blur-md hidden opacity-0 flex items-center justify-center transition-all duration-300 select-none pointer-events-auto" onclick="window.closeNeuroLightbox()">
+<div id="image-lightbox" class="fixed inset-0 z-[999999] bg-black/95 backdrop-blur-md hidden opacity-0 flex items-center justify-center transition-all duration-300 select-none pointer-events-auto" onclick="window.closeNeuroLightbox()" role="dialog" aria-modal="true" aria-label="Image viewer">
   <button
     id="lightbox-close"
     type="button"
     class="absolute top-6 right-6 z-[1000001] flex h-12 w-12 items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-all active:scale-90 border border-white/10 cursor-pointer pointer-events-auto"
     onclick="event.stopPropagation(); window.closeNeuroLightbox();"
-    aria-label="Close"
+    aria-label="Close (Esc)"
   >
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
     </svg>
   </button>
-
+  {/* Keyboard hint */}
+  <span class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-xs font-mono pointer-events-none select-none hidden md:block">
+    ESC to close
+  </span>
   <div class="relative flex h-full w-full items-center justify-center p-4">
     <img
       id="lightbox-img"
@@ -86,6 +89,7 @@ Astro.response.headers.set(
   window.openNeuroLightbox = function(src) {
     const lb = document.getElementById('image-lightbox');
     const img = document.getElementById('lightbox-img');
+    const closeBtn = document.getElementById('lightbox-close');
     if (!lb || !img) return;
     img.src = src;
     lb.classList.remove('hidden');
@@ -95,6 +99,8 @@ Astro.response.headers.set(
       lb.classList.add('opacity-100');
       img.classList.replace('scale-95', 'scale-100');
     }, 10);
+    // Focus close button for keyboard accessibility
+    setTimeout(() => closeBtn?.focus(), 100);
     window.history.pushState({ lightboxOpen: true }, '');
   };
 

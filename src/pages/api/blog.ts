@@ -498,7 +498,7 @@ export const PUT: APIRoute = async ({ request }) => {
     if (content) updates.content = content;
     if (formData.has("tags")) updates.tags = tags;
     if (coverImageAlt !== undefined) updates.cover_image_alt = coverImageAlt || null;
-    if (formData.has("isPublished")) updates.is_published = formData.get("isPublished") === "on";
+    updates.is_published = formData.has("isPublished") && formData.get("isPublished") === "on";
 
     const coverImage = formData.get("coverImage");
     if (coverImage instanceof File && coverImage.size > 0) {

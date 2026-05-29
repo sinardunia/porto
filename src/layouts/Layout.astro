@@ -44,6 +44,9 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
   <body
     class="m-0 min-h-screen w-full bg-primary-light p-0 font-sans antialiased text-text-light dark:bg-neutral-950 dark:text-neutral-400"
   >
+    <!-- SKIP LINK - Keyboard Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <!-- BACKGROUND BLUR -->
     <div
       class="pointer-events-none absolute inset-0 overflow-hidden"
@@ -68,7 +71,7 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
       <Header />
 
       <!-- CONTENT -->
-      <main class="flex flex-1 flex-col min-w-0">
+      <main id="main-content" class="flex flex-1 flex-col min-w-0" tabindex="-1">
         <slot />
       </main>
 
@@ -144,7 +147,398 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
       html.dark * {
         scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
       }
+
+      /* Skip Link - Visually hidden until focused */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: #171717;
+        color: #fff;
+        padding: 8px 16px;
+        z-index: 10000;
+        font-size: 14px;
+        text-decoration: none;
+        border-radius: 0 0 4px 0;
+        transition: top 0.2s;
+      }
+      .skip-link:focus {
+        top: 0;
+        outline: 2px solid #f97316;
+        outline-offset: 2px;
+      }
+
+      /* Focus visible for keyboard navigation */
+      *:focus-visible {
+        outline: 2px solid #f97316;
+        outline-offset: 2px;
+      }
+      button:focus-visible,
+      a:focus-visible,
+      input:focus-visible,
+      textarea:focus-visible {
+        outline: 2px solid #f97316;
+        outline-offset: 2px;
+      }
+      /* Remove outline for mouse users */
+      *:focus:not(:focus-visible) {
+        outline: none;
+      }
+
+      /* Keyboard shortcuts help dialog */
+      .kbd-help-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(4px);
+        z-index: 99999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .kbd-help-overlay.active {
+        display: flex;
+      }
+      .kbd-help-dialog {
+        background: #fff;
+        border-radius: 12px;
+        padding: 24px;
+        max-width: 480px;
+        width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      }
+      html.dark .kbd-help-dialog {
+        background: #171717;
+        color: #e5e5e5;
+      }
+      .kbd-help-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .kbd-shortcut {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      html.dark .kbd-shortcut {
+        border-bottom-color: #262626;
+      }
+      .kbd-shortcut:last-child {
+        border-bottom: none;
+      }
+      .kbd-key {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 28px;
+        padding: 0 8px;
+        background: #f5f5f5;
+        border: 1px solid #d4d4d4;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #525252;
+        font-family: ui-monospace, monospace;
+        box-shadow: 0 2px 0 #d4d4d4;
+      }
+      html.dark .kbd-key {
+        background: #262626;
+        border-color: #404040;
+        color: #a3a3a3;
+        box-shadow: 0 2px 0 #404040;
+      }
+      .kbd-key-combo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
     </style>
+
+    <!-- KEYBOARD SHORTCUTS - Desktop Only -->
+    <script is:inline>
+      (function() {
+        'use strict';
+
+        // Desktop-only: skip on touch devices
+        if (window.matchMedia('(pointer: coarse)').matches) return;
+
+        let gMode = false;
+        let gTimeout = null;
+
+        const shortcuts = {
+          // Quick actions (single key)
+          '/': () => focusSearch(),
+          '?': () => toggleHelp(),
+          't': () => toggleTheme(),
+          'Escape': () => closeAll(),
+
+          // Arch/vim-friendly: scroll (without shift, simple keys)
+          'j': () => scrollDown(),
+          'k': () => scrollUp(),
+          'h': () => goBack(),
+          'l': () => goForward(),
+
+          // Go mode sequences (g + key)
+          'gh': () => navigate('/'),
+          'gb': () => navigate('/blog'),
+          'gt': () => navigate('/thoughts'),
+          'gc': () => navigate('/chatango'),
+          'ga': () => navigate('/admin/dashboard'),
+          'gg': () => scrollToTop(),
+        };
+
+        function navigate(path) {
+          window.location.href = path;
+        }
+
+        function scrollDown() {
+          window.scrollBy({ top: 60, behavior: 'smooth' });
+        }
+
+        function scrollUp() {
+          window.scrollBy({ top: -60, behavior: 'smooth' });
+        }
+
+        function scrollToTop() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+          window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+
+        function goBack() {
+          if (window.history.length > 1) history.back();
+        }
+
+        function goForward() {
+          history.forward();
+        }
+
+        function focusSearch() {
+          const searchInput = document.querySelector('input[type="text"][name="q"], input[inputmode="search"]');
+          if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+          }
+        }
+
+        function toggleTheme() {
+          const html = document.documentElement;
+          const isDark = html.classList.contains('dark');
+          if (isDark) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+          } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+          }
+        }
+
+        function toggleHelp() {
+          const help = document.getElementById('kbd-help');
+          if (!help) return;
+          help.classList.toggle('active');
+        }
+
+        function closeAll() {
+          const help = document.getElementById('kbd-help');
+          if (help && help.classList.contains('active')) {
+            help.classList.remove('active');
+            return;
+          }
+          // Close lightbox if open
+          const lb = document.getElementById('image-lightbox');
+          if (lb && lb.style.display === 'flex') {
+            if (window.closeNeuroLightbox) window.closeNeuroLightbox();
+            if (window.closeBlogLightbox) window.closeBlogLightbox();
+          }
+        }
+
+        function shouldIgnore(e) {
+          const target = e.target;
+          if (!target) return false;
+          const tag = target.tagName?.toLowerCase();
+          const isInput = tag === 'input' || tag === 'textarea' || tag === 'select';
+          const isEditable = target.isContentEditable;
+          // Only ignore if help dialog is already open (we want Escape to close it)
+          const helpOpen = document.querySelector('.kbd-help-overlay.active');
+          return isInput || isEditable || helpOpen;
+        }
+
+        function handleKeydown(e) {
+          const key = e.key;
+
+          // Always allow Escape
+          if (key === 'Escape') {
+            closeAll();
+            return;
+          }
+
+          // Ignore shortcuts when typing in inputs
+          if (shouldIgnore(e)) return;
+
+          // Capital G for scroll to bottom
+          if (key === 'G') {
+            e.preventDefault();
+            scrollToBottom();
+            return;
+          }
+
+          // ? for help (detect both '?' and Slash with shift)
+          if (key === '?' || (key === '/' && e.shiftKey)) {
+            e.preventDefault();
+            toggleHelp();
+            return;
+          }
+
+          // Single-key shortcuts (that don't conflict with g-mode)
+          if (key === '/' || key === 't' || key === 'j' || key === 'k') {
+            e.preventDefault();
+            shortcuts[key]();
+            return;
+          }
+
+          // If in g-mode, handle g-sequences BEFORE single-key shortcuts
+          if (gMode) {
+            const combo = 'g' + key;
+            if (shortcuts[combo]) {
+              e.preventDefault();
+              shortcuts[combo]();
+              gMode = false;
+              clearTimeout(gTimeout);
+              return;
+            }
+            // Unknown combo - exit g-mode and let key fall through
+            gMode = false;
+            clearTimeout(gTimeout);
+            // Continue to single-key check below
+          }
+
+          // Single-key shortcuts that can also be g-mode second keys
+          // These only execute if NOT in g-mode (which was just cleared above for unknown combos)
+          if (key === 'h' || key === 'l') {
+            e.preventDefault();
+            shortcuts[key]();
+            return;
+          }
+
+          // Go mode sequences (g + key) - first g only
+          if (key === 'g' || key === 'G') {
+            e.preventDefault();
+
+            // If already in g-mode, this is 'gg' (double g)
+            if (gMode) {
+              scrollToTop();
+              gMode = false;
+              clearTimeout(gTimeout);
+              return;
+            }
+
+            // First g - enter g-mode
+            gMode = true;
+            if (gTimeout) clearTimeout(gTimeout);
+            gTimeout = setTimeout(() => {
+              gMode = false;
+            }, 800);
+            return;
+          }
+        }
+
+        // Attach event listener
+        document.addEventListener('keydown', handleKeydown, false);
+
+        // Add visual hint that keyboard shortcuts are available (desktop only)
+        const hint = document.createElement('div');
+        hint.id = 'kbd-hint';
+        hint.innerHTML = 'Press <kbd>?</kbd> for keyboard shortcuts';
+        const isDark = document.documentElement.classList.contains('dark');
+        const bg = isDark ? 'rgba(23,23,23,0.9)' : 'rgba(255,255,255,0.9)';
+        const border = isDark ? '#404040' : '#e5e5e5';
+        const text = isDark ? '#a3a3a3' : '#737373';
+        hint.style.cssText = `position:fixed;bottom:8px;right:8px;font-size:11px;color:${text};opacity:0;transition:opacity 0.3s;z-index:9999;padding:4px 8px;background:${bg};border-radius:4px;border:1px solid ${border};pointer-events:none;`;
+        document.body.appendChild(hint);
+        setTimeout(() => hint.style.opacity = '1', 1000);
+        setTimeout(() => hint.style.opacity = '0', 6000);
+      })();
+    </script>
+
+    <!-- KEYBOARD HELP DIALOG -->
+    <div id="kbd-help" class="kbd-help-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+      <div class="kbd-help-dialog" role="dialog" aria-modal="true" aria-labelledby="kbd-title">
+        <div class="kbd-help-title">
+          <span id="kbd-title">Keyboard Shortcuts</span>
+          <button data-close-help onclick="document.getElementById('kbd-help').classList.remove('active')" aria-label="Close" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;color:inherit;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Navigation (Arch/vim friendly) -->
+        <div style="margin-bottom:12px;">
+          <p style="font-size:11px;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Navigation</p>
+          <div class="kbd-shortcut">
+            <span>Go Home / Blog / Thoughts / Chat</span>
+            <span class="kbd-key-combo"><span class="kbd-key">g</span><span class="kbd-key">h/b/t/c</span></span>
+          </div>
+          <div class="kbd-shortcut">
+            <span>Admin Dashboard</span>
+            <span class="kbd-key-combo"><span class="kbd-key">g</span><span class="kbd-key">a</span></span>
+          </div>
+        </div>
+
+        <!-- Scrolling (vim-style) -->
+        <div style="margin:12px 0;padding:12px 0;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;">
+          <p style="font-size:11px;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Scroll (Vim Style)</p>
+          <div class="kbd-shortcut">
+            <span>Scroll Down / Up</span>
+            <span class="kbd-key-combo"><span class="kbd-key">j</span><span class="kbd-key">k</span></span>
+          </div>
+          <div class="kbd-shortcut">
+            <span>Top of page / Bottom</span>
+            <span class="kbd-key-combo"><span class="kbd-key">gg</span><span class="kbd-key">G</span></span>
+          </div>
+          <div class="kbd-shortcut">
+            <span>History Back / Forward</span>
+            <span class="kbd-key-combo"><span class="kbd-key">h</span><span class="kbd-key">l</span></span>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div>
+          <p style="font-size:11px;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Actions</p>
+          <div class="kbd-shortcut">
+            <span>Focus search</span>
+            <span class="kbd-key-combo"><span class="kbd-key">/</span></span>
+          </div>
+          <div class="kbd-shortcut">
+            <span>Toggle dark mode</span>
+            <span class="kbd-key-combo"><span class="kbd-key">t</span></span>
+          </div>
+          <div class="kbd-shortcut">
+            <span>Close / Cancel</span>
+            <span class="kbd-key-combo"><span class="kbd-key">esc</span></span>
+          </div>
+          <div class="kbd-shortcut">
+            <span>Show this help</span>
+            <span class="kbd-key-combo"><span class="kbd-key">?</span></span>
+          </div>
+        </div>
+
+        <p style="margin-top:16px;font-size:12px;color:#737373;text-align:center;">
+          Press <span class="kbd-key">?</span> anytime to show this dialog
+        </p>
+      </div>
+    </div>
 
     <!-- SOUND -->
     <script src="../scripts/click-sound.ts"></script>

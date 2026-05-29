@@ -1,7 +1,8 @@
 <button
   id="theme-toggle"
-  class="p-3 md:p-0 flex items-center justify-center text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 relative"
-  aria-label="Toggle Dark Mode"
+  class="p-3 md:p-0 flex items-center justify-center text-neutral-400 dark:text-neutral-500 hover:text-neutral-900 dark:hover:text-white transition-colors duration-300 relative group"
+  aria-label="Toggle Dark Mode (t)"
+  title="Toggle Dark Mode (t)"
 >
   <svg
     id="moon-icon"
@@ -38,6 +39,10 @@
     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
     <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
   </svg>
+  {/* Keyboard hint */}
+  <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] text-neutral-400 dark:text-neutral-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity hidden md:block whitespace-nowrap" aria-hidden="true">
+    t
+  </span>
 </button>
 
 <script>
