@@ -24,23 +24,23 @@ type Theme = {
 };
 const theme: Theme = {
   colors: {
-    primary: "orange",
+    primary: "slate",
 
     blur: {
-      top: "orange",
-      bottom: "orange",
+      top: "slate",
+      bottom: "slate",
     },
 
     light: {
-      background: "#ffffff",
-      text: "#171717",
-      primary: "#9a3412",
+      background: "#fafaf9",
+      text: "#292524",
+      primary: "#57534e",
     },
 
     dark: {
-      background: "#0a0a0a",
-      text: "#f5f5f5",
-      primary: "#c2410c",
+      background: "#0c0a09",
+      text: "#e7e5e4",
+      primary: "#a8a29e",
     },
   },
 };

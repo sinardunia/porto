@@ -27,8 +27,8 @@ module.exports = {
         },
 
         accent: {
-          light: '#a16207',
-          dark: '#ca8a04',
+          light: '#57534e',
+          dark: '#a8a29e',
         },
 
         muted: {
