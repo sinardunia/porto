@@ -21,15 +21,19 @@ const safeTags = Array.isArray(post.tags)
   : [];
 ---
 
-<a href={`${basePath}/${post.slug}`} class="group block border-b border-border-light/70 py-7 dark:border-neutral-800/80">
-  <article class="flex gap-5">
-    <div class="min-w-0 flex-1">
-      <h2 class="text-xl font-semibold leading-8 text-neutral-900 group-hover:text-neutral-700 dark:text-neutral-100 dark:group-hover:text-neutral-300">
+<a 
+  href={`${basePath}/${post.slug}`} 
+  class="group block border-b border-border-light/70 py-7 dark:border-neutral-800/80 transition-colors hover:bg-neutral-50/50 dark:hover:bg-neutral-900/30 -mx-5 px-5 md:-mx-6 md:px-6"
+  data-astro-prefetch="hover"
+>
+  <article class="flex items-start gap-5">
+    <div class="min-w-0 flex-1 overflow-hidden">
+      <h2 class="text-xl font-semibold leading-8 text-neutral-900 group-hover:text-neutral-700 dark:text-neutral-100 dark:group-hover:text-neutral-300 break-words hyphens-auto whitespace-normal">
         {post.title}
       </h2>
 
       {post.excerpt && (
-        <p class="mt-2 line-clamp-3 text-sm leading-7 text-neutral-500 dark:text-neutral-400">
+        <p class="mt-2 line-clamp-3 text-sm leading-7 text-neutral-500 dark:text-neutral-400 break-words">
           {post.excerpt}
         </p>
       )}
@@ -50,13 +54,17 @@ const safeTags = Array.isArray(post.tags)
     </div>
 
     {post.cover_image_url && (
-      <img
-        src={post.cover_image_url}
-        alt={post.cover_image_alt || ""}
-        loading="lazy"
-        decoding="async"
-        class="mt-1 h-20 w-20 shrink-0 rounded-lg object-cover opacity-90 sm:h-24 sm:w-24"
-      />
+      <div class="shrink-0 w-20 h-20 sm:w-24 sm:h-24 overflow-hidden rounded-lg bg-neutral-100 dark:bg-neutral-800">
+        <img
+          src={post.cover_image_url}
+          alt={post.cover_image_alt || ""}
+          width={96}
+          height={96}
+          loading="lazy"
+          decoding="async"
+          class="w-full h-full object-cover transition-all duration-300 ease-out group-hover:scale-105 opacity-90 group-hover:opacity-100"
+        />
+      </div>
     )}
   </article>
 </a>

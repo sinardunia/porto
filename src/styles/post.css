@@ -1,82 +1,285 @@
-/* Base post styles that are enhanced by the component-specific styles */
+/* Medium-style Typography - Ultra Readable */
+
+/* Base paragraph - Serif font, generous line-height */
 .post p {
-  @apply leading-7;
+  margin-bottom: 1.8em;
+  line-height: 1.8;
 }
 
+/* First paragraph (lead) - slightly larger but balanced */
+.post > p:first-of-type {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  margin-bottom: 1.6em;
+}
+
+/* Images - Responsive sizing */
 .post img {
-  @apply max-w-full h-auto max-h-[70vh] rounded-lg my-4;
-  background-color: rgb(245 245 245);
+  max-width: 100%;
+  height: auto;
+  max-height: 600px;
+  margin: 2.5em auto;
+  display: block;
+  border-radius: 4px;
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+  object-fit: contain;
 }
 
-html.dark .post img {
-  background-color: rgb(23 23 23);
+.post img:hover {
+  transform: scale(1.01);
 }
 
+/* Desktop - limit image width for better readability */
+@media (min-width: 768px) {
+  .post img {
+    max-width: 90%;
+    max-height: 500px;
+  }
+}
+
+/* Lightbox overlay */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox-overlay img {
+  max-width: 100%;
+  max-height: 100vh;
+  object-fit: contain;
+  border-radius: 0;
+  cursor: zoom-out;
+}
+
+/* Lightbox close button */
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile responsive images */
+@media (max-width: 640px) {
+  .post img {
+    margin: 1.5em 0;
+    border-radius: 0;
+  }
+
+  .lightbox-overlay {
+    padding: 10px;
+  }
+
+  .lightbox-close {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* Inline code - Sans-serif for contrast */
 .post code {
-  @apply rounded-sm px-1 py-[2px];
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.8em;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
 }
 
+html.dark .post code {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Headings - Sans-serif, bold hierarchy */
 .post h2 {
-  @apply mt-6 text-3xl;
+  font-size: 1.75rem;
+  margin-top: 2.2em;
+  margin-bottom: 0.6em;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .post h3 {
-  @apply mt-4 text-xl;
+  font-size: 1.4rem;
+  margin-top: 1.8em;
+  margin-bottom: 0.5em;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
 }
 
+.post h4 {
+  font-size: 1.2rem;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  line-height: 1.4;
+}
+
+/* Links - Underlined for clarity */
 .post a {
-  @apply underline;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  color: inherit;
+  transition: opacity 0.2s ease;
 }
 
-.post ul {
-  @apply list-disc;
+.post a:hover {
+  opacity: 0.7;
 }
 
+/* Lists - Proper spacing */
+.post ul,
+.post ol {
+  margin-bottom: 2em;
+  padding-left: 1.5em;
+}
+
+.post li {
+  margin-bottom: 0.4em;
+  line-height: 1.7;
+}
+
+/* Blockquote - Elegant styling */
 .post blockquote {
-  @apply flex flex-row gap-2 before:block before:h-auto before:w-1 before:max-w-[1px] before:content-[''];
-  @apply before:bg-accent-light dark:before:bg-orange-500;
+  margin: 2em 0;
+  padding-left: 1.5em;
+  border-left: 3px solid rgba(0, 0, 0, 0.15);
+  font-style: italic;
+  color: inherit;
 }
 
+html.dark .post blockquote {
+  border-left-color: rgba(255, 255, 255, 0.15);
+  color: rgb(200, 200, 200);
+}
+
+/* Code blocks */
 .post pre {
-  @apply p-4 rounded-md;
+  margin: 2em 0;
+  padding: 1.5em;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.85em;
+  line-height: 1.6;
+}
+
+html.dark .post pre {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .post pre > code {
-  @apply bg-transparent p-0;
+  background: transparent;
+  padding: 0;
+  font-size: inherit;
 }
 
-@keyframes falling-stars {
-  from {
-    transform: translateY(-100vh) translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateY(100vh) translateX(-50px);
-    opacity: 0;
-  }
+/* Horizontal rule */
+.post hr {
+  margin: 3em 0;
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.stars {
-  position: fixed;
-  top: 0;
-  left: 0;
+html.dark .post hr {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Strong emphasis */
+.post strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+html.dark .post strong {
+  color: rgb(250, 250, 250);
+  font-weight: 600;
+}
+
+/* Emphasis */
+.post em {
+  font-style: italic;
+}
+
+/* Tables */
+.post table {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
-  pointer-events: none;
+  margin: 2em 0;
+  border-collapse: collapse;
+  font-size: 0.9em;
 }
 
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  opacity: 0;
-  animation: falling-stars linear infinite;
+.post th,
+.post td {
+  padding: 0.75em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
 }
 
-@media (prefers-color-scheme: dark) {
-  .stars .star {
-    animation-duration: 4s;
+html.dark .post th,
+html.dark .post td {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.post th {
+  font-weight: 600;
+  border-bottom-width: 2px;
+}
+
+html.dark .post table {
+  color: rgb(220, 220, 220);
+}
+
+/* Mobile optimization */
+@media (max-width: 640px) {
+  .post {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .post > p:first-of-type {
+    font-size: 1.125rem;
+  }
+
+  .post p {
+    margin-bottom: 1.4em;
+  }
+
+  .post h2 {
+    font-size: 1.5rem;
+    margin-top: 1.5em;
+  }
+
+  .post h3 {
+    font-size: 1.25rem;
+    margin-top: 1.3em;
   }
 }

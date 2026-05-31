@@ -11,16 +11,29 @@ export default defineConfig({
     checkOrigin: false,
   },
 
+  // EXTREME PREFETCH - Hover to preload pages instantly
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "hover",
   },
 
-  integrations: [tailwind(), sitemap()],
+  integrations: [
+    tailwind({
+      // Minimize CSS output
+      applyBaseStyles: false,
+    }), 
+    sitemap(),
+  ],
 
   site: process.env.SITE_URL || "http://localhost:4321",
 
   vite: {
+    build: {
+      // CSS inline untuk file kecil (< 4KB)
+      assetsInlineLimit: 4096,
+      // Code splitting untuk JS
+      cssCodeSplit: true,
+    },
     optimizeDeps: {
       include: ["easymde"],
     },

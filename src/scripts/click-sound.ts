@@ -1,5 +1,6 @@
 function initClickSound() {
-  const audio = document.getElementById("button-sound");
+  const audio = document.getElementById("button-sound") as HTMLAudioElement | null;
+  if (!audio) return; // Guard: no audio element found
 
   const isInternalLink = (href: string | null): href is string =>
     Boolean(href && href.startsWith("/") && !href.startsWith("//"));
@@ -75,5 +76,8 @@ function initClickSound() {
 }
 
 // Support both standard page load and Astro View Transitions
-document.addEventListener("DOMContentLoaded", initClickSound);
-document.addEventListener("astro:page-load", initClickSound);
+// Only initialize on client-side
+if (typeof window !== 'undefined') {
+  document.addEventListener("DOMContentLoaded", initClickSound);
+  document.addEventListener("astro:page-load", initClickSound);
+}

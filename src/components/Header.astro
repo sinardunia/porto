@@ -1,8 +1,5 @@
 ---
-import removeTrailingSlash from "@/utils/removeTrailingSlash";
 import DarkModeToggle from "./DarkModeToggle.astro";
-
-const pathname = removeTrailingSlash(Astro.url.pathname);
 ---
 
 <header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-transparent">
@@ -20,57 +17,7 @@ const pathname = removeTrailingSlash(Astro.url.pathname);
       </a>
 
       <nav class="flex items-center gap-3 md:gap-6 min-w-0">
-        <ul class="flex items-center gap-0.5 md:gap-6 text-sm font-medium tracking-wide text-neutral-500 dark:text-neutral-400">
-          
-          <li>
-            <a href="/blog" class:list={[
-              "py-2.5 px-4 md:p-0 flex items-center justify-center transition-all duration-200 relative",
-              pathname === "/blog"
-                ? "text-neutral-900 dark:text-white font-semibold"
-                : "hover:text-neutral-900 dark:hover:text-neutral-200"
-            ]} title="Blog">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="md:hidden" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                <polyline points="14 2 14 8 20 8"></polyline>
-                <line x1="16" y1="13" x2="8" y2="13"></line>
-                <line x1="16" y1="17" x2="8" y2="17"></line>
-                <polyline points="10 9 9 9 8 9"></polyline>
-              </svg>
-              <span class="hidden md:block">Blog</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/thoughts" class:list={[
-              "py-2.5 px-4 md:p-0 flex items-center justify-center transition-all duration-200 relative",
-              pathname === "/thoughts" 
-                ? "text-neutral-900 dark:text-white font-semibold" 
-                : "hover:text-neutral-900 dark:hover:text-neutral-200"
-            ]} title="Thoughts">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="md:hidden" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-              <span class="hidden md:block">Thoughts</span>
-            </a>
-          </li>
-
-          <li>
-            <a href="/chatango" class:list={[
-              "py-2.5 px-4 md:p-0 flex items-center justify-center transition-all duration-200 relative",
-              pathname === "/chatango" 
-                ? "text-neutral-900 dark:text-white font-semibold" 
-                : "hover:text-neutral-900 dark:hover:text-neutral-200"
-            ]} title="Chat">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" class="md:hidden" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-              <span class="hidden md:block">Chat</span>
-            </a>
-          </li>
-        </ul>
-        
-        <div class="pl-3 md:pl-5 border-l border-neutral-200/60 dark:border-neutral-800/50 flex items-center h-4 flex-shrink-0">
+        <div class="flex items-center h-4 flex-shrink-0">
           <DarkModeToggle />
         </div>
       </nav>
@@ -88,15 +35,38 @@ const pathname = removeTrailingSlash(Astro.url.pathname);
 </style>
 
 <script>
-  function initHeader() {
-    const header = document.getElementById('main-header');
+  (function() {
+    if (typeof window === 'undefined') return;
+    
+    let ticking = false;
     let lastScroll = 0;
-
-    const handleScroll = () => {
+    
+    function initHeader() {
+      const header = document.getElementById('main-header');
       if (!header) return;
+      
+      // Remove any existing scroll listeners
+      window.removeEventListener('scroll', onScroll);
+      window.addEventListener('scroll', onScroll, { passive: true } as EventListenerOptions);
+    }
+    
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(function() {
+          updateHeader();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+    
+    function updateHeader() {
+      const header = document.getElementById('main-header');
+      if (!header) return;
+      
       const currentScroll = window.scrollY;
-
-      // FIX: Memisah string yang memiliki spasi menjadi token argumen mandiri memakai koma
+      
+      // Add/remove glass effect classes
       if (currentScroll > 10) {
         header.classList.add(
           'bg-white/80', 
@@ -116,7 +86,7 @@ const pathname = removeTrailingSlash(Astro.url.pathname);
           'shadow-sm'
         );
       }
-
+      
       // Hide on Scroll Down, Show on Scroll Up
       if (currentScroll > lastScroll && currentScroll > 100) {
         header.style.transform = 'translateY(-100%)';
@@ -124,12 +94,15 @@ const pathname = removeTrailingSlash(Astro.url.pathname);
         header.style.transform = 'translateY(0)';
       }
       lastScroll = currentScroll;
-    };
-
-    window.removeEventListener('scroll', handleScroll);
-    window.addEventListener('scroll', handleScroll);
-  }
-
-  initHeader();
-  document.addEventListener('astro:page-load', initHeader);
+    }
+    
+    // Initialize
+    initHeader();
+    
+    // Re-init after page transitions
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initHeader);
+    }
+    document.addEventListener('astro:page-load', initHeader);
+  })();
 </script>

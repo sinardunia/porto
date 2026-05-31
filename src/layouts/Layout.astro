@@ -6,8 +6,7 @@ import theme from "@/data/theme";
 import SEOTags from "@/components/seo/SEOTags.astro";
 import Cookie from "@/components/Cookie.astro";
 
-import "@fontsource/open-sans";
-
+// NO EXTERNAL FONTS - Using system fonts only for zero FOUT and fastest loading
 import "@/styles/tailwind.css";
 
 export interface Props {
@@ -37,16 +36,32 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
       og={og}
       jsonLd={jsonLd}
     />
+    <!-- CRITICAL THEME CSS - Prevent Flicker -->
+    <style is:inline>
+      /* Prevent flash of unstyled content in wrong theme */
+      html { background-color: #ffffff; }
+      html.dark { background-color: #0a0a0a; }
+      @media (prefers-color-scheme: dark) {
+        html:not(.light) { background-color: #0a0a0a; }
+      }
+    </style>
     <!-- THEME DETECTION -->
-    <script src="../scripts/theme.ts"></script>
+    <script is:inline>
+      (function() {
+        const saved = localStorage.getItem('theme') || 'dark';
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
 
   <body
     class="m-0 min-h-screen w-full bg-primary-light p-0 font-sans antialiased text-text-light dark:bg-neutral-950 dark:text-neutral-400"
   >
-    <!-- SKIP LINK - Keyboard Accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
     <!-- BACKGROUND BLUR -->
     <div
       class="pointer-events-none absolute inset-0 overflow-hidden"
@@ -91,16 +106,63 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
 
     <!-- GLOBAL STYLE -->
     <style is:global>
-      @font-face {
-        font-family: "Open Sans";
-        font-display: swap;
-      }
-
+      /* SYSTEM FONTS - Optimized for readability */
       html {
-        font-family: "Open Sans", sans-serif;
+        font-family: "Open Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         scroll-behavior: smooth;
         text-size-adjust: 100%;
         -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Article content - Optimized for long-form reading */
+      .post {
+        font-family: "Open Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 1.125rem; /* 18px - comfortable reading size */
+        line-height: 1.7; /* Generous line height for readability */
+        letter-spacing: 0; /* Neutral letter spacing */
+        color: rgb(30, 30, 30); /* Softer black for less eye strain */
+      }
+
+      html.dark .post {
+        color: rgb(230, 230, 230); /* Slightly dimmed white for dark mode */
+        font-weight: 400; /* Ensure not too thin in dark mode */
+      }
+
+      /* Headings - Clear hierarchy */
+      .post h1, .post h2, .post h3, .post h4, .post h5, .post h6 {
+        font-family: "Open Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.3;
+        color: rgb(15, 15, 15);
+      }
+
+      html.dark .post h1,
+      html.dark .post h2,
+      html.dark .post h3,
+      html.dark .post h4,
+      html.dark .post h5,
+      html.dark .post h6 {
+        color: rgb(245, 245, 245);
+        font-weight: 600; /* Slightly lighter in dark mode for comfort */
+      }
+
+      /* Body text weight in dark mode */
+      html.dark .post p,
+      html.dark .post li {
+        font-weight: 400;
+      }
+
+      /* Selection color for better visibility */
+      ::selection {
+        background: rgba(59, 130, 246, 0.2);
+        color: inherit;
+      }
+
+      html.dark ::selection {
+        background: rgba(96, 165, 250, 0.25);
       }
 
       html,
@@ -146,26 +208,6 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
       }
       html.dark * {
         scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
-      }
-
-      /* Skip Link - Visually hidden until focused */
-      .skip-link {
-        position: absolute;
-        top: -40px;
-        left: 0;
-        background: #171717;
-        color: #fff;
-        padding: 8px 16px;
-        z-index: 10000;
-        font-size: 14px;
-        text-decoration: none;
-        border-radius: 0 0 4px 0;
-        transition: top 0.2s;
-      }
-      .skip-link:focus {
-        top: 0;
-        outline: 2px solid #f97316;
-        outline-offset: 2px;
       }
 
       /* Focus visible for keyboard navigation */
@@ -290,9 +332,6 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
 
           // Go mode sequences (g + key)
           'gh': () => navigate('/'),
-          'gb': () => navigate('/blog'),
-          'gt': () => navigate('/thoughts'),
-          'gc': () => navigate('/chatango'),
           'ga': () => navigate('/admin/dashboard'),
           'gg': () => scrollToTop(),
         };
@@ -487,8 +526,8 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
         <div style="margin-bottom:12px;">
           <p style="font-size:11px;color:#737373;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Navigation</p>
           <div class="kbd-shortcut">
-            <span>Go Home / Blog / Thoughts / Chat</span>
-            <span class="kbd-key-combo"><span class="kbd-key">g</span><span class="kbd-key">h/b/t/c</span></span>
+            <span>Go Home</span>
+            <span class="kbd-key-combo"><span class="kbd-key">g</span><span class="kbd-key">h</span></span>
           </div>
           <div class="kbd-shortcut">
             <span>Admin Dashboard</span>

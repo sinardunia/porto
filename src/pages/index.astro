@@ -1,96 +1,68 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import SocialLinks from "@/components/SocialLinks.astro";
-import BlogListItem from "@/components/blog/BlogListItem.astro";
-import Link from "@/components/shared/Link.astro";
-import AsciiPortrait from "@/components/home/AsciiPortrait.astro";
-import { getPublishedBlogPosts } from "@/lib/blog";
+import SearchInput from "@/components/shared/SearchInput.astro";
+import BlogPostList from "@/components/blog/BlogPostList.astro";
+import BlogSkeleton from "@/components/skeletons/BlogSkeleton.astro";
 
-const latestPosts = await getPublishedBlogPosts(2);
+export const prerender = false;
 
-// Cache response at Vercel Edge Network
+const query = Astro.url.searchParams.get("q")?.trim() || "";
+const activeTag = Astro.url.searchParams.get("tag")?.trim() || "";
+
+const hiddenInputs: { name: string; value: string }[] = [];
+if (activeTag) hiddenInputs.push({ name: "tag", value: activeTag });
+
+const clearHref = activeTag ? `/?tag=${encodeURIComponent(activeTag)}` : "/";
+
+// Cache: lebih pendek kalau ada filter aktif
 Astro.response.headers.set(
   "Cache-Control",
-  "public, max-age=60, stale-while-revalidate=600"
+  query || activeTag
+    ? "public, max-age=30, stale-while-revalidate=300"
+    : "public, max-age=60, stale-while-revalidate=600"
 );
 ---
-<Layout description="A quiet personal archive of thoughts, writing, and experiments">
-  <main
-    class="mx-auto flex w-full max-w-[44rem] flex-col gap-14 px-5 pb-28 pt-6 min-w-0 overflow-x-hidden box-border md:px-0"
-  >
-    <section class="flex flex-col gap-6">
-      <h1
-        class="flex items-center gap-2 text-[32px] font-bold tracking-tight text-neutral-900 dark:text-neutral-100"
-      >
-        <img
-          src="/star.gif"
-          alt=""
-          width="20"
-          height="20"
-          class="pointer-events-none h-5 w-5 object-contain"
-        />
 
-        Fuji
-        <AsciiPortrait variant="inline" />
+<Layout
+  title={activeTag ? `${activeTag} — Blog` : "Blog"}
+  description={activeTag ? `Tulisan yang ditandai dengan "${activeTag}".` : "Catatan keresahan yang kebetulan ditulis. Jika bermanfaat, alhamdulillah."}
+>
+  <main class="mx-auto flex w-full max-w-[44rem] flex-col gap-8 px-5 pb-48 pt-0 min-w-0 overflow-x-hidden box-border md:px-0 min-h-[70vh]">
+    <header class="pt-10 pb-6 w-full min-w-0 overflow-hidden border-b border-neutral-100/50 dark:border-neutral-900/30">
+      <div class={`flex items-center gap-2 ${activeTag ? "mb-4" : ""}`}>
+        <h1 class="text-sm font-black uppercase tracking-[0.2em] text-neutral-800 dark:text-neutral-100">
+          {activeTag ? `Tag: ${activeTag}` : "Blog"}
+        </h1>
+        {!activeTag && (
+          <span class="h-1 w-1 rounded-full bg-orange-500 animate-pulse"></span>
+        )}
+      </div>
 
-        <span
-          class="select-none text-sm font-normal text-neutral-400 dark:text-neutral-500"
-        >
-          / Waltahh
-        </span>
-      </h1>
-
-      <div class="flex flex-col lg:flex-row lg:gap-8 lg:items-start">
-        <div
-          class="space-y-4 text-[15px] leading-8 text-neutral-700 dark:text-neutral-300 lg:flex-1"
-        >
-          <p>Halo, saya Fuji.</p>
-
-          <p>Saya kadang nulis di sini.</p>
-
-          <p>
-            Kadang serius.<br />
-            Kadang tidak terlalu serius :)
+      {activeTag ? (
+        <div class="max-w-[420px] space-y-3">
+          <p class="text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400 font-medium italic">
+            Tulisan yang ditandai dengan "{activeTag}".
           </p>
         </div>
-
-        <AsciiPortrait variant="side" />
-      </div>
-
-      <SocialLinks />
-    </section>
-
-    <section class="flex flex-col gap-5">
-      <div class="flex items-center justify-between">
-        <span
-          class="text-xs text-neutral-400 dark:text-neutral-500"
-        >
-          Latest writing
-        </span>
-
-        <Link
-          href="/blog"
-          label="View all"
-          isUnderline
-          target="_self"
-          class="text-xs text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200"
-        />
-      </div>
-
-      {latestPosts.length === 0 ? (
-        <p class="text-sm text-neutral-400 dark:text-neutral-500">
-          Nothing here yet.
-        </p>
       ) : (
-        <div class="flex flex-col gap-4">
-          {latestPosts.map((post) => (
-            <BlogListItem
-              post={post}
-              basePath="/blog"
-            />
-          ))}
+        <div class="max-w-[640px] space-y-3 mt-4">
+          <p class="text-[13px] leading-relaxed text-neutral-500 dark:text-neutral-400">
+         Catatan keresahan yang kebetulan ditulis. Jika bermanfaat, alhamdulillah.
+            </p>
         </div>
       )}
-    </section>
+    </header>
+
+    <SearchInput
+      action="/"
+      value={query}
+      placeholder="Cari tulisan..."
+      clearHref={query ? clearHref : undefined}
+      hiddenInputs={hiddenInputs}
+    />
+
+    <BlogPostList server:defer search={query} tag={activeTag}>
+      <BlogSkeleton slot="fallback" count={3} />
+    </BlogPostList>
   </main>
 </Layout>

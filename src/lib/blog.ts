@@ -107,8 +107,12 @@ export const safeLocaleDate = (
 };
 
 /**
- * Suggest related posts by shared tag overlap (primary) and recency (tie-breaker).
- * If no tags overlap, falls back to most recent posts excluding current.
+ * Enhanced related posts algorithm with multi-factor relevance scoring:
+ * 1. Tag overlap (highest weight) - posts sharing common tags
+ * 2. Content similarity - title/excerpt keyword matching
+ * 3. Recency (tie-breaker) - newer posts preferred
+ * 4. Category inference - posts with similar tag patterns
+ * Falls back to recent posts if no strong matches found.
  */
 export function getRelatedPosts(
   currentPost: BlogPost,
@@ -118,11 +122,18 @@ export function getRelatedPosts(
   const currentSlug = currentPost?.slug;
   if (!currentSlug) return [];
 
+  // Normalize current post data
   const currentTags = new Set(
     (currentPost.tags ?? [])
       .map((t) => (typeof t === "string" ? t.toLowerCase().trim() : ""))
       .filter(Boolean)
   );
+  
+  // Extract keywords from title and excerpt
+  const currentText = `${currentPost.title} ${currentPost.excerpt || ""}`.toLowerCase();
+  const currentKeywords = currentText
+    .split(/\s+/)
+    .filter(w => w.length > 3 && !['dengan','dalam','untuk','pada','yang','dari','oleh'].includes(w));
 
   const scored = allPosts
     .filter((p) => p && p.slug !== currentSlug)
@@ -131,23 +142,59 @@ export function getRelatedPosts(
         .map((t) => (typeof t === "string" ? t.toLowerCase().trim() : ""))
         .filter(Boolean);
 
-      const overlap = currentTags.size > 0
+      // Score 1: Tag overlap (weight: 10 points per shared tag)
+      const tagOverlap = currentTags.size > 0
         ? postTags.filter((t) => currentTags.has(t)).length
         : 0;
+      const tagScore = tagOverlap * 10;
 
+      // Score 2: Text similarity (weight: 2 points per shared keyword)
+      const postText = `${p.title} ${p.excerpt || ""}`.toLowerCase();
+      const keywordMatches = currentKeywords.filter(kw => postText.includes(kw)).length;
+      const textScore = Math.min(keywordMatches * 2, 10); // Cap at 10
+
+      // Score 3: Category affinity (posts with similar tag count/patterns)
+      const categoryScore = (postTags.length > 0 && currentTags.size > 0) 
+        ? Math.min(Math.abs(postTags.length - currentTags.size), 3) // Smaller difference = better
+        : 0;
+
+      // Score 4: Recency boost (0-5 points for posts within 90 days)
       const createdAt = safeDate(p.created_at);
+      const currentDate = safeDate(currentPost.created_at);
+      let recencyScore = 0;
+      if (createdAt && currentDate) {
+        const daysDiff = Math.abs(currentDate.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+        if (daysDiff < 30) recencyScore = 5;
+        else if (daysDiff < 90) recencyScore = 3;
+        else if (daysDiff < 180) recencyScore = 1;
+      }
+
+      // Total score (max ~35 points)
+      const totalScore = tagScore + textScore + recencyScore - categoryScore;
+
       return {
         post: p,
-        overlap,
+        score: totalScore,
+        tagOverlap,
         createdAt: createdAt ? createdAt.getTime() : 0,
       };
     })
     .sort((a, b) => {
-      if (b.overlap !== a.overlap) return b.overlap - a.overlap;
+      // Primary: relevance score
+      if (b.score !== a.score) return b.score - a.score;
+      // Secondary: tag overlap count
+      if (b.tagOverlap !== a.tagOverlap) return b.tagOverlap - a.tagOverlap;
+      // Tertiary: recency
       return b.createdAt - a.createdAt;
     });
 
-  return scored.slice(0, limit).map((s) => s.post);
+  // If no strong matches (all scores < 5), fall back to recent posts
+  const strongMatches = scored.filter(s => s.score >= 5);
+  const finalResults = strongMatches.length >= limit 
+    ? strongMatches 
+    : scored;
+
+  return finalResults.slice(0, limit).map((s) => s.post);
 }
 
 export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
