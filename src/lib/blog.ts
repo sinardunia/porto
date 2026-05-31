@@ -3,10 +3,40 @@ import { withTimeout } from "./security";
 import type { BlogPost, BlogPostSummary } from "@/types/blog";
 
 const BLOG_FIELDS = "id, slug, title, excerpt, content, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published" as const;
-const BLOG_SUMMARY_FIELDS = "id, slug, title, excerpt, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published" as const;
+// Optimized fields for homepage - excludes heavy 'content' field to save bandwidth
+const BLOG_SUMMARY_FIELDS = "id, slug, title, excerpt, cover_image_url, cover_image_alt, tags, created_at" as const;
 
 export const normalizeSearch = (value: string) =>
   value.trim().toLowerCase();
+
+/**
+ * Generate URL-safe slug from title
+ * - Normalize accents (é → e, ñ → n)
+ * - Lowercase
+ * - Replace spaces with hyphens
+ * - Remove special characters
+ * - Max 120 chars
+ * - Fallback timestamp if empty
+ */
+export const slugify = (title: string): string => {
+  let slug = title
+    .normalize("NFD") // Decompose accented characters
+    .replace(/[\u0300-\u036f]/g, "") // Remove combining diacritics
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "") // Remove special chars except spaces and hyphens
+    .replace(/\s+/g, "-") // Replace spaces with hyphens
+    .replace(/-+/g, "-") // Collapse multiple hyphens
+    .replace(/^-|-$/g, "") // Trim leading/trailing hyphens
+    .slice(0, 120);
+  
+  // Fallback: if slug is empty after cleaning, use timestamp
+  if (!slug || slug.length === 0) {
+    slug = `post-${Date.now()}`;
+  }
+  
+  return slug;
+};
 
 export const matchesSearch = (post: BlogPostSummary, search: string) => {
   const normalizedSearch = normalizeSearch(search);

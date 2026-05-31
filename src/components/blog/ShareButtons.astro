@@ -42,7 +42,7 @@ const shareLinks = [
       target="_blank"
       rel="noopener noreferrer"
       aria-label={link.name}
-      class="inline-flex items-center justify-center w-9 h-9 text-neutral-500 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-all duration-200"
+      class="inline-flex items-center justify-center w-9 h-9 text-neutral-500 dark:text-neutral-400 md:hover:text-neutral-800 md:dark:hover:text-neutral-200 md:hover:bg-neutral-100 md:dark:hover:bg-neutral-800 rounded-full transition-all duration-200"
       data-copy={link.isCopy ? url : undefined}
       onclick={link.isCopy ? `navigator.clipboard.writeText('${url}'); const icon=this.querySelector('svg'); const original=icon.innerHTML; icon.innerHTML='<path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M5 13l4 4L19 7\' />'; setTimeout(()=>{icon.innerHTML=original},1500); return false;` : undefined}
     >

@@ -34,7 +34,7 @@ const allTags = getAllTags(posts);
             "shrink-0 snap-start rounded-full border px-3 py-1 text-xs transition-colors",
             tag === t
               ? "border-text-light bg-text-light text-white dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-950"
-              : "border-border-light bg-secondary-light text-neutral-500 hover:border-neutral-400 hover:text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:border-neutral-600 dark:hover:text-neutral-200",
+              : "border-border-light bg-secondary-light text-neutral-500 md:hover:border-neutral-400 md:hover:text-neutral-800 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 md:dark:hover:border-neutral-600 md:dark:hover:text-neutral-200",
           ]}
         >
           {t}
@@ -43,7 +43,7 @@ const allTags = getAllTags(posts);
       {tag && (
         <a
           href="/blog"
-          class="shrink-0 snap-start rounded-full border border-border-light px-3 py-1 text-xs text-neutral-400 transition-colors hover:text-neutral-700 dark:border-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-200"
+          class="shrink-0 snap-start rounded-full border border-border-light px-3 py-1 text-xs text-neutral-400 transition-colors md:hover:text-neutral-700 dark:border-neutral-800 dark:text-neutral-500 md:dark:hover:text-neutral-200"
         >
           &times; Clear
         </a>
@@ -69,7 +69,7 @@ const allTags = getAllTags(posts);
         {search || tag ? "Tidak ditemukan hasil pencarian." : "Belum ada blog post di sini."}
       </p>
       {(search || tag) && (
-        <a href="/blog" class="text-[10px] uppercase tracking-wider font-bold text-orange-500 mt-2 inline-block hover:underline">
+        <a href="/blog" class="text-[10px] uppercase tracking-wider font-bold text-orange-500 mt-2 inline-block md:hover:underline">
           Reset
         </a>
       )}

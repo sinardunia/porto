@@ -408,11 +408,14 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
           const target = e.target;
           if (!target) return false;
           const tag = target.tagName?.toLowerCase();
-          const isInput = tag === 'input' || tag === 'textarea' || tag === 'select';
+          // Guard: Ignore if typing in any input element (EasyMDE compatibility)
+          const isInput = tag === 'input' || tag === 'textarea' || tag === 'select' || tag === 'code';
           const isEditable = target.isContentEditable;
+          // Check for CodeMirror/EasyMDE specific classes
+          const isCodeMirror = target.closest('.CodeMirror, .cm-editor, .EasyMDEContainer');
           // Only ignore if help dialog is already open (we want Escape to close it)
           const helpOpen = document.querySelector('.kbd-help-overlay.active');
-          return isInput || isEditable || helpOpen;
+          return isInput || isEditable || isCodeMirror || helpOpen;
         }
 
         function handleKeydown(e) {
@@ -494,8 +497,14 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
           }
         }
 
-        // Attach event listener
+        // Attach event listener with View Transitions compatibility
         document.addEventListener('keydown', handleKeydown, false);
+        
+        // Re-attach after View Transitions navigation
+        document.addEventListener('astro:page-load', () => {
+          document.removeEventListener('keydown', handleKeydown);
+          document.addEventListener('keydown', handleKeydown, false);
+        });
 
         // Add visual hint that keyboard shortcuts are available (desktop only)
         const hint = document.createElement('div');

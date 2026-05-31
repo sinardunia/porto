@@ -36,7 +36,7 @@ const getRelevanceInfo = (post: BlogPostSummary, allPosts: BlogPostSummary[]) =>
       {posts.slice(0, 4).map((post) => (
         <a
           href={`/blog/${post.slug}`}
-          class="group flex items-start gap-3 py-2 -mx-2 px-2 rounded-lg hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors"
+          class="group flex items-start gap-3 py-2 -mx-2 px-2 rounded-lg md:hover:bg-neutral-50 md:dark:hover:bg-neutral-900/50 transition-colors"
           data-astro-prefetch="hover"
         >
           {/* Small thumbnail on the side - 48x48px fixed */}
@@ -49,7 +49,7 @@ const getRelevanceInfo = (post: BlogPostSummary, allPosts: BlogPostSummary[]) =>
                 height={48}
                 loading="lazy"
                 decoding="async"
-                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                class="w-full h-full object-cover transition-transform duration-300 md:group-hover:scale-110"
               />
             </div>
           ) : (
@@ -62,7 +62,7 @@ const getRelevanceInfo = (post: BlogPostSummary, allPosts: BlogPostSummary[]) =>
 
           {/* Text content */}
           <div class="flex-1 min-w-0 pt-0.5">
-            <h3 class="text-sm font-medium text-neutral-700 dark:text-neutral-300 leading-snug group-hover:text-neutral-900 dark:group-hover:text-neutral-100 transition-colors line-clamp-2">
+            <h3 class="text-sm font-medium text-neutral-700 dark:text-neutral-300 leading-snug md:group-hover:text-neutral-900 md:dark:group-hover:text-neutral-100 transition-colors line-clamp-2">
               {post.title}
             </h3>
             <time class="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1 block">
