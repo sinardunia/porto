@@ -2,7 +2,7 @@
 
 A living personal site built with Astro — minimal, fast, and intentionally simple. Long-form essays and ongoing thoughts, served from Supabase with zero social mechanics.
 
-**Live:** [portokus.vercel.app](https://portokus.vercel.app)
+**Live:** [waltahh.vercel.app](https://waltahh.vercel.app)
 
 ---
 

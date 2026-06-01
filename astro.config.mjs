@@ -25,7 +25,7 @@ export default defineConfig({
     sitemap(),
   ],
 
-  site: process.env.SITE_URL || "http://localhost:4321",
+  site: process.env.SITE_URL || "https://waltahh.vercel.app",
 
   vite: {
     build: {
