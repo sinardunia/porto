@@ -21,9 +21,8 @@ type SitemapUrl = {
 };
 
 const staticRoutes: SitemapUrl[] = [
-  { url: "/", priority: "1.0", changefreq: "weekly" },
+  { url: "/", priority: "1.0", changefreq: "daily" },
   { url: "/blog", priority: "0.9", changefreq: "daily" },
-  { url: "/privacy", priority: "0.3", changefreq: "monthly" },
   { url: "/disclaimer", priority: "0.3", changefreq: "monthly" },
   { url: "/rss.xml", priority: "0.5", changefreq: "daily" },
 ];

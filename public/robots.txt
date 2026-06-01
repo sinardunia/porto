@@ -6,7 +6,7 @@ Allow: /
 Crawl-delay: 1
 
 # Sitemap
-Sitemap: https://portokus.vercel.app/sitemap.xml
+Sitemap: /sitemap.xml
 
 # Block specific paths that shouldn't be indexed
 Disallow: /admin/

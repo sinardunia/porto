@@ -19,7 +19,7 @@ export const GET: APIRoute = async () => {
     const { data, error } = await withTimeout(
       supabase
         .from("blog_posts")
-        .select("slug, title, excerpt, created_at")
+        .select("slug, title, excerpt, created_at, tags")
         .eq("is_published", true)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
@@ -34,28 +34,39 @@ export const GET: APIRoute = async () => {
       (data ?? []).map(async (post) => {
         const url = new URL(`/blog/${post.slug}`, SITE_URL).toString();
         const description = await sanitizeRenderedHtml(escapeXml(post.excerpt || ""));
+        const tags = Array.isArray(post.tags) ? post.tags.filter((t): t is string => typeof t === "string") : [];
+        const categoriesXml = tags.map((tag) => `    <category>${escapeXml(tag)}</category>`).join("\n");
 
         return `
-          <item>
-            <title>${escapeXml(post.title)}</title>
-            <link>${url}</link>
-            <guid>${url}</guid>
-            <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
-            <description>${description}</description>
-          </item>`;
+    <item>
+      <title>${escapeXml(post.title)}</title>
+      <link>${url}</link>
+      <guid isPermaLink="true">${url}</guid>
+      <pubDate>${new Date(post.created_at).toUTCString()}</pubDate>
+      <description>${description}</description>
+${categoriesXml}
+    </item>`;
       })
     );
     const itemsXml = items.join("");
 
-    const xml = `<?xml version="1.0" encoding="UTF-8" ?>
-      <rss version="2.0">
-        <channel>
-          <title>Fuji Halim Rabani</title>
-          <link>${SITE_URL}</link>
-          <description>A quiet personal archive.</description>
-          ${itemsXml}
-        </channel>
-      </rss>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Fuji Halim Rabani</title>
+    <link>${SITE_URL}</link>
+    <description>A quiet personal archive of thoughts, writing, and experiments.</description>
+    <language>id</language>
+    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>${SITE_URL}/opengraph-image.jpg</url>
+      <title>Fuji Halim Rabani</title>
+      <link>${SITE_URL}</link>
+    </image>
+    ${itemsXml}
+  </channel>
+</rss>`;
 
     return new Response(xml, {
       headers: {
