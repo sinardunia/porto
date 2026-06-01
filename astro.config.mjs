@@ -8,7 +8,7 @@ export default defineConfig({
   adapter: vercel(),
 
   security: {
-    checkOrigin: true,
+    checkOrigin: false,
   },
 
   // EXTREME PREFETCH - Hover to preload pages instantly

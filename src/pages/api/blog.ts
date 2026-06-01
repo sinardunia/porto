@@ -21,6 +21,12 @@ import {
 
 export const prerender = false;
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
 const BLOG_IMAGES_BUCKET =
   "blog-images";
 
@@ -87,29 +93,17 @@ const uploadCoverImage =
     return data.publicUrl;
   };
 
-export const GET: APIRoute =
-  async () => {
-    return json({
-      ok: true,
-
-      message:
-        "Blog API running",
-    });
-  };
+export const GET: APIRoute = async () => {
+  return new Response(
+    JSON.stringify({ ok: true, message: "Blog API running" }),
+    { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+  );
+};
 
 export const OPTIONS: APIRoute = async () => {
   return new Response(null, {
     status: 204,
-
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-
-      "Access-Control-Allow-Methods":
-        "GET, POST, PUT, DELETE, OPTIONS",
-
-      "Access-Control-Allow-Headers":
-        "Content-Type, Authorization",
-    },
+    headers: corsHeaders,
   });
 };
 
@@ -391,19 +385,14 @@ export const POST: APIRoute =
         );
       }
 
-      return json(
-        {
+      return new Response(
+        JSON.stringify({
           ok: true,
-
           id: data.id,
-
           slug: data.slug,
-
-          message:
-            "Blog published.",
-        },
-
-        201
+          message: "Blog published.",
+        }),
+        { status: 201, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     } catch (error) {
       console.error(
@@ -411,12 +400,9 @@ export const POST: APIRoute =
         error
       );
 
-      return json(
-        {
-          message:
-            "Server error.",
-        },
-        500
+      return new Response(
+        JSON.stringify({ message: "Server error." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
   };
@@ -502,10 +488,16 @@ export const PUT: APIRoute = async ({ request }) => {
 
     if (error) {
       console.error("[BLOG_API] Update failed:", error);
-      return json({ message: "Blog update failed." }, 500);
+      return new Response(
+      JSON.stringify({ message: "Blog update failed." }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
     }
 
-    return json({ ok: true, message: "Blog post updated." });
+    return new Response(
+      JSON.stringify({ ok: true, message: "Blog post updated." }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
   } catch (error) {
     console.error("[BLOG_API] PUT fatal error:", error);
     return json({ message: "Server error." }, 500);
@@ -549,10 +541,16 @@ export const DELETE: APIRoute = async ({ request }) => {
 
     if (error) {
       console.error("[BLOG_API] Delete failed:", error);
-      return json({ message: "Blog delete failed." }, 500);
+      return new Response(
+      JSON.stringify({ message: "Blog delete failed." }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
     }
 
-    return json({ ok: true, message: "Blog post deleted." });
+    return new Response(
+      JSON.stringify({ ok: true, message: "Blog post deleted." }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
   } catch (error) {
     console.error("[BLOG_API] DELETE fatal error:", error);
     return json({ message: "Server error." }, 500);
