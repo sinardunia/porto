@@ -8,7 +8,7 @@ export default defineConfig({
   adapter: vercel(),
 
   security: {
-    checkOrigin: false,
+    checkOrigin: true,
   },
 
   // EXTREME PREFETCH - Hover to preload pages instantly
@@ -42,6 +42,9 @@ export default defineConfig({
       headers: {
         "Content-Security-Policy":
           "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https:;",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
       },
     },
   },

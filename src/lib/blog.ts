@@ -63,27 +63,21 @@ export const getAllTags = (posts: BlogPostSummary[]) =>
   ).sort((a, b) => a.localeCompare(b));
 
 export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
-  try {
-    const supabase = createSupabaseClient();
-    const { data, error } = await withTimeout(
-      supabase
-        .from("blog_posts")
-        .select(BLOG_FIELDS)
-        .eq("is_published", true)
-        .order("created_at", { ascending: false })
-        .limit(limit),
-      5000,
-      "Blog posts fetch"
-    );
-    if (error) {
-      console.warn("Unable to load blog posts:", error.message);
-      return [];
-    }
-    return (data ?? []) as BlogPost[];
-  } catch (err) {
-    console.warn("Unable to load blog posts:", err instanceof Error ? err.message : "Unknown error");
-    return [];
+  const supabase = createSupabaseClient();
+  const { data, error } = await withTimeout(
+    supabase
+      .from("blog_posts")
+      .select(BLOG_FIELDS)
+      .eq("is_published", true)
+      .order("created_at", { ascending: false })
+      .limit(limit),
+    15000,
+    "Blog posts fetch"
+  );
+  if (error) {
+    throw new Error(`Supabase error: ${error.message}`);
   }
+  return (data ?? []) as BlogPost[];
 }
 
 export async function getPublishedBlogPostSummaries(limit = 50): Promise<BlogPostSummary[]> {
@@ -134,6 +128,44 @@ export const safeLocaleDate = (
 ): string => {
   const d = safeDate(value);
   return d ? new Intl.DateTimeFormat(locale, options).format(d) : "";
+};
+
+// Humanize timestamp: "2 hours ago", "Yesterday", "3 days ago", etc
+export const humanizeTimestamp = (value: string | null | undefined, locale = "id-ID"): string => {
+  const d = safeDate(value);
+  if (!d) return "";
+
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  const diffYears = Math.floor(diffDays / 365);
+
+  // Indonesian humanize
+  if (locale === "id-ID") {
+    if (diffSecs < 60) return "baru saja";
+    if (diffMins < 60) return `${diffMins} menit yang lalu`;
+    if (diffHours < 24) return `${diffHours} jam yang lalu`;
+    if (diffDays === 1) return "kemarin";
+    if (diffDays < 7) return `${diffDays} hari yang lalu`;
+    if (diffWeeks < 4) return `${diffWeeks} minggu yang lalu`;
+    if (diffMonths < 12) return `${diffMonths} bulan yang lalu`;
+    return `${diffYears} tahun yang lalu`;
+  }
+
+  // English fallback
+  if (diffSecs < 60) return "just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays === 1) return "yesterday";
+  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffWeeks < 4) return `${diffWeeks}w ago`;
+  if (diffMonths < 12) return `${diffMonths}mo ago`;
+  return `${diffYears}y ago`;
 };
 
 /**

@@ -53,7 +53,7 @@ export const GET: APIRoute = async () => {
           <title>Fuji Halim Rabani</title>
           <link>${SITE_URL}</link>
           <description>A quiet personal archive.</description>
-          ${items}
+          ${itemsXml}
         </channel>
       </rss>`;
 

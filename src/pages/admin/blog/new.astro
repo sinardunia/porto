@@ -464,19 +464,20 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         onError("Image must be smaller than 5MB.");
         return;
       }
-      const adminSecret = localStorage.getItem("thoughts_admin_secret");
-      if (!adminSecret) {
-        onError("Admin secret belum diisi.");
-        return;
-      }
       const uploadForm = new FormData();
       uploadForm.append("image", file);
       fetch("/api/upload-image", {
         method: "POST",
-        headers: { Authorization: `Bearer ${adminSecret}` },
+        credentials: "same-origin",
         body: uploadForm,
       })
-      .then(res => res.json().then(result => ({ res, result })))
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = "/admin/login";
+          throw new Error("Session expired. Redirecting to login...");
+        }
+        return res.json().then(result => ({ res, result }));
+      })
       .then(({ res, result }) => {
         if (!res.ok) throw new Error(result?.message || "Upload failed.");
         onSuccess(result.url);
@@ -570,11 +571,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
 
     const submitBlogPost = async () => {
       if (publishButton.disabled) return;
-      const adminSecret = localStorage.getItem("thoughts_admin_secret");
-      if (!adminSecret) {
-        setStatus("Admin secret belum diisi.");
-        return;
-      }
 
       const content = easyMDE ? easyMDE.value().trim() : "";
       if (!content) {
@@ -585,8 +581,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
       if (easyMDE) contentInput.value = easyMDE.value();
 
       const formData = new FormData(form);
-      // Ensure adminSecret is in the Form data
-      formData.set("adminSecret", adminSecret);
 
       setLoading(true);
       setStatus("");
@@ -595,11 +589,13 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         const response = await fetch("/api/blog", {
           method: "POST",
           credentials: "same-origin",
-          headers: {
-            Authorization: `Bearer ${adminSecret}`,
-          },
           body: formData,
         });
+
+        if (response.status === 401) {
+          window.location.href = "/admin/login";
+          return;
+        }
 
         const result = await response.json().catch(() => null);
 

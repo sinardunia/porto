@@ -47,8 +47,7 @@ if (Astro.request.method === "POST") {
         <p class="text-sm text-neutral-500 dark:text-neutral-400">
           Mengarahkan ke dashboard...
         </p>
-        <script is:inline define:vars={{ secretValue }}>
-          localStorage.setItem("thoughts_admin_secret", secretValue);
+        <script is:inline>
           window.location.href = "/admin/dashboard";
         </script>
       </div>

@@ -1,34 +1,17 @@
 ---
 import type { BlogPostSummary } from "@/types/blog";
+import { humanizeTimestamp, safeLocaleDate } from "@/lib/blog";
 
 type Props = {
   posts: BlogPostSummary[];
 };
 
 const { posts } = Astro.props;
-
-// Format date helper
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
-// Get shared tags count for relevance indicator
-const getRelevanceInfo = (post: BlogPostSummary, allPosts: BlogPostSummary[]) => {
-  // This is a simplified version - in real usage, pass current post tags from parent
-  return {
-    hasImage: !!post.cover_image_url,
-    dateStr: formatDate(post.created_at)
-  };
-};
 ---
 
 {posts.length > 0 && (
-  <aside class="pt-10 border-t border-neutral-200 dark:border-neutral-800">
-    <h2 class="text-xs font-medium text-neutral-400 dark:text-neutral-500 mb-4 tracking-wide uppercase">
+  <aside class="pt-16 mt-16 border-t border-neutral-200 dark:border-neutral-800">
+    <h2 class="text-xs font-medium text-neutral-400 dark:text-neutral-500 mb-6 tracking-wide uppercase">
       More to read
     </h2>
     
@@ -65,8 +48,8 @@ const getRelevanceInfo = (post: BlogPostSummary, allPosts: BlogPostSummary[]) =>
             <h3 class="text-sm font-medium text-neutral-700 dark:text-neutral-300 leading-snug md:group-hover:text-neutral-900 md:dark:group-hover:text-neutral-100 transition-colors line-clamp-2">
               {post.title}
             </h3>
-            <time class="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1 block">
-              {formatDate(post.created_at)}
+            <time class="text-[11px] text-neutral-400 dark:text-neutral-500 mt-1 block" datetime={post.created_at} title={safeLocaleDate(post.created_at, "id-ID", { day: "numeric", month: "long", year: "numeric" })}>
+              {humanizeTimestamp(post.created_at, "id-ID")}
             </time>
           </div>
         </a>

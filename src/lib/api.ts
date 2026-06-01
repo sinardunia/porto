@@ -14,8 +14,9 @@ export const json = (
         "Cache-Control":
           "no-store",
 
+        // Restrict CORS to same origin for admin endpoints
         "Access-Control-Allow-Origin":
-          "*",
+          import.meta.env.SITE_URL || "*",
 
         "Access-Control-Allow-Headers":
           "Content-Type, Authorization",
@@ -48,24 +49,35 @@ export const getBearerToken = (
     .trim();
 };
 
+export const getAdminSecretFromCookie = (
+  request: Request
+): string | null => {
+  const cookieHeader = request.headers.get("cookie");
+  if (!cookieHeader) return null;
+
+  const cookies = cookieHeader.split(";").map((c) => c.trim());
+  const adminCookie = cookies.find((c) =>
+    c.startsWith("admin_secret=")
+  );
+
+  if (!adminCookie) return null;
+
+  return decodeURIComponent(
+    adminCookie.slice("admin_secret=".length)
+  );
+};
+
 export const verifyAdminSecret = (
   request: Request
 ) => {
-  /*
-    IMPORTANT:
-    Astro + Vercel server runtime
-    should use import.meta.env
-    instead of process.env
-  */
-
   const expectedSecret =
     import.meta.env
       .THOUGHTS_ADMIN_SECRET?.trim();
 
+  // Try Authorization header first, fallback to cookie
   const providedSecret =
-    getBearerToken(
-      request
-    )?.trim();
+    (getBearerToken(request) ??
+      getAdminSecretFromCookie(request))?.trim();
 
   if (!expectedSecret) {
     console.error(

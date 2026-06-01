@@ -1,8 +1,9 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import ReadingProgress from "@/components/ReadingProgress.astro";
 import ShareButtons from "@/components/blog/ShareButtons.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
-import { getBlogPostBySlug, getPublishedBlogPostSummaries, getRelatedPosts, estimateReadTime, safeLocaleDate, safeIsoDate } from "@/lib/blog";
+import { getBlogPostBySlug, getPublishedBlogPostSummaries, getRelatedPosts, estimateReadTime, safeLocaleDate, safeIsoDate, humanizeTimestamp } from "@/lib/blog";
 import { sanitizeRenderedHtml } from "@/lib/security";
 import { SITE_URL } from "@/data/config";
 import "@/styles/post.css";
@@ -15,12 +16,18 @@ if (!slug || typeof slug !== "string") {
   return Astro.redirect("/blog");
 }
 
-const [post, allPosts] = await Promise.all([
-  getBlogPostBySlug(slug),
-  getPublishedBlogPostSummaries(50),
-]);
+const post = await getBlogPostBySlug(slug);
 
-const relatedPosts = post ? getRelatedPosts(post, allPosts, 3) : [];
+// Fetch for related posts
+let relatedPosts: Awaited<ReturnType<typeof getPublishedBlogPostSummaries>> = [];
+if (post) {
+  try {
+    const allPosts = await getPublishedBlogPostSummaries(50);
+    relatedPosts = getRelatedPosts(post, allPosts, 4);
+  } catch {
+    relatedPosts = [];
+  }
+}
 
 if (!post) {
   Astro.response.status = 404;
@@ -39,7 +46,8 @@ if (post) {
 
 const safeTags = post && Array.isArray(post.tags) ? post.tags.filter((t): t is string => typeof t === "string") : [];
 const readTime = post ? estimateReadTime(post.content || "") : 0;
-const dateStr = post ? safeLocaleDate(post.created_at) : "";
+const dateStr = post ? humanizeTimestamp(post.created_at, "id-ID") : "";
+const fullDate = post ? safeLocaleDate(post.created_at, "id-ID", { day: "numeric", month: "long", year: "numeric" }) : "";
 const isoDate = post ? safeIsoDate(post.created_at) : "";
 const description = post?.excerpt || (post ? `${post.title}. A ${readTime}-minute read.` : "The requested post could not be found.");
 const ogImage = post?.cover_image_url || undefined;
@@ -88,7 +96,8 @@ const jsonLd = post ? {
   og={post ? { title: post.title, description, image: ogImage, type: "article" } : undefined}
   jsonLd={jsonLd}
 >
-  <main class="px-5 sm:px-6 lg:px-8 py-8 md:py-12 w-full">
+  {post && <ReadingProgress />}
+  <main class="px-5 sm:px-6 lg:px-8 pt-2 w-full">
     {post ? (
       <>
         {/* Medium-style article container - max-w-[680px] */}
@@ -121,22 +130,24 @@ const jsonLd = post ? {
               {post.title}
             </h1>
 
-            {/* Meta - Sans-serif */}
-            <div class="mt-5 flex flex-wrap items-center gap-3 text-base text-neutral-500 dark:text-neutral-500 font-sans">
-              <time datetime={post.created_at} itemprop="datePublished">
-                {dateStr}
-              </time>
-              <span>·</span>
-              <span>{readTime} min read</span>
+            {/* Meta - Sans-serif, responsive */}
+            <div class="mt-5 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3 text-sm sm:text-base text-neutral-500 dark:text-neutral-500 font-sans">
+              <div class="flex items-center gap-2 sm:gap-3">
+                <time datetime={post.created_at} itemprop="datePublished" title={fullDate}>
+                  {dateStr}
+                </time>
+                <span class="text-neutral-400">·</span>
+                <span>{readTime} min read</span>
+              </div>
               {safeTags.length > 0 && (
-                <>
-                  <span>·</span>
-                  <div class="flex flex-wrap gap-2">
+                <div class="flex items-center gap-2 sm:gap-3">
+                  <span class="text-neutral-400 hidden sm:inline">·</span>
+                  <div class="flex flex-wrap gap-x-3 gap-y-1">
                     {safeTags.slice(0, 3).map((tag) => (
-                      <span class="text-sm">#{tag}</span>
+                      <span class="text-neutral-600 dark:text-neutral-400">#{tag}</span>
                     ))}
                   </div>
-                </>
+                </div>
               )}
             </div>
 
@@ -170,18 +181,20 @@ const jsonLd = post ? {
             set:html={finalContent}
           />
 
-          {/* Share Buttons - Bottom */}
-          <div class="mt-12 pt-8 border-t border-neutral-200 dark:border-neutral-800">
-            <ShareButtons url={`${SITE_URL}/blog/${post.slug}`} title={post.title} />
+          {/* Share - Minimal icon-only */}
+          <div class="mt-16 pt-10 border-t border-neutral-200 dark:border-neutral-800">
+            <div class="flex items-center justify-between gap-4">
+              <span class="text-xs text-neutral-400 dark:text-neutral-500">Share</span>
+              <ShareButtons url={`${SITE_URL}/blog/${post.slug}`} title={post.title} />
+            </div>
           </div>
-        </article>
 
-        {/* Related Posts - Full width section */}
-        {relatedPosts.length > 0 && (
-          <div class="mt-16 md:mt-20 mx-auto max-w-[680px]">
+          {/* Related Posts */}
+          {relatedPosts.length > 0 && (
             <RelatedPosts posts={relatedPosts} />
-          </div>
-        )}
+          )}
+
+        </article>
 
         {/* Image Lightbox */}
         <div id="image-lightbox" class="lightbox-overlay" onclick="closeImageLightbox()">

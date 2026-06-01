@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { json, verifyAdminSecret } from "@/lib/api";
 import { createSupabaseAdminClient } from "@/lib/supabase";
-import { validateMediaFile, withTimeout, normalizeMediaExtension } from "@/lib/security";
+import { getClientIP, normalizeMediaExtension, uploadRateLimiter, validateMediaFile, withTimeout } from "@/lib/security";
 
 export const prerender = false;
 
@@ -9,7 +9,7 @@ export const OPTIONS: APIRoute = async () => {
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": import.meta.env.SITE_URL || "*",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
     },
@@ -31,6 +31,16 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
     if (!auth.ok) return auth.response;
+
+    // Rate limiting
+    const clientIP = getClientIP(request);
+    const rateCheck = uploadRateLimiter.check(clientIP);
+    if (!rateCheck.allowed) {
+      return json(
+        { message: `Upload rate limit exceeded. Retry after ${rateCheck.retryAfter}s.` },
+        429
+      );
+    }
 
     const formData = await request.formData();
     const file = formData.get("image");

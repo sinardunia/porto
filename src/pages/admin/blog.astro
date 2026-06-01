@@ -124,19 +124,18 @@ const posts = postsError ? [] : (postsData ?? []);
         const slug = btn.dataset.slug || "";
         if (!slug || !confirm("Hapus blog post ini? Tindakan tidak bisa dibatalkan.")) return;
 
-        const adminSecret = localStorage.getItem("thoughts_admin_secret");
-        if (!adminSecret) {
-          setStatus("Error: Admin secret tidak ditemukan. Silakan login ulang.");
-          return;
-        }
-
         setStatus("Menghapus...");
         try {
           const res = await fetch("/api/blog?slug=" + encodeURIComponent(slug), {
             method: "DELETE",
-            headers: { Authorization: "Bearer " + adminSecret },
+            credentials: "same-origin",
           });
           const data = await res.json().catch(() => null);
+
+          if (res.status === 401) {
+            window.location.href = "/admin/login";
+            return;
+          }
 
           if (!res.ok) throw new Error((data && data.message) || ("HTTP " + res.status));
 

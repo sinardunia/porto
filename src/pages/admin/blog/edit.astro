@@ -485,19 +485,20 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         onError("Image must be smaller than 5MB.");
         return;
       }
-      const adminSecret = localStorage.getItem("thoughts_admin_secret");
-      if (!adminSecret) {
-        onError("Admin secret belum diisi.");
-        return;
-      }
       const uploadForm = new FormData();
       uploadForm.append("image", file);
       fetch("/api/upload-image", {
         method: "POST",
-        headers: { Authorization: `Bearer ${adminSecret}` },
+        credentials: "same-origin",
         body: uploadForm,
       })
-      .then(res => res.json().then(result => ({ res, result })))
+      .then(res => {
+        if (res.status === 401) {
+          window.location.href = "/admin/login";
+          throw new Error("Session expired. Redirecting to login...");
+        }
+        return res.json().then(result => ({ res, result }));
+      })
       .then(({ res, result }) => {
         if (!res.ok) throw new Error(result?.message || "Upload failed.");
         onSuccess(result.url);
@@ -591,11 +592,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
 
     const submitUpdate = async () => {
       if (updateButton.disabled) return;
-      const adminSecret = localStorage.getItem("thoughts_admin_secret");
-      if (!adminSecret) {
-        setStatus("Admin secret belum diisi.");
-        return;
-      }
 
       const content = easyMDE ? easyMDE.value().trim() : "";
       if (!content) {
@@ -615,11 +611,13 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         const response = await fetch("/api/blog", {
           method: "PUT",
           credentials: "same-origin",
-          headers: {
-            Authorization: `Bearer ${adminSecret}`,
-          },
           body: formData,
         });
+
+        if (response.status === 401) {
+          window.location.href = "/admin/login";
+          return;
+        }
 
         const result = await response.json().catch(() => null);
 

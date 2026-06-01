@@ -10,7 +10,9 @@ import {
 } from "@/lib/supabase";
 
 import {
+  adminRateLimiter,
   cleanText,
+  getClientIP,
   normalizeMediaExtension,
   normalizeSlug,
   validateMediaFile,
@@ -141,6 +143,16 @@ export const POST: APIRoute =
 
       if (!auth.ok) {
         return auth.response;
+      }
+
+      // Rate limiting
+      const clientIP = getClientIP(request);
+      const rateCheck = adminRateLimiter.check(clientIP);
+      if (!rateCheck.allowed) {
+        return json(
+          { message: `Rate limit exceeded. Retry after ${rateCheck.retryAfter}s.` },
+          429
+        );
       }
 
       const formData =
@@ -453,6 +465,16 @@ export const PUT: APIRoute = async ({ request }) => {
     const auth = verifyAdminSecret(request);
     if (!auth.ok) return auth.response;
 
+    // Rate limiting
+    const clientIP = getClientIP(request);
+    const rateCheck = adminRateLimiter.check(clientIP);
+    if (!rateCheck.allowed) {
+      return json(
+        { message: `Rate limit exceeded. Retry after ${rateCheck.retryAfter}s.` },
+        429
+      );
+    }
+
     const formData = await request.formData();
 
     const slug = cleanText(formData.get("slug"), 160);
@@ -537,6 +559,16 @@ export const DELETE: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
     if (!auth.ok) return auth.response;
+
+    // Rate limiting
+    const clientIP = getClientIP(request);
+    const rateCheck = adminRateLimiter.check(clientIP);
+    if (!rateCheck.allowed) {
+      return json(
+        { message: `Rate limit exceeded. Retry after ${rateCheck.retryAfter}s.` },
+        429
+      );
+    }
 
     const url = new URL(request.url);
     const slug = url.searchParams.get("slug")?.trim() || "";

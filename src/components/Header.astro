@@ -1,115 +1,35 @@
 ---
-import { Image } from "astro:assets";
 import DarkModeToggle from "./DarkModeToggle.astro";
-import pfpImage from "../assets/pfp.jpeg";
 ---
 
-<header id="main-header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-transparent">
-  <div class="max-w-[872px] mx-auto px-5 md:px-10 py-3 md:py-5">
-    <div class="flex items-center justify-between w-full min-w-0 gap-4">
-      
-      <a href="/" class="flex items-center active:scale-95 transition-transform duration-200 flex-shrink-0" title="Home">
-        <div class="w-8 h-8 rounded-full overflow-hidden border border-neutral-200/50 dark:border-neutral-800/60 shadow-sm transition-opacity opacity-90 hover:opacity-100">
-          {/* Astro Image: auto WebP/AVIF + CLS prevention */}
-          <Image 
-            src={pfpImage}
-            alt="Fuji" 
-            width={32}
-            height={32}
-            class="w-full h-full object-cover"
-            loading="eager"
-            decoding="async"
-          />
-        </div>
+<header id="main-header" class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-sm">
+  <div class="max-w-[720px] mx-auto px-4 sm:px-6 py-3 sm:py-4">
+    <div class="flex items-center justify-between min-w-0 gap-4">
+
+      <a href="/" class="no-typewriter flex items-center justify-center w-10 h-10 -ml-2 rounded-lg text-neutral-800 dark:text-neutral-200 hover:text-neutral-600 dark:hover:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-all" title="Home">
+        <!-- Chat bubble + pencil writing -->
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <!-- Chat bubble -->
+          <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7A8.38 8.38 0 0 1 4 11.5a8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9H11a8.48 8.48 0 0 1 8 8v.5z"/>
+          <!-- Pencil from top-right, writing into bubble -->
+          <path d="M20 3l1 1"/>
+          <path d="M18 5l3-2 2 2-5 5-3 3"/>
+          <path d="M15 11l3 3"/>
+        </svg>
       </a>
 
-      <nav class="flex items-center gap-3 md:gap-6 min-w-0">
-        <div class="flex items-center h-4 flex-shrink-0">
-          <DarkModeToggle />
-        </div>
+      <nav class="flex items-center min-w-0">
+        <DarkModeToggle />
       </nav>
-      
+
     </div>
   </div>
 </header>
 
-<div class="h-16 md:h-20 w-full block"></div>
+<div class="h-[52px] sm:h-[60px] w-full block"></div>
 
 <style>
   header { 
     -webkit-tap-highlight-color: transparent;
   }
 </style>
-
-<script>
-  (function() {
-    if (typeof window === 'undefined') return;
-    
-    let ticking = false;
-    let lastScroll = 0;
-    
-    function initHeader() {
-      const header = document.getElementById('main-header');
-      if (!header) return;
-      
-      // Remove any existing scroll listeners
-      window.removeEventListener('scroll', onScroll);
-      window.addEventListener('scroll', onScroll, { passive: true } as EventListenerOptions);
-    }
-    
-    function onScroll() {
-      if (!ticking) {
-        window.requestAnimationFrame(function() {
-          updateHeader();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }
-    
-    function updateHeader() {
-      const header = document.getElementById('main-header');
-      if (!header) return;
-      
-      const currentScroll = window.scrollY;
-      
-      // Add/remove glass effect classes
-      if (currentScroll > 10) {
-        header.classList.add(
-          'bg-white/80', 
-          'dark:bg-[#0a0a0a]/80', 
-          'backdrop-blur-md', 
-          'border-neutral-200/20', 
-          'dark:border-neutral-900/30', 
-          'shadow-sm'
-        );
-      } else {
-        header.classList.remove(
-          'bg-white/80', 
-          'dark:bg-[#0a0a0a]/80', 
-          'backdrop-blur-md', 
-          'border-neutral-200/20', 
-          'dark:border-neutral-900/30', 
-          'shadow-sm'
-        );
-      }
-      
-      // Hide on Scroll Down, Show on Scroll Up
-      if (currentScroll > lastScroll && currentScroll > 100) {
-        header.style.transform = 'translateY(-100%)';
-      } else {
-        header.style.transform = 'translateY(0)';
-      }
-      lastScroll = currentScroll;
-    }
-    
-    // Initialize
-    initHeader();
-    
-    // Re-init after page transitions
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initHeader);
-    }
-    document.addEventListener('astro:page-load', initHeader);
-  })();
-</script>

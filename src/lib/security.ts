@@ -189,6 +189,59 @@ export const sanitizeRenderedHtml = async (html: string): Promise<string> => {
 };
 
 /* =========================
+   RATE LIMITING (in-memory, per-instance)
+========================= */
+
+type RateLimitStore = Map<string, { count: number; resetAt: number }>;
+
+const createRateLimiter = (
+  maxRequests: number,
+  windowMs: number
+): {
+  check: (identifier: string) => { allowed: boolean; retryAfter?: number };
+} => {
+  const store: RateLimitStore = new Map();
+
+  return {
+    check: (identifier: string) => {
+      const now = Date.now();
+      const record = store.get(identifier);
+
+      if (!record || now > record.resetAt) {
+        store.set(identifier, { count: 1, resetAt: now + windowMs });
+        return { allowed: true };
+      }
+
+      if (record.count >= maxRequests) {
+        return {
+          allowed: false,
+          retryAfter: Math.ceil((record.resetAt - now) / 1000),
+        };
+      }
+
+      record.count++;
+      return { allowed: true };
+    },
+  };
+};
+
+// Admin API: 10 requests per minute per IP
+export const adminRateLimiter = createRateLimiter(10, 60 * 1000);
+
+// Upload API: 5 uploads per minute per IP
+export const uploadRateLimiter = createRateLimiter(5, 60 * 1000);
+
+export const getClientIP = (request: Request): string => {
+  // Vercel/Netlify forwarded headers
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0].trim();
+  }
+  // Fallback to a default for same-instance requests
+  return "127.0.0.1";
+};
+
+/* =========================
    TIMEOUT WRAPPER
 ========================= */
 
