@@ -24,10 +24,6 @@ export const prerender = false;
 const BLOG_IMAGES_BUCKET =
   "blog-images";
 
-/* ---------------------------------
-   STORAGE HELPERS
----------------------------------- */
-
 const getStoragePath = (
   file: File
 ) => {
@@ -91,10 +87,6 @@ const uploadCoverImage =
     return data.publicUrl;
   };
 
-/* ---------------------------------
-   GET
----------------------------------- */
-
 export const GET: APIRoute =
   async () => {
     return json({
@@ -104,10 +96,6 @@ export const GET: APIRoute =
         "Blog API running",
     });
   };
-
-/* ---------------------------------
-   OPTIONS
----------------------------------- */
 
 export const OPTIONS: APIRoute = async () => {
   return new Response(null, {
@@ -124,10 +112,6 @@ export const OPTIONS: APIRoute = async () => {
     },
   });
 };
-
-/* ---------------------------------
-   POST
----------------------------------- */
 
 export const POST: APIRoute =
   async ({ request }) => {
@@ -200,10 +184,6 @@ export const POST: APIRoute =
           "coverImage"
         );
 
-      /* -------------------------
-         TAGS
-      -------------------------- */
-
       const rawTags = cleanText(
         formData.get("tags"),
         500
@@ -230,10 +210,6 @@ export const POST: APIRoute =
               (t) => t.length > 0 && t.length <= 30
             )
         : [];
-
-      /* -------------------------
-         VALIDATION
-      -------------------------- */
 
       if (!title) {
         return json(
@@ -287,9 +263,6 @@ export const POST: APIRoute =
 
       const supabase = createSupabaseAdminClient();
 
-      /* -------------------------
-         CHECK SLUG EXISTS
-      -------------------------- */
       const { data: existingSlug } = await withTimeout(
         supabase.from("blog_posts").select("id").eq("slug", slug).single(),
         5000,
@@ -304,10 +277,6 @@ export const POST: APIRoute =
           409
         );
       }
-
-      /* -------------------------
-         UPLOAD COVER IMAGE
-      -------------------------- */
 
       let coverImageUrl:
         | string
@@ -353,10 +322,6 @@ export const POST: APIRoute =
           );
         }
       }
-
-      /* -------------------------
-         INSERT BLOG POST
-      -------------------------- */
 
       const { data, error } =
         await withTimeout(
@@ -456,10 +421,6 @@ export const POST: APIRoute =
     }
   };
 
-/* ---------------------------------
-   PUT (update blog post)
----------------------------------- */
-
 export const PUT: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
@@ -551,16 +512,11 @@ export const PUT: APIRoute = async ({ request }) => {
   }
 };
 
-/* ---------------------------------
-   DELETE
----------------------------------- */
-
 export const DELETE: APIRoute = async ({ request }) => {
   try {
     const auth = verifyAdminSecret(request);
     if (!auth.ok) return auth.response;
 
-    // Rate limiting
     const clientIP = getClientIP(request);
     const rateCheck = adminRateLimiter.check(clientIP);
     if (!rateCheck.allowed) {

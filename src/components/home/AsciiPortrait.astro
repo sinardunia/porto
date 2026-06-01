@@ -1,7 +1,4 @@
 ---
-// ASCII portrait - two modes:
-// - inline: minimal badge for heading
-// - side: terminal window beside intro text (desktop only)
 interface Props {
   variant?: "inline" | "side";
 }
@@ -35,7 +32,6 @@ const { variant = "inline" } = Astro.props;
 )}
 
 <style>
-  /* Inline badge styles */
   .ascii-badge {
     display: inline-flex;
     align-items: center;
@@ -56,7 +52,6 @@ const { variant = "inline" } = Astro.props;
   
   .ascii-dot {
     display: inline-block;
-    /* Light mode: stone/warm gray — calm, beda dari terminal */
     background: linear-gradient(135deg, #78716c 0%, #57534e 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -70,7 +65,6 @@ const { variant = "inline" } = Astro.props;
   }
   
   :global(.dark) .ascii-dot {
-    /* Dark mode: warm stone */
     background: linear-gradient(135deg, #a8a29e 0%, #78716c 100%);
     -webkit-background-clip: text;
     background-clip: text;
@@ -87,7 +81,6 @@ const { variant = "inline" } = Astro.props;
     }
   }
   
-  /* Desktop terminal - Arch aesthetic: clean, minimal, no bullshit */
   .ascii-terminal {
     display: none;
   }
@@ -102,7 +95,6 @@ const { variant = "inline" } = Astro.props;
       transition: opacity 0.3s ease;
       margin-top: -20px;
       
-      /* Arch terminal: single border, no radius, clean */
       border: 1px solid #737373;
       background: #fafafa;
       padding: 18px;
@@ -125,8 +117,6 @@ const { variant = "inline" } = Astro.props;
       overflow-x: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
-      
-      /* Light mode: tema emerald gradient */
       background: linear-gradient(
         180deg,
         #22c55e 0%,
@@ -147,7 +137,6 @@ const { variant = "inline" } = Astro.props;
     }
     
     :global(.dark) .terminal-content {
-      /* Dark mode: bright lime glow — matrix vibes */
       background: linear-gradient(
         180deg,
         #86efac 0%,

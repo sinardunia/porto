@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import SearchInput from "@/components/shared/SearchInput.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
+import { SITE_URL } from "@/data/config";
 
 export const prerender = false;
 
@@ -13,18 +14,73 @@ if (activeTag) hiddenInputs.push({ name: "tag", value: activeTag });
 
 const clearHref = activeTag ? `/?tag=${encodeURIComponent(activeTag)}` : "/";
 
-// Cache: lebih pendek kalau ada filter aktif
 Astro.response.headers.set(
   "Cache-Control",
   query || activeTag
     ? "public, max-age=30, stale-while-revalidate=300"
     : "public, max-age=60, stale-while-revalidate=600"
 );
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Fuji Halim Rabani",
+  description: "A quiet personal archive of thoughts, writing, and experiments.",
+  url: SITE_URL,
+  publisher: {
+    "@type": "Person",
+    name: "Fuji Halim Rabani",
+    url: SITE_URL,
+  },
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE_URL}/?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+  inLanguage: "id",
+};
+
+const breadcrumbJsonLd = activeTag ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: `Tag: ${activeTag}`,
+      item: `${SITE_URL}/?tag=${encodeURIComponent(activeTag)}`,
+    },
+  ],
+} : {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
+    },
+  ],
+};
+
+const jsonLd = [websiteJsonLd, breadcrumbJsonLd];
 ---
 
 <Layout
   title={activeTag ? `${activeTag} — Blog` : "Blog"}
   description={activeTag ? `Tulisan yang ditandai dengan "${activeTag}".` : "Catatan keresahan yang kebetulan ditulis. Jika bermanfaat, alhamdulillah."}
+  keywords={activeTag ? [activeTag, "blog", "writing"] : ["blog", "personal", "writing", "essays"]}
+  jsonLd={jsonLd}
 >
   <main class="flex w-full flex-col gap-6 pt-2 pb-32 min-w-0 min-h-[70vh]">
     <header class="w-full min-w-0">

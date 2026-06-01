@@ -5,7 +5,6 @@ function initCookieDialog() {
   const template = document.getElementById("cookie-template") as HTMLTemplateElement | null;
   if (!template) return;
 
-  // Prevent multiple dialogs if called multiple times (e.g. during VT transitions)
   if (document.getElementById("cookie-dialog")) return;
 
   const clone = document.importNode(template.content, true);

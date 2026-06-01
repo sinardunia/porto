@@ -1,11 +1,20 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { SITE_URL } from "@/data/config";
 
 const title = "Terms of Service";
 const description = "Syarat dan ketentuan penggunaan website.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: title,
+  description: description,
+  url: `${SITE_URL}/terms`,
+};
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} keywords={["terms", "syarat", "ketentuan", "tos"]} jsonLd={jsonLd}>
   <div class="max-w-none">
     <h1 class="text-2xl sm:text-3xl font-semibold text-neutral-800 dark:text-neutral-200 mb-6">Terms of Service</h1>
     

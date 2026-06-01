@@ -32,7 +32,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
     </header>
 
     <form id="blog-form" novalidate class="flex flex-col gap-5 pt-4">
-      <!-- TITLE -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Title</span>
         <input
@@ -44,7 +43,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         />
       </label>
 
-      <!-- SLUG -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Slug</span>
         <input
@@ -57,7 +55,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         />
       </label>
 
-      <!-- EXCERPT -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Excerpt (opsional)</span>
         <textarea
@@ -68,7 +65,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         ></textarea>
       </label>
 
-      <!-- TAGS -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Tags (pisahkan dengan koma)</span>
         <input
@@ -79,7 +75,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         />
       </label>
 
-      <!-- EDITOR -->
       <div class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</span>
         <textarea
@@ -89,7 +84,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         ></textarea>
       </div>
 
-      <!-- COVER IMAGE -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Cover image (opsional)</span>
         <input
@@ -100,7 +94,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         />
       </label>
 
-      <!-- COVER ALT -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Cover image alt (opsional)</span>
         <input
@@ -111,7 +104,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         />
       </label>
 
-      <!-- PUBLISH CHECKBOX -->
       <label class="flex items-center gap-3 rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900">
         <input
           id="is-published"
@@ -123,7 +115,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Publish immediately</span>
       </label>
 
-      <!-- BUTTONS -->
       <div class="flex items-center gap-3">
         <button
           id="publish-button"
@@ -319,9 +310,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
       return;
     }
 
-    /* -------------------------
-       SLUG AUTO-GENERATE
-    -------------------------- */
     const slugify = (text) =>
       text
         .trim()
@@ -338,9 +326,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
       }
     });
 
-    /* -------------------------
-       MARKDOWN HELPERS (preview)
-    -------------------------- */
     const convertYouTubeLinks = (html) => {
       const patterns = [
         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
@@ -454,9 +439,6 @@ if (!adminSecret || adminSecret !== expectedSecret) {
       if (status) status.textContent = message;
     };
 
-    /* -------------------------
-       EASYMDE INIT
-    -------------------------- */
     const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
     const uploadImageToSupabase = (file, onSuccess, onError) => {

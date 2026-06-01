@@ -4,35 +4,46 @@ import Footer from "@/components/Footer.astro";
 import SEOTags from "@/components/seo/SEOTags.astro";
 import ScrollToTop from "@/components/ScrollToTop.astro";
 
-// NO EXTERNAL FONTS - Using system fonts only for zero FOUT and fastest loading
 import "@/styles/tailwind.css";
 
 export interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  keywords?: string[];
   og?: {
     title?: string;
     description?: string;
     image?: string;
     alt?: string;
     type?: string;
+    locale?: string;
   };
   jsonLd?: Record<string, any>;
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    author?: string;
+    tags?: string[];
+  };
 }
 
-const { title, description, noindex, og, jsonLd } = Astro.props;
+const { title, description, noindex, keywords, og, jsonLd, article } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <SEOTags
       title={title}
       description={description}
       noindex={noindex}
+      keywords={keywords}
       og={og}
       jsonLd={jsonLd}
+      article={article}
     />
     <style is:inline>html{background:#fff}html.dark{background:#0a0a0a}</style>
     <script is:inline>(function(){const s=localStorage.getItem('theme')||'dark',p=matchMedia('(prefers-color-scheme:dark)').matches;if(s==='dark'||(!s&&p))document.documentElement.classList.add('dark')})()</script>
@@ -42,23 +53,16 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
     class="m-0 min-h-screen w-full bg-primary-light p-0 font-sans antialiased text-text-light dark:bg-neutral-950 dark:text-neutral-400"
   >
     <div class="mx-auto flex min-h-screen w-full max-w-[720px] flex-col gap-8 sm:gap-10 px-4 sm:px-6 py-6 sm:py-8 md:py-12">
-      <!-- HEADER -->
       <Header />
-
-      <!-- CONTENT -->
       <main id="main-content" class="flex flex-1 flex-col min-w-0" tabindex="-1">
         <slot />
       </main>
-
-      <!-- FOOTER -->
       <Footer />
     </div>
 
     <style is:global>
       html{font-family:system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
       .post{font-size:1.125rem;line-height:1.7}
-
-      /* Custom text selection color */
       ::selection {
         background: rgba(120, 120, 120, 0.25);
       }
@@ -66,7 +70,6 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
         background: rgba(180, 180, 180, 0.25);
       }
 
-      /* Typewriter cursor link hover effect - exclude post content */
       a[href]:not(.no-typewriter):not(.post a) {
         position: relative;
       }
@@ -87,7 +90,6 @@ const { title, description, noindex, og, jsonLd } = Astro.props;
         50% { opacity: 0; }
       }
 
-      /* Respect user's motion preferences - critical for vestibular disorders */
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
           animation-duration: 0.01ms !important;

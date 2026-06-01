@@ -13,10 +13,6 @@ const DANGEROUS_URL_ATTRIBUTES =
 const UNSAFE_STYLE_ATTRIBUTES =
   /\s+style\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi;
 
-/* =========================
-   MEDIA TYPES (IMAGE + VIDEO)
-========================= */
-
 export const ALLOWED_MEDIA_TYPES = [
   "image/jpeg",
   "image/png",
@@ -28,12 +24,8 @@ export const ALLOWED_MEDIA_TYPES = [
   "video/webm",
   "video/x-matroska", // mkv (optional tapi sering kepakai)
 ] as const;
-export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-export const MAX_VIDEO_SIZE = 20 * 1024 * 1024; // 20MB
-
-/* =========================
-   CLEAN TEXT
-========================= */
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+export const MAX_VIDEO_SIZE = 20 * 1024 * 1024;
 
 export const cleanText = (
   value: FormDataEntryValue | string | null,
@@ -75,10 +67,6 @@ export const normalizeMediaExtension = (file: File) => {
   return "bin";
 };
 
-/* =========================
-   VALIDATE MEDIA (IMAGE + VIDEO)
-========================= */
-
 export const validateMediaFile = (file: File) => {
   const isAllowed = (ALLOWED_MEDIA_TYPES as readonly string[]).includes(
     file.type
@@ -106,10 +94,6 @@ export const validateMediaFile = (file: File) => {
   return null;
 };
 
-/* =========================
-   YOUTUBE EMBED
-========================= */
-
 const YOUTUBE_PATTERNS = [
   /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
   /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
@@ -126,7 +110,6 @@ export const extractYouTubeId = (url: string): string | null => {
 };
 
 export const convertYouTubeLinks = (html: string): string => {
-  // Protect content inside <pre>, <code>, <script>, <style>, <textarea>
   const protectedBlocks: string[] = [];
   let protectedIndex = 0;
   const protectedHtml = html.replace(
@@ -138,7 +121,6 @@ export const convertYouTubeLinks = (html: string): string => {
     }
   );
 
-  // Step 1: Replace <a> tags that are plain YouTube links
   let result = protectedHtml.replace(
     /<a\s+href="([^"]+)"[^>]*>([^<]*)<\/a>/g,
     (match, href: string, text: string) => {
@@ -149,7 +131,6 @@ export const convertYouTubeLinks = (html: string): string => {
     }
   );
 
-  // Step 2: Replace standalone plain-text YouTube URLs
   result = result.replace(
     /(^|>|\s)((?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=[a-zA-Z0-9_-]{11}|youtu\.be\/[a-zA-Z0-9_-]{11}|youtube\.com\/embed\/[a-zA-Z0-9_-]{11}|youtube\.com\/shorts\/[a-zA-Z0-9_-]{11})[^"'<>\s]*)(?=[\s<.,;:!?)\]"']|$)/g,
     (match, before: string, url: string) => {
@@ -159,17 +140,12 @@ export const convertYouTubeLinks = (html: string): string => {
     }
   );
 
-  // Restore protected blocks
   protectedBlocks.forEach((block, i) => {
     result = result.split(`__PROTECTED_${i}__`).join(block);
   });
 
   return result;
 };
-
-/* =========================
-   SANITIZER
-========================= */
 
 export const sanitizeRenderedHtml = async (html: string): Promise<string> => {
   const { default: filterXSS } = await import("xss");
@@ -187,10 +163,6 @@ export const sanitizeRenderedHtml = async (html: string): Promise<string> => {
     stripIgnoreTagBody: ["script"],
   });
 };
-
-/* =========================
-   RATE LIMITING (in-memory, per-instance)
-========================= */
 
 type RateLimitStore = Map<string, { count: number; resetAt: number }>;
 
@@ -225,25 +197,16 @@ const createRateLimiter = (
   };
 };
 
-// Admin API: 10 requests per minute per IP
 export const adminRateLimiter = createRateLimiter(10, 60 * 1000);
-
-// Upload API: 5 uploads per minute per IP
 export const uploadRateLimiter = createRateLimiter(5, 60 * 1000);
 
 export const getClientIP = (request: Request): string => {
-  // Vercel/Netlify forwarded headers
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
     return forwarded.split(",")[0].trim();
   }
-  // Fallback to a default for same-instance requests
   return "127.0.0.1";
 };
-
-/* =========================
-   TIMEOUT WRAPPER
-========================= */
 
 export const withTimeout = async <T>(
   promise: PromiseLike<T>,

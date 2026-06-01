@@ -1,5 +1,4 @@
 ---
-// Reading progress bar - decelerating effect to encourage completion
 ---
 
 <div id="reading-progress" class="fixed top-0 left-0 h-[2px] bg-neutral-800 dark:bg-neutral-200 z-[60] w-0"></div>
@@ -9,21 +8,13 @@
     const progressBar = document.getElementById('reading-progress');
     if (!progressBar) return;
 
-    // Decelerating progress: cepat di awal, lambat di akhir, sprint di finish
     function calculateVisualProgress(real) {
-      // 0-70%: linear (cepat, satisfying)
-      // 70-90%: decelerate (butuh effort lebih, curiosity)
-      // 90-100%: accelerate sprint (reward completion)
       if (real <= 0.7) {
         return real * 100;
       } else if (real <= 0.9) {
-        // 70-90% zone: stretch 20% real progress jadi hanya 15% visual
-        // bikin user ngerasa "stuck" dan scroll lebih lanjut
-        return 70 + (real - 0.7) * 75; // 70 -> 85
+        return 70 + (real - 0.7) * 75;
       } else {
-        // 90-100% zone: sprint finish
-        // last 10% real = 15% visual jump ke 100
-        return 85 + (real - 0.9) * 150; // 85 -> 100
+        return 85 + (real - 0.9) * 150;
       }
     }
 
@@ -35,7 +26,6 @@
       progressBar.style.width = visualProgress + '%';
     }
 
-    // Throttle untuk performa
     let ticking = false;
     function onScroll() {
       if (!ticking) {
@@ -48,6 +38,6 @@
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    updateProgress(); // Initial call
+    updateProgress();
   })();
 </script>

@@ -30,7 +30,6 @@ const allTags = getAllTags(posts);
 ---
 
 <div class="flex flex-col gap-8 min-h-[50vh]" role="region" aria-live="polite" aria-busy={isLoading}>
-  {/* Skeleton loading state - reduces perceived wait time */}
   {isLoading && (
     <div class="flex flex-col gap-4" aria-hidden="true">
       {[1, 2, 3].map(() => (
@@ -74,12 +73,10 @@ const allTags = getAllTags(posts);
           </a>
         )}
       </div>
-      {/* Fade hint for scrollable area on mobile */}
       <div class="absolute right-0 top-0 bottom-2 w-8 bg-gradient-to-l from-white dark:from-[#0a0a0a] to-transparent pointer-events-none sm:hidden" />
     </div>
   )}
 
-  {/* Error state - calming message reduces stress */}
   {hasError && (
     <div class="py-16 text-center" role="status">
       <p class="text-sm text-neutral-500 dark:text-neutral-400 mb-2">

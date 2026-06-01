@@ -1,5 +1,4 @@
 ---
-// Scroll to top - muncul setelah scroll 400px
 ---
 
 <button
@@ -27,7 +26,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Throttled scroll listener
     let ticking = false;
     window.addEventListener('scroll', function() {
       if (!ticking) {
@@ -41,7 +39,6 @@
 
     btn.addEventListener('click', scrollToTop);
 
-    // Initial check
     toggleVisibility();
   })();
 </script>

@@ -2,20 +2,30 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
-
 | Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+|---------|------------------|
+| Latest  | :white_check_mark: |
+| < 1.0   | :x:                |
+
+Only the latest release receives security updates.
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+**Please do not open public issues for security vulnerabilities.**
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Instead, report security issues privately via:
+
+- **GitHub Security Advisories**: [Open a new advisory](https://github.com/waltahh/porto/security/advisories/new)
+- **Email**: Open a GitHub issue asking for contact (we'll reach out privately)
+
+**What to expect:**
+- Initial response within 48 hours
+- Regular updates on investigation progress
+- Credit in the advisory (unless you prefer anonymity)
+- Coordinated disclosure timeline
+
+**Scope:**
+- Supabase key exposure
+- XSS via user-generated content
+- Authentication bypass in admin routes
+- Dependency vulnerabilities

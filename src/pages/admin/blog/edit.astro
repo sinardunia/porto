@@ -61,7 +61,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
     <form id="blog-form" novalidate class="flex flex-col gap-5 pt-4">
       <input type="hidden" id="edit-slug" value={post.slug} />
 
-      <!-- TITLE -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Title</span>
         <input
@@ -74,7 +73,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         />
       </label>
 
-      <!-- SLUG (read-only for edits) -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Slug</span>
         <input
@@ -88,7 +86,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         <span class="text-[10px] text-neutral-400 dark:text-neutral-500">Slug tidak bisa diubah setelah publish.</span>
       </label>
 
-      <!-- EXCERPT -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Excerpt (opsional)</span>
         <textarea
@@ -99,7 +96,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         >{post.excerpt || ""}</textarea>
       </label>
 
-      <!-- TAGS -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Tags (pisahkan dengan koma)</span>
         <input
@@ -111,7 +107,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         />
       </label>
 
-      <!-- EDITOR -->
       <div class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Content</span>
         <textarea
@@ -120,7 +115,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         >{post.content || ""}</textarea>
       </div>
 
-      <!-- COVER IMAGE -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Cover image (opsional)</span>
         <input
@@ -137,7 +131,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         )}
       </label>
 
-      <!-- COVER ALT -->
       <label class="flex flex-col gap-2">
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Cover image alt (opsional)</span>
         <input
@@ -149,7 +142,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         />
       </label>
 
-      <!-- PUBLISH CHECKBOX -->
       <label class="flex items-center gap-3 rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-900">
         <input
           id="is-published"
@@ -161,7 +153,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
         <span class="text-sm font-medium text-neutral-700 dark:text-neutral-300">Published</span>
       </label>
 
-      <!-- BUTTONS -->
       <div class="flex items-center gap-3">
         <button
           id="update-button"
@@ -359,9 +350,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
       return;
     }
 
-    /* -------------------------
-       MARKDOWN HELPERS (preview)
-    -------------------------- */
     const convertYouTubeLinks = (html) => {
       const patterns = [
         /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
@@ -475,9 +463,6 @@ const tagsString = Array.isArray(post.tags) ? post.tags.join(", ") : "";
       if (status) status.textContent = message;
     };
 
-    /* -------------------------
-       EASYMDE INIT
-    -------------------------- */
     const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
     const uploadImageToSupabase = (file, onSuccess, onError) => {

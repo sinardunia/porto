@@ -18,7 +18,6 @@ if (!slug || typeof slug !== "string") {
 
 const post = await getBlogPostBySlug(slug);
 
-// Fetch for related posts
 let relatedPosts: Awaited<ReturnType<typeof getPublishedBlogPostSummaries>> = [];
 if (post) {
   try {
@@ -63,7 +62,7 @@ if (post) {
   }
 }
 
-const jsonLd = post ? {
+const articleJsonLd = post ? {
   "@context": "https://schema.org",
   "@type": "Article",
   headline: post.title,
@@ -86,29 +85,56 @@ const jsonLd = post ? {
     "@id": new URL(`/blog/${post.slug}`, SITE_URL).toString(),
   },
   keywords: safeTags.join(", "),
+  articleSection: "Blog",
+  inLanguage: "id",
 } : undefined;
+
+const breadcrumbJsonLd = post ? {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: SITE_URL,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: post.title,
+      item: new URL(`/blog/${post.slug}`, SITE_URL).toString(),
+    },
+  ],
+} : undefined;
+
+const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
 ---
 
 <Layout
   title={post?.title ?? "Not Found"}
   description={description}
   noindex={!post}
-  og={post ? { title: post.title, description, image: ogImage, type: "article" } : undefined}
+  keywords={safeTags}
+  og={post ? { title: post.title, description, image: ogImage, type: "article", locale: "id_ID" } : undefined}
   jsonLd={jsonLd}
+  article={post ? {
+    publishedTime: isoDate,
+    modifiedTime: safeIsoDate(post.updated_at) || isoDate,
+    author: "Fuji Halim Rabani",
+    tags: safeTags,
+  } : undefined}
 >
   {post && <ReadingProgress />}
   <main class="px-5 sm:px-6 lg:px-8 pt-2 w-full">
     {post ? (
       <>
-        {/* Medium-style article container - max-w-[680px] */}
-        <article 
-          class="mx-auto max-w-[680px]" 
-          itemscope 
+        <article
+          class="mx-auto max-w-[680px]"
+          itemscope
           itemtype="https://schema.org/Article"
         >
-          {/* Header - Sans-serif for meta/headings */}
           <header class="mb-8 md:mb-10">
-            {/* Navigation */}
             <nav class="mb-6">
               <a 
                 href="/" 
@@ -122,7 +148,6 @@ const jsonLd = post ? {
               </a>
             </nav>
 
-            {/* Title - Sans-serif, prominent */}
             <h1
               class="text-3xl md:text-4xl lg:text-[42px] font-bold text-neutral-900 dark:text-neutral-100 leading-[1.15] tracking-tight font-sans"
               itemprop="headline"
@@ -130,7 +155,6 @@ const jsonLd = post ? {
               {post.title}
             </h1>
 
-            {/* Meta - Sans-serif, responsive */}
             <div class="mt-5 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-3 text-sm sm:text-base text-neutral-500 dark:text-neutral-500 font-sans">
               <div class="flex items-center gap-2 sm:gap-3">
                 <time datetime={post.created_at} itemprop="datePublished" title={fullDate}>
@@ -153,7 +177,6 @@ const jsonLd = post ? {
 
           </header>
 
-          {/* Featured Image */}
           {post.cover_image_url && (
             <figure class="mb-8 md:mb-10" itemprop="image">
               <div 
@@ -174,14 +197,12 @@ const jsonLd = post ? {
             </figure>
           )}
 
-          {/* Article Content - Serif font for body text (Medium style) */}
           <div
             class="post prose prose-lg max-w-none"
             itemprop="articleBody"
             set:html={finalContent}
           />
 
-          {/* Share - Minimal icon-only */}
           <div class="mt-16 pt-10 border-t border-neutral-200 dark:border-neutral-800">
             <div class="flex items-center justify-between gap-4">
               <span class="text-xs text-neutral-400 dark:text-neutral-500">Share</span>
@@ -189,14 +210,12 @@ const jsonLd = post ? {
             </div>
           </div>
 
-          {/* Related Posts */}
           {relatedPosts.length > 0 && (
             <RelatedPosts posts={relatedPosts} />
           )}
 
         </article>
 
-        {/* Image Lightbox */}
         <div id="image-lightbox" class="lightbox-overlay" onclick="closeImageLightbox()">
           <button
             class="lightbox-close"
@@ -210,10 +229,8 @@ const jsonLd = post ? {
           <img id="lightbox-img" src="" alt=""/>
         </div>
 
-        {/* Lightbox Script */}
         <script is:inline>
           (function() {
-            // Add click handlers to all images in post content
             function initImageLightbox() {
               const postContent = document.querySelector('.post');
               if (!postContent) return;
@@ -256,10 +273,8 @@ const jsonLd = post ? {
             document.body.style.overflow = '';
           }
 
-          // Expose for global keyboard shortcuts
           window.closeBlogLightbox = closeImageLightbox;
 
-          // Keyboard shortcuts
           document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
               closeImageLightbox();

@@ -1,11 +1,38 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { SITE_URL } from "@/data/config";
 
 const title = "Contact";
 const description = "Cara menghubungi penulis melalui email.";
+
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Fuji Halim Rabani",
+  url: SITE_URL,
+  email: "mailto:fujihalimrabani1601@gmail.com",
+  sameAs: [
+    "https://twitter.com/fuhara16",
+    "https://github.com/fuji-halim",
+  ],
+};
+
+const contactPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: title,
+  description: description,
+  url: `${SITE_URL}/contact`,
+  mainEntity: {
+    "@type": "Person",
+    name: "Fuji Halim Rabani",
+  },
+};
+
+const jsonLd = [personJsonLd, contactPageJsonLd];
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} keywords={["contact", "email", "hubungi"]} jsonLd={jsonLd}>
   <div class="max-w-none">
     <h1 class="text-2xl sm:text-3xl font-semibold text-neutral-800 dark:text-neutral-200 mb-6">Contact</h1>
     

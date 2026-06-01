@@ -1,11 +1,24 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { SITE_URL } from "@/data/config";
 
 const title = "Privacy Policy";
 const description = "Kebijakan privasi dan perlindungan data pengunjung website.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: title,
+  description: description,
+  url: `${SITE_URL}/privacy`,
+  mainEntity: {
+    "@type": "PrivacyPolicy",
+    name: "Privacy Policy",
+  },
+};
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} keywords={["privacy", "kebijakan privasi", "data protection"]} jsonLd={jsonLd}>
   <div class="max-w-none">
     <h1 class="text-2xl sm:text-3xl font-semibold text-neutral-800 dark:text-neutral-200 mb-6">Privacy Policy</h1>
     
