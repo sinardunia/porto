@@ -3,9 +3,11 @@ import tailwind from "@astrojs/tailwind";
 import sitemap from "@astrojs/sitemap";
 import vercel from "@astrojs/vercel";
 
+import cloudflare from "@astrojs/cloudflare";
+
 export default defineConfig({
   output: "server",
-  adapter: vercel(),
+  adapter: cloudflare(),
 
   security: {
     checkOrigin: false,
