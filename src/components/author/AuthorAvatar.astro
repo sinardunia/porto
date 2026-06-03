@@ -1,7 +1,4 @@
 ---
-import { Image } from "astro:assets";
-import mascot from "@/assets/author-mascot.png";
-
 interface Props {
   size?: "sm" | "md" | "lg";
   class?: string;
@@ -24,13 +21,11 @@ const ring =
   ]}
   style={`width: ${px}px; height: ${px}px;`}
 >
-  <Image
-    src={mascot}
+  <img
+    src="/author-mascot.webp"
     alt=""
     width={px}
     height={px}
-    widths={[px, px * 2]}
-    sizes={`${px}px`}
     class="h-full w-full object-cover object-[center_18%] scale-[1.35]"
     loading="lazy"
     decoding="async"

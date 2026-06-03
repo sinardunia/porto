@@ -1,7 +1,4 @@
 ---
-import { Image } from "astro:assets";
-import mascot from "@/assets/author-mascot.png";
-
 interface Props {
   variant?: "inline" | "hero";
   class?: string;
@@ -11,8 +8,8 @@ const { variant = "inline", class: className = "" } = Astro.props;
 
 const dimensions =
   variant === "hero"
-    ? { width: 200, height: 280, widths: [120, 160, 200, 280] as number[], sizes: "(max-width: 640px) 120px, 200px" }
-    : { width: 88, height: 120, widths: [88, 120, 176] as number[], sizes: "88px" };
+    ? { width: 200, height: 280 }
+    : { width: 88, height: 120 };
 ---
 
 <figure
@@ -23,13 +20,11 @@ const dimensions =
   ]}
   aria-hidden="true"
 >
-  <Image
-    src={mascot}
+  <img
+    src="/author-mascot.webp"
     alt=""
     width={dimensions.width}
     height={dimensions.height}
-    widths={dimensions.widths}
-    sizes={dimensions.sizes}
     class:list={[
       "h-auto w-auto object-contain opacity-[0.42] dark:opacity-[0.32]",
       variant === "hero" ? "max-h-[280px]" : "max-h-[120px]",
