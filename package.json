@@ -6,11 +6,14 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "npm run build && wrangler dev",
     "astro": "astro",
-    "export:archive": "node scripts/export-archive.mjs"
+    "export:archive": "node scripts/export-archive.mjs",
+    "deploy": "npm run build && wrangler deploy",
+    "cf-typegen": "wrangler types"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "12",
     "@astrojs/sitemap": "^1.3.1",
     "@astrojs/tailwind": "^6.0.0",
     "@astrojs/vercel": "^9.0.5",
@@ -32,6 +35,7 @@
     "eslint-plugin-astro": "0.27.1",
     "prettier": "2.8.8",
     "prettier-plugin-astro": "0.9.0",
-    "prettier-plugin-tailwindcss": "0.3.0"
+    "prettier-plugin-tailwindcss": "0.3.0",
+    "wrangler": "^4.97.0"
   }
 }
