@@ -4,7 +4,6 @@ import SearchInput from "@/components/shared/SearchInput.astro";
 import PopularTags from "@/components/blog/PopularTags.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
 import AuthorCard from "@/components/author/AuthorCard.astro";
-import SiteMascot from "@/components/author/SiteMascot.astro";
 import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
 import type { BlogPostSummary } from "@/types/blog";
@@ -78,7 +77,7 @@ const pageDescription = "Catatan keresahan yang kebetulan ditulis. Jika bermanfa
 >
   <div class="flex w-full min-w-0 flex-col gap-8 pb-24">
     <section
-      class="relative flex items-start justify-between gap-4 rounded-lg border border-neutral-200/60 bg-white/40 px-4 py-4 dark:border-neutral-800/60 dark:bg-neutral-900/20 sm:px-5"
+      class="flex flex-col items-start gap-4 rounded-lg border border-neutral-200/60 bg-white/40 px-4 py-4 dark:border-neutral-800/60 dark:bg-neutral-900/20 sm:px-5"
       aria-label="About this blog"
     >
       <div class="min-w-0 flex-1">
@@ -91,7 +90,6 @@ const pageDescription = "Catatan keresahan yang kebetulan ditulis. Jika bermanfa
           Read more
         </a>
       </div>
-      <SiteMascot variant="inline" class="absolute right-3 top-2 sm:relative sm:right-0 sm:top-0" />
     </section>
 
     <section class="flex flex-col gap-5" aria-label="Search and filters">
