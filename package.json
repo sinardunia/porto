@@ -19,6 +19,7 @@
     "astro": "^5.5.3",
     "astro-seo": "0.7.2",
     "browser-image-compression": "^2.0.2",
+    "decap-cms": "^3.13.0",
     "dotenv": "^16.4.7",
     "easymde": "^2.21.0",
     "marked": "^18.0.3",

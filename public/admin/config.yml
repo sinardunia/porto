@@ -1,0 +1,27 @@
+backend:
+  name: github
+  repo: waltahh/porto
+  branch: main
+  base_url: https://api.github.com
+  site_domain: waltahh.vercel.app
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "blog"
+    label: "Blog Posts"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Slug", name: "slug", widget: "string", required: false }
+      - { label: "Publish Date", name: "created_at", widget: "datetime", date_format: "YYYY-MM-DD", time_format: "HH:mm" }
+      - { label: "Updated Date", name: "updated_at", widget: "datetime", date_format: "YYYY-MM-DD", time_format: "HH:mm", required: false }
+      - { label: "Excerpt", name: "excerpt", widget: "text", required: false }
+      - { label: "Cover Image URL", name: "cover_image_url", widget: "string", required: false }
+      - { label: "Cover Image Alt", name: "cover_image_alt", widget: "string", required: false }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Published", name: "is_published", widget: "boolean", default: true }
+      - { label: "Body", name: "body", widget: "markdown" }

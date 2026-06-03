@@ -64,7 +64,10 @@ for (const thought of thoughts) {
 
 for (const post of blogPosts) {
   const fileName = `${safeFileName(post.slug)}.md`;
-  const markdown = `---\nid: ${post.id}\nslug: ${post.slug}\ntitle: ${JSON.stringify(post.title)}\nexcerpt: ${JSON.stringify(post.excerpt || "")}\ncover_image_url: ${post.cover_image_url || ""}\ncover_image_alt: ${JSON.stringify(post.cover_image_alt || "")}\ncreated_at: ${post.created_at}\nupdated_at: ${post.updated_at || ""}\nis_published: ${post.is_published}\n---\n\n${post.content || ""}\n`;
+  const tagsYaml = post.tags && Array.isArray(post.tags)
+    ? `\ntags:\n${post.tags.map((t) => `  - ${JSON.stringify(t)}`).join("\n")}`
+    : "\ntags: []";
+  const markdown = `---\nid: ${post.id}\nslug: ${post.slug}\ntitle: ${JSON.stringify(post.title)}\nexcerpt: ${JSON.stringify(post.excerpt || "")}\ncover_image_url: ${post.cover_image_url || ""}\ncover_image_alt: ${JSON.stringify(post.cover_image_alt || "")}\ncreated_at: ${post.created_at}\nupdated_at: ${post.updated_at || ""}\nis_published: ${post.is_published}${tagsYaml}\n---\n\n${post.content || ""}\n`;
   await writeFile(path.join(outputDir, "blog_posts", fileName), markdown);
 }
 
