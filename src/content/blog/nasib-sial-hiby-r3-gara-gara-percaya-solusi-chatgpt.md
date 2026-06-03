@@ -17,13 +17,13 @@ Demi menikmati musik dengan lebih khusyuk, banyak pencinta audio terjun ke dunia
 
 Demi mengejar kualitas suara seperti itu, salah satu perangkat legendaris yang sering diincar di forum Facebook sejak bertahun-tahun lalu adalah HiBy R3.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/45d04f78-b2f1-48c3-b7a6-78dba2170d6d.jpg)
+![](/images/45d04f78-b2f1-48c3-b7a6-78dba2170d6d.jpg)
 
 ## Berburu di Pasar Bekas
 
 Karena harga unit barunya cukup menguras tabungan, berburu unit *second* menjadi jalan ninja yang paling realistis bagi saya. Di momen itu, saya sempat tergoda untuk menawar harga ke penjual di Shopee. Saya beli barangnya dari tegra39.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/c49329d6-0a64-43fb-abee-0a72d36863e1.png)
+![](/images/c49329d6-0a64-43fb-abee-0a72d36863e1.png)
 
 ## Derita Baterai Sakaratul Maut
 
@@ -35,7 +35,7 @@ Awalnya DAP ini masih kuat memutar sekitar 10 lagu. Namun lama-kelamaan performa
 
 Karena dompet saya sudah tipis setelah diperas habis-habisan untuk membeli perangkat ini, opsi servis resmi jelas mustahil. Pilihan terakhir yang tersisa adalah meminta bantuan pada teknologi masa depan yang gratisan. Yaitu **ChatGPT**.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/42c8fdac-da8e-4244-a986-ce6371aeadaf.png)
+![](/images/42c8fdac-da8e-4244-a986-ce6371aeadaf.png)
 
 ## Malapetaka
 
@@ -69,7 +69,7 @@ Beberapa lama kemudian... ChatGPT menyarankan saya membeli lem LCD T4000 untuk m
 
 Namun ketika semua solusi terasa buntu, nekat memang jadi satu-satunya pilihan… bukan?
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/06488325-c556-494c-81e0-890abe419dc2.jpg)
+![](/images/06488325-c556-494c-81e0-890abe419dc2.jpg)
 
 ## Tragedi
 
@@ -91,7 +91,9 @@ Meski bodinya rusak, setidaknya perangkat ini masih bisa menemani ritual mendeng
 
 Pada akhirnya, AI tidak merusak perangkat saya. Saya yang melakukannya sendiri. AI hanya memberi saran. Yang menanggung akibatnya tetap manusia. Termasuk menahan malu karena gadget impian saya sekarang malah terlihat seperti **bom rakitan btw**.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/941c461f-0531-4533-a5f1-9827c60ec3c9.jpg)
+![](/images/941c461f-0531-4533-a5f1-9827c60ec3c9-1.jpg)
+
+  
 *Pake sticker supaya tidak terlalu keliatan bom XD*
 
 Sampai jumpa di keresahan selanjutnya, semoga.
