@@ -1,38 +1,67 @@
-import { createSupabaseClient } from "./supabase";
-import { withTimeout } from "./security";
+import { getCollection, type CollectionEntry } from "astro:content";
 import type { BlogPost, BlogPostSummary } from "@/types/blog";
 
-const BLOG_FIELDS = "id, slug, title, excerpt, content, cover_image_url, cover_image_alt, tags, created_at, updated_at, is_published" as const;
-const BLOG_SUMMARY_FIELDS = "id, slug, title, excerpt, cover_image_url, cover_image_alt, tags, created_at" as const;
+type BlogEntry = CollectionEntry<"blog">;
+
+const getSlug = (entry: BlogEntry) => entry.data.slug ?? entry.id;
+
+const toIsoString = (date: Date) => date.toISOString();
+
+const entryToPost = (entry: BlogEntry): BlogPost => ({
+  id: entry.id,
+  slug: getSlug(entry),
+  title: entry.data.title,
+  excerpt: entry.data.excerpt ?? null,
+  content: entry.body ?? "",
+  cover_image_url: entry.data.cover_image_url ?? null,
+  cover_image_alt: entry.data.cover_image_alt ?? null,
+  tags: entry.data.tags ?? [],
+  created_at: toIsoString(entry.data.created_at),
+  updated_at: entry.data.updated_at ? toIsoString(entry.data.updated_at) : null,
+  is_published: entry.data.is_published,
+});
+
+const entryToSummary = (entry: BlogEntry): BlogPostSummary => {
+  const { content: _content, ...summary } = entryToPost(entry);
+  return summary;
+};
+
+const sortByCreatedAt = (a: BlogEntry, b: BlogEntry) =>
+  b.data.created_at.getTime() - a.data.created_at.getTime();
+
+export async function getPublishedBlogEntries(): Promise<BlogEntry[]> {
+  const entries = await getCollection("blog", ({ data }) => data.is_published);
+  return entries.sort(sortByCreatedAt);
+}
+
+export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
+  return (await getPublishedBlogEntries()).slice(0, limit).map(entryToPost);
+}
+
+export async function getPublishedBlogPostSummaries(limit = 50): Promise<BlogPostSummary[]> {
+  return (await getPublishedBlogEntries()).slice(0, limit).map(entryToSummary);
+}
+
+export async function getBlogEntryBySlug(slug: string): Promise<BlogEntry | null> {
+  const entries = await getPublishedBlogEntries();
+  return entries.find((entry) => getSlug(entry) === slug) ?? null;
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  const entry = await getBlogEntryBySlug(slug);
+  return entry ? entryToPost(entry) : null;
+}
 
 export const normalizeSearch = (value: string) =>
   value.trim().toLowerCase();
 
-export const slugify = (title: string): string => {
-  let slug = title
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 120);
-
-  if (!slug || slug.length === 0) {
-    slug = `post-${Date.now()}`;
-  }
-
-  return slug;
-};
-
 export const matchesSearch = (post: BlogPostSummary, search: string) => {
   const normalizedSearch = normalizeSearch(search);
   if (!normalizedSearch) return true;
-  return [post.title, post.excerpt, post.slug]
+  const tags = Array.isArray(post.tags) ? post.tags : [];
+  return [post.title, post.excerpt, post.slug, ...tags]
     .filter(Boolean)
-    .some((v) => v?.toLowerCase().includes(normalizedSearch));
+    .some((v) => String(v).toLowerCase().includes(normalizedSearch));
 };
 
 export const matchesTag = (post: BlogPostSummary, tag: string) => {
@@ -51,54 +80,11 @@ export const getAllTags = (posts: BlogPostSummary[]) =>
     )
   ).sort((a, b) => a.localeCompare(b));
 
-export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
-  const supabase = createSupabaseClient();
-  const { data, error } = await withTimeout(
-    supabase
-      .from("blog_posts")
-      .select(BLOG_FIELDS)
-      .eq("is_published", true)
-      .order("created_at", { ascending: false })
-      .limit(limit),
-    15000,
-    "Blog posts fetch"
-  );
-  if (error) {
-    throw new Error(`Supabase error: ${error.message}`);
-  }
-  return (data ?? []) as BlogPost[];
-}
-
-export async function getPublishedBlogPostSummaries(limit = 50): Promise<BlogPostSummary[]> {
-  try {
-    const supabase = createSupabaseClient();
-    const { data, error } = await withTimeout(
-      supabase
-        .from("blog_posts")
-        .select(BLOG_SUMMARY_FIELDS)
-        .eq("is_published", true)
-        .order("created_at", { ascending: false })
-        .limit(limit),
-      5000,
-      "Blog summaries fetch"
-    );
-    if (error) {
-      console.warn("Unable to load blog summaries:", error.message);
-      return [];
-    }
-    return (data ?? []) as BlogPostSummary[];
-  } catch (err) {
-    console.warn("Unable to load blog summaries:", err instanceof Error ? err.message : "Unknown error");
-    return [];
-  }
-}
-
 export function estimateReadTime(content: string): number {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 200));
 }
 
-/* Safe date helpers — never crash on invalid/missing dates */
 export const safeDate = (value: string | null | undefined): Date | null => {
   if (!value || typeof value !== "string") return null;
   const d = new Date(value.trim());
@@ -224,28 +210,4 @@ export function getRelatedPosts(
     : scored;
 
   return finalResults.slice(0, limit).map((s) => s.post);
-}
-
-export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
-  try {
-    const supabase = createSupabaseClient();
-    const { data, error } = await withTimeout(
-      supabase
-        .from("blog_posts")
-        .select(BLOG_FIELDS)
-        .eq("slug", slug)
-        .eq("is_published", true)
-        .single(),
-      5000,
-      "Blog post fetch"
-    );
-    if (error || !data) {
-      console.warn("Blog post not found:", error?.message || slug);
-      return null;
-    }
-    return data as BlogPost;
-  } catch (err) {
-    console.warn("Blog post fetch failed:", err instanceof Error ? err.message : "Unknown error");
-    return null;
-  }
 }

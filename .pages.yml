@@ -1,57 +1,61 @@
 media:
-input: public/images
-output: /images
+  input: public/images
+  output: /images
 
 content:
+  - name: post
+    label: Blog Posts
+    type: collection
+    path: src/content/blog
+    format: yaml-frontmatter
+    filename: "{fields.slug}.md"
+    view:
+      fields: [title, created_at, is_published, tags]
+      primary: title
+      sort: [created_at, desc]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
 
-* name: post
-  label: Posts
-  type: collection
-  path: src/content/blog
+      - name: slug
+        label: Slug
+        type: string
+        description: URL path segment, e.g. my-post-title
 
-  fields:
+      - name: excerpt
+        label: Excerpt
+        type: text
 
-  * name: title
-    label: Title
-    type: string
+      - name: cover_image_url
+        label: Cover Image URL
+        type: string
+        description: Full URL or /images/... path
 
-  * name: slug
-    label: Slug
-    type: string
+      - name: cover_image_alt
+        label: Cover Image Alt
+        type: string
 
-  * name: excerpt
-    label: Excerpt
-    type: text
-    required: false
+      - name: created_at
+        label: Created At
+        type: date
+        required: true
 
-  * name: cover_image_url
-    label: Cover Image URL
-    type: string
-    required: false
+      - name: updated_at
+        label: Updated At
+        type: date
 
-  * name: cover_image_alt
-    label: Cover Image Alt
-    type: string
-    required: false
+      - name: is_published
+        label: Published
+        type: boolean
+        default: true
 
-  * name: created_at
-    label: Created At
-    type: date
+      - name: tags
+        label: Tags
+        type: string
+        list: true
 
-  * name: updated_at
-    label: Updated At
-    type: date
-    required: false
-
-  * name: is_published
-    label: Published
-    type: boolean
-
-  * name: tags
-    label: Tags
-    type: string
-    list: true
-
-  * name: body
-    label: Content
-    type: rich-text
+      - name: body
+        label: Content
+        type: rich-text

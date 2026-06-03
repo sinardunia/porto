@@ -1,9 +1,8 @@
 import type { APIRoute } from "astro";
-import { createSupabaseClient } from "@/lib/supabase";
+import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { SITE_URL } from "@/data/config";
-import { withTimeout } from "@/lib/security";
 
-export const prerender = false;
+export const prerender = true;
 
 const escapeXml = (value: string) =>
   value
@@ -29,23 +28,13 @@ const staticRoutes: SitemapUrl[] = [
 
 export const GET: APIRoute = async () => {
   try {
-    const supabase = createSupabaseClient();
-    const { data: posts, error } = await withTimeout(
-      supabase
-        .from("blog_posts")
-        .select("slug, updated_at")
-        .eq("is_published", true)
-        .is("deleted_at", null)
-        .order("created_at", { ascending: false }),
-      10000,
-      "Sitemap posts fetch"
-    );
+    const posts = await getPublishedBlogPostSummaries(500);
 
-    if (error) throw error;
-
-    const blogUrls: SitemapUrl[] = (posts ?? []).map((post) => ({
+    const blogUrls: SitemapUrl[] = posts.map((post) => ({
       url: `/blog/${post.slug}`,
-      lastmod: post.updated_at ? new Date(post.updated_at).toISOString().split("T")[0] : undefined,
+      lastmod: post.updated_at
+        ? new Date(post.updated_at).toISOString().split("T")[0]
+        : new Date(post.created_at).toISOString().split("T")[0],
       priority: "0.8",
       changefreq: "weekly",
     }));

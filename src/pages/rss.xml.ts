@@ -1,9 +1,9 @@
 import type { APIRoute } from "astro";
-import { createSupabaseClient } from "@/lib/supabase";
+import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { SITE_URL } from "@/data/config";
-import { sanitizeRenderedHtml, withTimeout } from "@/lib/security";
+import { sanitizeRenderedHtml } from "@/lib/security";
 
-export const prerender = false;
+export const prerender = true;
 
 const escapeXml = (value: string) =>
   value
@@ -15,23 +15,10 @@ const escapeXml = (value: string) =>
 
 export const GET: APIRoute = async () => {
   try {
-    const supabase = createSupabaseClient();
-    const { data, error } = await withTimeout(
-      supabase
-        .from("blog_posts")
-        .select("slug, title, excerpt, created_at, tags")
-        .eq("is_published", true)
-        .is("deleted_at", null)
-        .order("created_at", { ascending: false })
-        .limit(25),
-      10000,
-      "RSS blog posts fetch"
-    );
-
-    if (error) throw error;
+    const posts = await getPublishedBlogPostSummaries(25);
 
     const items = await Promise.all(
-      (data ?? []).map(async (post) => {
+      posts.map(async (post) => {
         const url = new URL(`/blog/${post.slug}`, SITE_URL).toString();
         const description = await sanitizeRenderedHtml(escapeXml(post.excerpt || ""));
         const tags = Array.isArray(post.tags) ? post.tags.filter((t): t is string => typeof t === "string") : [];

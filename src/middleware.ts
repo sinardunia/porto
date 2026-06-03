@@ -11,10 +11,10 @@ const securityHeaders = {
     "media-src 'self' data: https: blob:",
     "font-src 'self' data:",
     "style-src 'self' 'unsafe-inline'",
-    "script-src 'self' 'unsafe-inline' https://utteranc.es",
+    "script-src 'self' 'unsafe-inline'",
     "connect-src 'self' https: blob:",
 
-    "frame-src https://utteranc.es https://*.cbox.ws https://www.youtube.com https://www.youtube-nocookie.com",
+    "frame-src https://www.youtube.com https://www.youtube-nocookie.com",
     "form-action 'self'",
   ].join("; "),
   "X-Frame-Options": "DENY",

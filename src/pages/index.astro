@@ -103,7 +103,8 @@ const jsonLd = [websiteJsonLd, breadcrumbJsonLd];
       action="/"
       value={query}
       placeholder="Cari tulisan..."
-      clearHref={query ? clearHref : undefined}
+      clearHref={clearHref}
+      activeTag={activeTag}
       hiddenInputs={hiddenInputs}
     />
 

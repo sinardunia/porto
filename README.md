@@ -1,65 +1,36 @@
-# Personal Archive
+# Personal Blog
 
-A living personal site built with Astro — minimal, fast, and intentionally simple. Long-form essays and ongoing thoughts, served from Supabase with zero social mechanics.
+A minimal personal blog built with [Astro 5](https://astro.build), [Tailwind CSS](https://tailwindcss.com), and [Pages CMS](https://pagescms.org) for content editing.
 
 **Live:** [waltahh.vercel.app](https://waltahh.vercel.app)
-
----
 
 ## Stack
 
 | Layer | Tool |
 |-------|------|
-| Framework | [Astro 5](https://astro.build) |
-| Styling | [Tailwind CSS 3](https://tailwindcss.com) |
-| Adapter | [Vercel](https://vercel.com) |
-| Database | [Supabase](https://supabase.com) |
-| Fonts | Open Sans via Fontsource |
-
----
+| Framework | Astro 5 |
+| Styling | Tailwind CSS 3 |
+| Hosting | Vercel (SSR) |
+| Content | Astro Content Collections (`src/content/blog`) |
+| CMS | Pages CMS (`.pages.yml`) |
 
 ## Structure
 
 ```
 src/
-├── components/          # UI pieces (Header, Footer, EssayListItem, etc.)
-├── layouts/            # Layout.astro — global shell
-├── pages/
-│   ├── index.astro     # Home
-│   ├── posts/          # Essays archive
-│   ├── thoughts/       # Micro posts stream
-│   ├── admin/          # Content management
-│   └── api/            # API routes
-├── lib/                # Supabase clients & utilities
-├── types/              # TypeScript definitions
-├── data/               # Site config
-└── styles/             # Global CSS
+├── components/     # UI (Header, blog list, search, etc.)
+├── content/blog/   # Markdown posts (single source of truth)
+├── layouts/        # Page shell
+├── lib/            # Blog helpers
+├── pages/          # Routes
+└── scripts/        # Small client enhancements (search)
 ```
-
----
-
-## Content Model
-
-| Type | Storage | Character |
-|------|---------|-----------|
-| **Essays** | Supabase (runtime fetch) | Long-form, shaped, versioned |
-| **Thoughts** | Supabase | Short, ongoing fragments |
-| **Static pages** | Repo (`.astro` files) | About, disclaimer, etc. |
-
-Legacy Markdown essays remain in the repo for gradual migration.
-
----
 
 ## Development
 
 ```bash
-# Install
 npm install
-
-# Dev server
 npm run dev
-
-# Build
 npm run build
 ```
 
@@ -69,42 +40,20 @@ npm run build
 cp .env.example .env
 ```
 
-Required variables:
-
 | Variable | Purpose |
 |----------|---------|
-| `SUPABASE_URL` | Database connection |
-| `SUPABASE_ANON_KEY` | Public Supabase key |
-| `SITE_URL` | Canonical URL (optional, defaults to localhost) |
+| `SITE_URL` | Canonical URL for SEO, RSS, and sitemap |
 
----
+## Content
 
-## Design Principles
-
-- **No social mechanics** — no likes, reactions, comments, view counts, or followers
-- **Mobile-first** — everything works beautifully on small screens
-- **Zero React** — Astro-native components, no unnecessary JS
-- **No CMS abstraction** — direct Supabase integration, no dashboard layers
-- **Calm & focused** — minimal animations, no clutter, fast loading
-
----
+- Posts live in `src/content/blog` as Markdown with YAML frontmatter.
+- Schema is defined in `src/content.config.ts`.
+- Edit content via [Pages CMS](https://app.pagescms.org) — `/admin` redirects to the configured Pages CMS project.
 
 ## Deployment
 
-Deployed to Vercel with server-side rendering for dynamic routes (`prerender = false`). Static pages are pre-rendered at build time.
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines. Key principles:
-
-- Open an issue first for significant changes
-- No React, no heavy dependencies, no social features
-- `npm run build` must pass
-
----
+Deployed to Vercel with server-side rendering for dynamic routes (home search, RSS, sitemap). Blog posts are loaded from the content collection at build/runtime.
 
 ## License
 
-MIT — feel free to study or borrow patterns, but build your own voice.
+MIT

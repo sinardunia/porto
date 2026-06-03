@@ -3,12 +3,19 @@ import Layout from "@/layouts/Layout.astro";
 import ReadingProgress from "@/components/ReadingProgress.astro";
 import ShareButtons from "@/components/blog/ShareButtons.astro";
 import RelatedPosts from "@/components/blog/RelatedPosts.astro";
-import { getBlogPostBySlug, getPublishedBlogPostSummaries, getRelatedPosts, estimateReadTime, safeLocaleDate, safeIsoDate, humanizeTimestamp } from "@/lib/blog";
-import { sanitizeRenderedHtml } from "@/lib/security";
+import { render } from "astro:content";
+import { getBlogEntryBySlug, getPublishedBlogEntries, getPublishedBlogPostSummaries, getRelatedPosts, estimateReadTime, safeLocaleDate, safeIsoDate, humanizeTimestamp } from "@/lib/blog";
 import { SITE_URL } from "@/data/config";
 import "@/styles/post.css";
 
-export const prerender = false;
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const entries = await getPublishedBlogEntries();
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug ?? entry.id },
+  }));
+}
 
 const { slug } = Astro.params;
 
@@ -16,7 +23,24 @@ if (!slug || typeof slug !== "string") {
   return Astro.redirect("/blog");
 }
 
-const post = await getBlogPostBySlug(slug);
+const entry = await getBlogEntryBySlug(slug);
+const post = entry
+  ? {
+      id: entry.id,
+      slug: entry.data.slug ?? entry.id,
+      title: entry.data.title,
+      excerpt: entry.data.excerpt ?? null,
+      content: entry.body ?? "",
+      cover_image_url: entry.data.cover_image_url ?? null,
+      cover_image_alt: entry.data.cover_image_alt ?? null,
+      tags: entry.data.tags ?? [],
+      created_at: entry.data.created_at.toISOString(),
+      updated_at: entry.data.updated_at?.toISOString() ?? null,
+      is_published: entry.data.is_published,
+    }
+  : null;
+
+const { Content } = entry ? await render(entry) : { Content: null };
 
 let relatedPosts: Awaited<ReturnType<typeof getPublishedBlogPostSummaries>> = [];
 if (post) {
@@ -50,17 +74,6 @@ const fullDate = post ? safeLocaleDate(post.created_at, "id-ID", { day: "numeric
 const isoDate = post ? safeIsoDate(post.created_at) : "";
 const description = post?.excerpt || (post ? `${post.title}. A ${readTime}-minute read.` : "The requested post could not be found.");
 const ogImage = post?.cover_image_url || undefined;
-
-let finalContent = "";
-if (post) {
-  try {
-    const { marked } = await import("marked");
-    const renderedContent = await marked.parse(post.content || "");
-    finalContent = await sanitizeRenderedHtml(renderedContent);
-  } catch {
-    finalContent = `<p class="text-neutral-400 italic">Failed to load content.</p>`;
-  }
-}
 
 const articleJsonLd = post ? {
   "@context": "https://schema.org",
@@ -200,8 +213,9 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
           <div
             class="post prose prose-lg max-w-none"
             itemprop="articleBody"
-            set:html={finalContent}
-          />
+          >
+            {Content && <Content />}
+          </div>
 
           <div class="mt-16 pt-10 border-t border-neutral-200 dark:border-neutral-800">
             <div class="flex items-center justify-between gap-4">
