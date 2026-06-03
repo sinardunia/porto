@@ -36,24 +36,34 @@ const displayTags = post.tags.slice(0, 2);
     </ThumbnailFrame>
 
     <div class="min-w-0 flex-1 pt-0.5">
-      <h3 class="text-[15px] font-semibold leading-snug text-neutral-900 transition-colors group-hover:text-neutral-600 dark:text-neutral-100 dark:group-hover:text-neutral-300 sm:text-base">
+      <h3
+        class="text-[15px] font-semibold leading-snug text-neutral-900 transition-colors group-hover:text-neutral-600 dark:text-neutral-100 dark:group-hover:text-neutral-300 sm:text-base"
+      >
         {post.title}
       </h3>
 
-      {post.description && (
-        <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-500">
-          {post.description}
-        </p>
-      )}
+      {
+        post.description && (
+          <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-500">
+            {post.description}
+          </p>
+        )
+      }
 
-      <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-neutral-400 dark:text-neutral-500">
+      <div
+        class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-neutral-500 dark:text-neutral-400"
+      >
         <time datetime={post.pubDatetime} title={fullDate} class="sm:hidden">{shortDate}</time>
-        <time datetime={post.pubDatetime} title={fullDate} class="hidden sm:inline">{humanized}</time>
-        {displayTags.map((tag) => (
-          <span class="relative z-20">
-            <TagPill name={tag} slug={tagToSlug(tag)} />
-          </span>
-        ))}
+        <time datetime={post.pubDatetime} title={fullDate} class="hidden sm:inline"
+          >{humanized}</time
+        >
+        {
+          displayTags.map((tag) => (
+            <span class="relative z-20">
+              <TagPill name={tag} slug={tagToSlug(tag)} />
+            </span>
+          ))
+        }
       </div>
     </div>
   </div>
