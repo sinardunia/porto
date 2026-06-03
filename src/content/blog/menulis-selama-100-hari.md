@@ -1,12 +1,13 @@
 ---
-slug: menulis-selama-100-hari
 title: "Hari ke 1: Berencana menulis 100 hari tanpa AI"
-description: "Menulis selama 100 hari, Tanpa bantuan AI. Melatih disiplin dan konsistensi"
-pubDatetime: 2026-05-28T23:25:35.723642+00:00
-draft: false
+slug: menulis-selama-100-hari
+description: Menulis selama 100 hari, Tanpa bantuan AI. Melatih disiplin dan konsistensi
+pubDatetime: 2026-06-03
+modDatetime: 2026-06-03
+draft: true
 featured: false
 tags:
-  - "personal"
+  - personal
 ---
 100 hari menulis tanpa bantuan AI
 
