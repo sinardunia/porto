@@ -1,0 +1,83 @@
+---
+/**
+ * Lightweight, self-hosted QA telemetry. No third-party scripts, no network
+ * calls — everything stays in the console so it is safe for production and
+ * CSP-friendly. Captures Navigation Timing, Core Web Vitals (LCP/CLS/INP) and
+ * uncaught errors. All access is guarded so a missing API never breaks the page.
+ */
+---
+
+<script is:inline>
+  (function () {
+    if (typeof window === "undefined" || typeof performance === "undefined") return;
+    var log = function (label, data) {
+      try {
+        // console.debug keeps telemetry out of the default console view.
+        console.debug("[perf] " + label, data);
+      } catch (_) {}
+    };
+
+    // Page load measurement via the Navigation Timing API.
+    var onLoad = function () {
+      try {
+        var nav = performance.getEntriesByType("navigation")[0];
+        if (nav) {
+          log("navigation", {
+            ttfb: Math.round(nav.responseStart),
+            domContentLoaded: Math.round(nav.domContentLoadedEventEnd),
+            load: Math.round(nav.loadEventEnd),
+          });
+        }
+      } catch (_) {}
+    };
+    if (document.readyState === "complete") onLoad();
+    else window.addEventListener("load", onLoad, { once: true });
+
+    // Core Web Vitals via PerformanceObserver (guarded; ignored if unsupported).
+    var observe = function (type, cb) {
+      try {
+        var po = new PerformanceObserver(cb);
+        po.observe({ type: type, buffered: true });
+        return po;
+      } catch (_) {
+        return null;
+      }
+    };
+
+    observe("largest-contentful-paint", function (list) {
+      var entries = list.getEntries();
+      var last = entries[entries.length - 1];
+      if (last) log("LCP", Math.round(last.startTime));
+    });
+
+    var cls = 0;
+    observe("layout-shift", function (list) {
+      list.getEntries().forEach(function (e) {
+        if (!e.hadRecentInput) cls += e.value;
+      });
+      log("CLS", Math.round(cls * 1000) / 1000);
+    });
+
+    var inp = 0;
+    observe("event", function (list) {
+      list.getEntries().forEach(function (e) {
+        if (e.duration > inp) {
+          inp = e.duration;
+          log("INP(max)", Math.round(inp));
+        }
+      });
+    });
+
+    // Console-safe error logging — never rethrows, never blocks the UI.
+    window.addEventListener("error", function (e) {
+      try {
+        console.warn("[error]", e.message, e.filename + ":" + e.lineno);
+      } catch (_) {}
+    });
+    window.addEventListener("unhandledrejection", function (e) {
+      try {
+        console.warn("[unhandledrejection]", e.reason);
+      } catch (_) {}
+    });
+  })();
+</script>

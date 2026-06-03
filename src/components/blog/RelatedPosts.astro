@@ -11,49 +11,51 @@ type Props = {
 const { posts } = Astro.props;
 ---
 
-{posts.length > 0 && (
-  <aside class="mt-16 border-t border-neutral-200 pt-12 dark:border-neutral-800">
-    <h2 class="mb-6 text-xs font-medium uppercase tracking-wide text-neutral-400 dark:text-neutral-500">
-      More to read
-    </h2>
+{
+  posts.length > 0 && (
+    <aside class="mt-16 border-t border-neutral-200 pt-12 dark:border-neutral-800">
+      <h2 class="mb-6 text-xs font-medium uppercase tracking-wide text-neutral-500 dark:text-neutral-400">
+        More to read
+      </h2>
 
-    <div class="flex flex-col gap-1">
-      {posts.slice(0, 4).map((post) => (
-        <a
-          href={`/blog/${post.slug}`}
-          class="group -mx-2 flex items-start gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
-          data-astro-prefetch="hover"
-        >
-          <ThumbnailFrame size="sm">
-            <CoverImage
-              src={post.coverImage}
-              alt={post.title}
-              width={48}
-              height={48}
-              sizes="48px"
-              loading="lazy"
-              class="h-full w-full object-cover"
-            />
-          </ThumbnailFrame>
+      <div class="flex flex-col gap-1">
+        {posts.slice(0, 4).map((post) => (
+          <a
+            href={`/blog/${post.slug}`}
+            class="group -mx-2 flex items-start gap-3 rounded-lg px-2 py-3 transition-colors hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
+            data-astro-prefetch="hover"
+          >
+            <ThumbnailFrame size="sm">
+              <CoverImage
+                src={post.coverImage}
+                alt={post.title}
+                width={48}
+                height={48}
+                sizes="48px"
+                loading="lazy"
+                class="h-full w-full object-cover"
+              />
+            </ThumbnailFrame>
 
-          <div class="min-w-0 flex-1 pt-0.5">
-            <h3 class="line-clamp-2 text-sm font-medium leading-snug text-neutral-700 transition-colors group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-neutral-100">
-              {post.title}
-            </h3>
-            <time
-              class="mt-1 block text-[11px] text-neutral-400 dark:text-neutral-500"
-              datetime={post.pubDatetime}
-              title={safeLocaleDate(post.pubDatetime, "id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              })}
-            >
-              {humanizeTimestamp(post.pubDatetime, "id-ID")}
-            </time>
-          </div>
-        </a>
-      ))}
-    </div>
-  </aside>
-)}
+            <div class="min-w-0 flex-1 pt-0.5">
+              <h3 class="line-clamp-2 text-sm font-medium leading-snug text-neutral-700 transition-colors group-hover:text-neutral-900 dark:text-neutral-300 dark:group-hover:text-neutral-100">
+                {post.title}
+              </h3>
+              <time
+                class="mt-1 block text-[11px] text-neutral-500 dark:text-neutral-400"
+                datetime={post.pubDatetime}
+                title={safeLocaleDate(post.pubDatetime, "id-ID", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              >
+                {humanizeTimestamp(post.pubDatetime, "id-ID")}
+              </time>
+            </div>
+          </a>
+        ))}
+      </div>
+    </aside>
+  )
+}

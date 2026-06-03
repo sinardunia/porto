@@ -69,7 +69,8 @@ const fullDate = post
   : "";
 const isoDate = post ? safeIsoDate(post.pubDatetime) : "";
 const description =
-  post?.description || (post ? `${post.title}. A ${readTime}-minute read.` : "The requested post could not be found.");
+  post?.description ||
+  (post ? `${post.title}. A ${readTime}-minute read.` : "The requested post could not be found.");
 const ogImage = post ? resolveOgImageSrc(post.coverImage) : undefined;
 const canonicalPath = post ? `/blog/${post.slug}` : Astro.url.pathname;
 
@@ -117,7 +118,9 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
   description={description}
   noindex={!post}
   keywords={safeTags}
-  og={post ? { title: post.title, description, image: ogImage, type: "article", locale: "id_ID" } : undefined}
+  og={post
+    ? { title: post.title, description, image: ogImage, type: "article", locale: "id_ID" }
+    : undefined}
   jsonLd={jsonLd}
   article={post
     ? {
@@ -130,97 +133,112 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
 >
   {post && <ReadingProgress />}
   {post && <PostLightbox />}
-  {post ? (
-    <article
-      class="mx-auto w-full max-w-[42rem]"
-      itemscope
-      itemtype="https://schema.org/BlogPosting"
-      data-lightbox-scope
-    >
-      <header class="mb-10">
-        <nav class="mb-8" aria-label="Breadcrumb">
-          <a
-            href="/"
-            class="inline-flex min-h-[44px] items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
-            data-astro-prefetch="hover"
-          >
-            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Articles
-          </a>
-        </nav>
-
-        <h1
-          class="text-[1.75rem] font-bold leading-[1.2] tracking-tight text-neutral-900 dark:text-neutral-50 sm:text-4xl sm:leading-[1.15]"
-          itemprop="headline"
-        >
-          {post.title}
-        </h1>
-
-        <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-neutral-500 dark:text-neutral-500">
-          <time datetime={post.pubDatetime} itemprop="datePublished" title={fullDate}>
-            {dateStr}
-          </time>
-          <span aria-hidden="true">·</span>
-          <span>{readTime} min read</span>
-          {safeTags.length > 0 && (
-            <>
-              <span aria-hidden="true">·</span>
-              <ul class="flex flex-wrap gap-1.5" aria-label="Tags">
-                {safeTags.map((tag) => (
-                  <li>
-                    <TagPill name={tag} slug={tagToSlug(tag)} />
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </div>
-      </header>
-
-      {post.coverImage && (
-        <figure class="mb-10 overflow-hidden rounded-lg" itemprop="image">
-          <div class="aspect-video w-full bg-neutral-100 dark:bg-neutral-900">
-            <CoverImage
-              src={post.coverImage}
-              alt={post.title}
-              width={1200}
-              height={675}
-              sizes="(max-width: 42rem) 100vw, 42rem"
-              loading="eager"
-              class="h-full w-full object-cover"
-            />
-          </div>
-        </figure>
-      )}
-
-      <div class="post prose prose-neutral max-w-none dark:prose-invert" itemprop="articleBody">
-        {Content && <Content />}
-      </div>
-
-      <footer class="mt-16 space-y-10 border-t border-neutral-200 pt-10 dark:border-neutral-800">
-        <section aria-label="Author">
-          <AuthorCard variant="compact" />
-        </section>
-        <div class="flex items-center justify-between gap-4">
-          <span class="text-xs text-neutral-400 dark:text-neutral-500">Share</span>
-          <ShareButtons url={`${SITE_URL}/blog/${post.slug}`} title={post.title} />
-        </div>
-      </footer>
-
-      {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
-    </article>
-  ) : (
-    <div class="mx-auto max-w-[42rem] py-16 text-center">
-      <h1 class="mb-3 text-2xl font-bold text-neutral-900 dark:text-neutral-100">Not found</h1>
-      <p class="mb-8 text-neutral-500 dark:text-neutral-400">This article does not exist or is not published.</p>
-      <a
-        href="/"
-        class="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-neutral-100 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+  {
+    post ? (
+      <article
+        class="mx-auto w-full max-w-[42rem]"
+        itemscope
+        itemtype="https://schema.org/BlogPosting"
+        data-lightbox-scope
       >
-        Back to articles
-      </a>
-    </div>
-  )}
+        <header class="mb-10">
+          <nav class="mb-8" aria-label="Breadcrumb">
+            <a
+              href="/"
+              class="inline-flex min-h-[44px] items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
+              data-astro-prefetch="hover"
+            >
+              <svg
+                class="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              Articles
+            </a>
+          </nav>
+
+          <h1
+            class="text-[1.75rem] font-bold leading-[1.2] tracking-tight text-neutral-900 dark:text-neutral-50 sm:text-4xl sm:leading-[1.15]"
+            itemprop="headline"
+          >
+            {post.title}
+          </h1>
+
+          <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-neutral-500 dark:text-neutral-500">
+            <time datetime={post.pubDatetime} itemprop="datePublished" title={fullDate}>
+              {dateStr}
+            </time>
+            <span aria-hidden="true">·</span>
+            <span>{readTime} min read</span>
+            {safeTags.length > 0 && (
+              <>
+                <span aria-hidden="true">·</span>
+                <ul class="flex flex-wrap gap-1.5" aria-label="Tags">
+                  {safeTags.map((tag) => (
+                    <li>
+                      <TagPill name={tag} slug={tagToSlug(tag)} />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        </header>
+
+        {post.coverImage && (
+          <figure class="mb-10 overflow-hidden rounded-lg" itemprop="image">
+            <div class="aspect-video w-full bg-neutral-100 dark:bg-neutral-900">
+              <CoverImage
+                src={post.coverImage}
+                alt={post.title}
+                width={1200}
+                height={675}
+                sizes="(max-width: 42rem) 100vw, 42rem"
+                loading="eager"
+                class="h-full w-full object-cover"
+              />
+            </div>
+          </figure>
+        )}
+
+        <div class="post prose prose-neutral max-w-none dark:prose-invert" itemprop="articleBody">
+          {Content && <Content />}
+        </div>
+
+        <footer class="mt-16 space-y-10 border-t border-neutral-200 pt-10 dark:border-neutral-800">
+          <section aria-label="Author">
+            <AuthorCard variant="compact" />
+          </section>
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-xs text-neutral-500 dark:text-neutral-400">Share</span>
+            <ShareButtons url={`${SITE_URL}/blog/${post.slug}`} title={post.title} />
+          </div>
+        </footer>
+
+        {relatedPosts.length > 0 && <RelatedPosts posts={relatedPosts} />}
+      </article>
+    ) : (
+      <div class="mx-auto max-w-[42rem] py-16 text-center">
+        <h1 class="mb-3 text-2xl font-bold text-neutral-900 dark:text-neutral-100">Not found</h1>
+        <p class="mb-8 text-neutral-500 dark:text-neutral-400">
+          This article does not exist or is not published.
+        </p>
+        <a
+          href="/"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-neutral-100 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+        >
+          Back to articles
+        </a>
+      </div>
+    )
+  }
 </Layout>

@@ -3,6 +3,13 @@ import Header from "../components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import SEOTags from "@/components/seo/SEOTags.astro";
 import ScrollToTop from "@/components/ScrollToTop.astro";
+import Observability from "@/components/Observability.astro";
+
+import "@fontsource/inter/latin-400.css";
+import "@fontsource/inter/latin-500.css";
+import "@fontsource/inter/latin-600.css";
+import "@fontsource/inter/latin-700.css";
+import interLatin400 from "@fontsource/inter/files/inter-latin-400-normal.woff2";
 
 import "@/styles/tailwind.css";
 
@@ -34,12 +41,7 @@ const { title, description, noindex, keywords, og, jsonLd, article } = Astro.pro
 <!DOCTYPE html>
 <html lang="id">
   <head>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" as="font" type="font/woff2" href={interLatin400} crossorigin="anonymous" />
     <SEOTags
       title={title}
       description={description}
@@ -50,8 +52,12 @@ const { title, description, noindex, keywords, og, jsonLd, article } = Astro.pro
       article={article}
     />
     <style is:inline>
-      html { background: #fafafa; }
-      html.dark { background: #0a0a0a; }
+      html {
+        background: #fafafa;
+      }
+      html.dark {
+        background: #0a0a0a;
+      }
     </style>
     <script is:inline>
       (function () {
@@ -74,7 +80,9 @@ const { title, description, noindex, keywords, og, jsonLd, article } = Astro.pro
       Skip to content
     </a>
 
-    <div class="mx-auto flex min-h-screen w-full max-w-[720px] flex-col px-4 py-6 sm:px-6 sm:py-8 md:py-10">
+    <div
+      class="mx-auto flex min-h-screen w-full max-w-[720px] flex-col px-4 py-6 sm:px-6 sm:py-8 md:py-10"
+    >
       <Header />
       <main id="main-content" class="flex flex-1 flex-col min-w-0 pt-6" tabindex="-1">
         <slot />
@@ -83,5 +91,6 @@ const { title, description, noindex, keywords, og, jsonLd, article } = Astro.pro
     </div>
 
     <ScrollToTop />
+    <Observability />
   </body>
 </html>
