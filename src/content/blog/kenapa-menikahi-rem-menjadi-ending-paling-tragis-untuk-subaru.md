@@ -1,12 +1,14 @@
 ---
+title: Menikahi Rem Menjadi Ending Paling Tragis untuk Subaru
 slug: kenapa-menikahi-rem-menjadi-ending-paling-tragis-untuk-subaru
-title: "Menikahi Rem Menjadi Ending Paling Tragis untuk Subaru"
-description: "Kenapa pilihan paling bahagia sering kali menyimpan penderitaan paling ngeri"
-pubDatetime: 2025-02-12T09:03:04.434424+00:00
+description: Kenapa pilihan paling bahagia sering kali menyimpan penderitaan paling ngeri
+coverImage: /images/natsukisubaruanime-1.png
+pubDatetime: 2026-06-03
+modDatetime: 2026-06-03
 draft: false
 featured: false
 tags:
-  - "anime"
+  - anime
 ---
 Sosok wibu di dunia maya erat hubungannya dengan seorang yang nolep. 
 
@@ -24,7 +26,6 @@ Kemampuan untuk hidup kembali setelah mati, atau yang biasa disebut RBD (*Return
 
 Kalau dibedah lebih detail, karakter Subaru memiliki kutukan hidup kembali tersebut dengan cara yang cukup merepotkan. Setiap kali dia mati mengenaskan, dia bakal kebangun di titik awal yang sama. Tepat di depan abang-abang tukang apel di pasar.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/3a479c22-3db1-4998-a66c-ca48526640df.jpg)
 
 
 Nah, yang nonton anime ini, pernahkah kamu kepikiran satu skenario yang agak mengganggu mengenai kemampuan tersebut?
@@ -61,10 +62,10 @@ Kenapa bisa demikian? Karena demi bisa hidup tenang dan membangun keluarga bersa
 
 ![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/62f5cbae-7f29-434e-b694-0a28f240ef17.jpg)
 
-
 ✖ **Fakta pahit di balik rute ini:**
-* Rumah tangganya harmonis, tapi dibangun dari hasil menelantarkan teman-temannya yang mati dibantai.
-* Subaru menjalani hari normal dengan rem, Tapi batinnya tersiksa karena tahu dirinya seorang pengecut.
+
+- Rumah tangganya harmonis, tapi dibangun dari hasil menelantarkan teman-temannya yang mati dibantai.
+- Subaru menjalani hari normal dengan rem, Tapi batinnya tersiksa karena tahu dirinya seorang pengecut.
 
 > *Lalu, kenapa rute pernikahan ini dinamakan "Sloth" alias Kemalasan? Apakah karena Subaru malas bekerja?*
 
@@ -100,6 +101,5 @@ Sebab pada akhirnya, **mengabaikan kenyataan tidak akan pernah menghilangkan mas
 Menghadapi kenyataan pahit memang menguras energi, tapi itu seribu kali lebih terhormat daripada menabung bom waktu di dalam pikiran sendiri. Berhenti menjadi pengecut yang mengubur masalah, dan mulailah hadapi apa yang harus diselesaikan hari ini.
 
 ![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/819c1188-c509-432e-96ef-531b82ec6265.png)
-
 
 Semoga artikel ini bisa memberikan sudut pandang baru yang bermanfaat untuk kalian. *Next*, kita bahas apa lagi, nih?
