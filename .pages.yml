@@ -1,0 +1,57 @@
+media:
+input: public/images
+output: /images
+
+content:
+
+* name: post
+  label: Posts
+  type: collection
+  path: src/content/blog
+
+  fields:
+
+  * name: title
+    label: Title
+    type: string
+
+  * name: slug
+    label: Slug
+    type: string
+
+  * name: excerpt
+    label: Excerpt
+    type: text
+    required: false
+
+  * name: cover_image_url
+    label: Cover Image URL
+    type: string
+    required: false
+
+  * name: cover_image_alt
+    label: Cover Image Alt
+    type: string
+    required: false
+
+  * name: created_at
+    label: Created At
+    type: date
+
+  * name: updated_at
+    label: Updated At
+    type: date
+    required: false
+
+  * name: is_published
+    label: Published
+    type: boolean
+
+  * name: tags
+    label: Tags
+    type: string
+    list: true
+
+  * name: body
+    label: Content
+    type: rich-text
