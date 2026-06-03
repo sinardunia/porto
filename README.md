@@ -1,6 +1,6 @@
-# Personal Blog
+# Porto
 
-A minimal personal blog built with [Astro 5](https://astro.build), [Tailwind CSS](https://tailwindcss.com), and [Pages CMS](https://pagescms.org) for content editing.
+A minimal personal publication built with [Astro 5](https://astro.build), [Tailwind CSS](https://tailwindcss.com), and [Pages CMS](https://pagescms.org).
 
 **Live:** [waltahh.vercel.app](https://waltahh.vercel.app)
 
@@ -9,50 +9,40 @@ A minimal personal blog built with [Astro 5](https://astro.build), [Tailwind CSS
 | Layer | Tool |
 |-------|------|
 | Framework | Astro 5 |
-| Styling | Tailwind CSS 3 |
+| Styling | Tailwind CSS 3 + Typography |
 | Hosting | Vercel (SSR) |
 | Content | Astro Content Collections (`src/content/blog`) |
 | CMS | Pages CMS (`.pages.yml`) |
-
-## Structure
-
-```
-src/
-├── components/     # UI (Header, blog list, search, etc.)
-├── content/blog/   # Markdown posts (single source of truth)
-├── layouts/        # Page shell
-├── lib/            # Blog helpers
-├── pages/          # Routes
-└── scripts/        # Small client enhancements (search)
-```
 
 ## Development
 
 ```bash
 npm install
+cp .env.example .env
 npm run dev
 npm run build
 ```
 
-### Environment
-
-```bash
-cp .env.example .env
-```
-
-| Variable | Purpose |
-|----------|---------|
-| `SITE_URL` | Canonical URL for SEO, RSS, and sitemap |
+Set `SITE_URL` in `.env` to your canonical domain (SEO, RSS, sitemap, Open Graph).
 
 ## Content
 
-- Posts live in `src/content/blog` as Markdown with YAML frontmatter.
-- Schema is defined in `src/content.config.ts`.
-- Edit content via [Pages CMS](https://app.pagescms.org) — `/admin` redirects to the configured Pages CMS project.
+Posts live in `src/content/blog` as Markdown with YAML frontmatter.
 
-## Deployment
+| Field | Description |
+|-------|-------------|
+| `title` | Article title |
+| `description` | Summary for listings and SEO |
+| `pubDatetime` | Publish date |
+| `modDatetime` | Last modified (optional) |
+| `tags` | Tag list |
+| `draft` | Hide from site when `true` |
+| `featured` | Boost in sitemap priority |
+| `coverImage` | Cover image path from `/images/...` (upload via Pages CMS) |
 
-Deployed to Vercel with server-side rendering for dynamic routes (home search, RSS, sitemap). Blog posts are loaded from the content collection at build/runtime.
+Edit content at [Pages CMS](https://app.pagescms.org) — `/admin` redirects to the configured project.
+
+Cover images and inline images upload to `public/images` via Pages CMS media.
 
 ## License
 

@@ -1,6 +1,7 @@
 ---
 import { SEO } from "astro-seo";
 import { SITE_URL } from "@/data/config";
+import { AUTHOR } from "@/data/author";
 
 type Props = {
   title?: string;
@@ -15,7 +16,7 @@ type Props = {
     type?: string;
     locale?: string;
   };
-  jsonLd?: Record<string, any>;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   article?: {
     publishedTime?: string;
     modifiedTime?: string;
@@ -24,31 +25,25 @@ type Props = {
   };
 };
 
-const {
-  title,
-  description,
-  noindex,
-  keywords,
-  og,
-  jsonLd,
-  article,
-} = Astro.props;
+const { title, description, noindex, keywords, og, jsonLd, article } = Astro.props;
 
-const DEFAULT_TITLE = "Fuji Halim Rabani";
+const SITE_NAME = "Porto";
+const AUTHOR_NAME = AUTHOR.name;
 const DEFAULT_DESCRIPTION = "A quiet personal archive of thoughts, writing, and experiments.";
-const DEFAULT_KEYWORDS = ["blog", "personal", "writing", "essays", "thoughts"];
+const DEFAULT_KEYWORDS = ["blog", "personal", "writing", "essays"];
 
-const pageTitle = title ? `${title} • Fuji` : DEFAULT_TITLE;
+const pageTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
 const pageDescription = description || DEFAULT_DESCRIPTION;
 const pageKeywords = keywords ? [...DEFAULT_KEYWORDS, ...keywords] : DEFAULT_KEYWORDS;
 
 const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
-const ogImage = og?.image || `${SITE_URL.replace(/\/$/, "")}/opengraph-image.jpg`;
+const ogImage = og?.image || new URL("/opengraph-image.jpg", SITE_URL).toString();
 const locale = og?.locale || "id_ID";
 
-const jsonLdScript = jsonLd
-  ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>`
-  : "";
+const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const jsonLdScript = jsonLdBlocks
+  .map((block) => `<script type="application/ld+json">${JSON.stringify(block)}</script>`)
+  .join("\n");
 ---
 
 <SEO
@@ -67,20 +62,22 @@ const jsonLdScript = jsonLd
     },
     optional: {
       description: og?.description || pageDescription,
-      locale: locale,
-      siteName: "Fuji Halim Rabani",
+      locale,
+      siteName: SITE_NAME,
     },
     image: {
-      alt: og?.alt || "Fuji Halim Rabani personal website",
+      alt: og?.alt || `${SITE_NAME} — ${AUTHOR_NAME}`,
       width: 1200,
       height: 630,
     },
-    article: article ? {
-      publishedTime: article.publishedTime,
-      modifiedTime: article.modifiedTime,
-      authors: article.author ? [article.author] : undefined,
-      tags: article.tags,
-    } : undefined,
+    article: article
+      ? {
+          publishedTime: article.publishedTime,
+          modifiedTime: article.modifiedTime,
+          authors: article.author ? [article.author] : undefined,
+          tags: article.tags,
+        }
+      : undefined,
   }}
   twitter={{
     card: "summary_large_image",
@@ -89,41 +86,33 @@ const jsonLdScript = jsonLd
     title: og?.title || pageTitle,
     description: og?.description || pageDescription,
     image: ogImage,
-    imageAlt: og?.alt || "Fuji Halim Rabani personal website",
+    imageAlt: og?.alt || `${SITE_NAME} — ${AUTHOR_NAME}`,
   }}
   extend={{
     link: [
-      { rel: "icon", href: "/favicon.ico" },
-      { rel: "manifest", href: "/manifest.json" },
+      { rel: "icon", href: "/favicon.ico", sizes: "any" },
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
       { rel: "canonical", href: canonicalUrl },
       { rel: "alternate", type: "application/rss+xml", title: "RSS Feed", href: "/rss.xml" },
       { rel: "sitemap", type: "application/xml", href: "/sitemap.xml" },
-      { rel: "alternate", hreflang: "id", href: canonicalUrl },
-      { rel: "alternate", hreflang: "x-default", href: canonicalUrl },
     ],
     meta: [
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#0a0a0a", media: "(prefers-color-scheme: dark)" },
       { name: "theme-color", content: "#ffffff", media: "(prefers-color-scheme: light)" },
-      { name: "generator", content: Astro.generator },
-      { name: "author", content: "Fuji Halim Rabani" },
+      { name: "author", content: AUTHOR_NAME },
       { name: "keywords", content: pageKeywords.join(", ") },
       { name: "language", content: "id" },
-      { name: "geo.country", content: "id" },
-      { name: "geo.placename", content: "Indonesia" },
-      { name: "robots", content: noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" },
-      { name: "googlebot", content: noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" },
-      { name: "bingbot", content: noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" },
-      { name: "referrer", content: "strict-origin-when-cross-origin" },
+      {
+        name: "robots",
+        content: noindex
+          ? "noindex, nofollow"
+          : "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+      },
       { name: "color-scheme", content: "dark light" },
       { name: "format-detection", content: "telephone=no" },
-      { name: "copyright", content: "Fuji Halim Rabani" },
-      { name: "owner", content: "Fuji Halim Rabani" },
-      { name: "dc.title", content: pageTitle },
-      { name: "dc.description", content: pageDescription },
-      { name: "dc.creator", content: "Fuji Halim Rabani" },
-      { name: "dc.language", content: "id" },
-      { name: "dc.publisher", content: SITE_URL },
     ],
   }}
 />

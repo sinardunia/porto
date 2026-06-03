@@ -1,29 +1,23 @@
 ---
 interface Props {
-  action: string;
-  name?: string;
   value?: string;
   placeholder?: string;
   clearHref?: string;
   activeTag?: string;
-  hiddenInputs?: { name: string; value: string }[];
 }
 
 const {
-  action,
-  name = "q",
   value = "",
-  placeholder = "Search...",
+  placeholder = "Search articles...",
   clearHref = "/",
   activeTag = "",
-  hiddenInputs = [],
 } = Astro.props;
 
 const hasQuery = value.length > 0;
 ---
 
 <form
-  action={action}
+  action="/"
   method="get"
   role="search"
   class="w-full"
@@ -31,46 +25,67 @@ const hasQuery = value.length > 0;
   data-clear-href={clearHref}
   data-active-tag={activeTag}
 >
-  <div class="relative group">
-    <button
-      type="button"
-      data-search-focus
-      class="absolute left-1 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-neutral-400 transition-colors hover:text-indigo-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 dark:text-neutral-500 dark:hover:text-indigo-400"
-      aria-label="Focus search field"
-      tabindex="-1"
+  {activeTag && <input type="hidden" name="tag" value={activeTag} />}
+  <label for="blog-search" class="sr-only">Search articles</label>
+  <div class="relative">
+    <span
+      class="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
+      aria-hidden="true"
     >
-      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
       </svg>
-    </button>
+    </span>
     <input
-      type="search"
-      name={name}
+      id="blog-search"
+      type="text"
+      name="q"
       value={value}
       inputmode="search"
       enterkeyhint="search"
       placeholder={placeholder}
       autocomplete="off"
-      class="w-full rounded-full border border-neutral-200/50 bg-white/40 py-2.5 pl-11 pr-11 text-sm text-neutral-700 shadow-[0_4px_20px_rgb(0,0,0,0.01)] backdrop-blur-sm transition-all duration-300 placeholder:text-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:border-white/5 dark:bg-[#0c0c12]/30 dark:text-neutral-200 dark:shadow-none dark:placeholder:text-neutral-600 dark:focus:border-white/10 dark:focus:ring-indigo-500/5"
+      class="w-full rounded-lg border border-neutral-200 bg-white py-2.5 pl-10 pr-10 text-sm text-neutral-800 shadow-sm transition-colors placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none focus:ring-2 focus:ring-neutral-900/10 dark:border-neutral-800 dark:bg-neutral-900/40 dark:text-neutral-100 dark:placeholder:text-neutral-600 dark:focus:border-neutral-600 dark:focus:ring-white/10"
     />
-    {hiddenInputs.map((h) => (
-      <input type="hidden" name={h.name} value={h.value} />
-    ))}
     <button
       type="button"
       data-search-clear
       hidden={!hasQuery}
       tabindex={hasQuery ? 0 : -1}
-      class="absolute right-1 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full text-neutral-400 transition-all hover:bg-neutral-100/50 hover:text-neutral-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 dark:hover:bg-white/[0.06] dark:hover:text-neutral-300"
       aria-label="Clear search"
+      class="absolute right-1.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/20 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-white/20"
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
         <line x1="18" y1="6" x2="6" y2="18"></line>
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
   </div>
 </form>
+
+<style>
+  /* Prevent duplicate native clear control on some browsers */
+  input[type="text"]::-webkit-search-cancel-button,
+  input[type="text"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+</style>
 
 <script>
   import "@/scripts/blog-search.ts";

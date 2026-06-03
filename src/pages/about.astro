@@ -1,0 +1,55 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AuthorCard from "@/components/author/AuthorCard.astro";
+import SiteMascot from "@/components/author/SiteMascot.astro";
+import { AUTHOR } from "@/data/author";
+import { SITE_URL } from "@/data/config";
+
+const description = "Tentang penulis dan arsip tulisan pribadi ini.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  mainEntity: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    description: AUTHOR.bioLong,
+    url: SITE_URL,
+  },
+};
+---
+
+<Layout title="About" description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-[42rem] pb-8">
+    <header class="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 sm:text-3xl">
+          About
+        </h1>
+        <p class="mt-3 text-sm leading-relaxed text-neutral-500 dark:text-neutral-500">
+          {AUTHOR.tagline}
+        </p>
+      </div>
+      <SiteMascot variant="hero" class="shrink-0 sm:-mb-2" />
+    </header>
+
+    <section class="rounded-lg border border-neutral-200/80 bg-neutral-50/50 p-5 dark:border-neutral-800/80 dark:bg-neutral-900/30 sm:p-6">
+      <AuthorCard variant="full" />
+    </section>
+
+    <p class="mt-8 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+      Porto adalah blog pribadi—bukan perusahaan, bukan redaksi. Tulisan di sini tidak selalu benar,
+      tidak selalu selesai, dan tidak perlu disetujui siapa pun. Terima kasih sudah mampir.
+    </p>
+
+    <p class="mt-6">
+      <a
+        href="/"
+        class="inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
+        data-astro-prefetch="hover"
+      >
+        ← Back to articles
+      </a>
+    </p>
+  </div>
+</Layout>

@@ -1,0 +1,60 @@
+---
+import "@/styles/lightbox.css";
+---
+
+<div
+  id="post-lightbox"
+  hidden
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Image viewer"
+>
+  <div class="post-lightbox__overlay" data-lightbox-overlay></div>
+
+  <button
+    type="button"
+    class="post-lightbox__btn post-lightbox__btn--close"
+    data-lightbox-close
+    aria-label="Close image viewer"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="post-lightbox__btn post-lightbox__btn--prev"
+    data-lightbox-prev
+    aria-label="Previous image"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="post-lightbox__btn post-lightbox__btn--next"
+    data-lightbox-next
+    aria-label="Next image"
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+  </button>
+
+  <p class="post-lightbox__counter" data-lightbox-counter hidden></p>
+
+  <div class="post-lightbox__panel" data-lightbox-panel>
+    <figure class="post-lightbox__figure">
+      <img class="post-lightbox__image" data-lightbox-image alt="" decoding="async" />
+      <figcaption class="post-lightbox__caption" data-lightbox-caption hidden></figcaption>
+    </figure>
+  </div>
+</div>
+
+<script>
+  import "@/scripts/post-lightbox.ts";
+</script>

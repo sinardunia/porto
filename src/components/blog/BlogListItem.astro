@@ -1,69 +1,69 @@
 ---
+import CoverImage from "./CoverImage.astro";
+import ThumbnailFrame from "./ThumbnailFrame.astro";
+import TagPill from "./TagPill.astro";
 import type { BlogPostSummary } from "@/types/blog";
 import { humanizeTimestamp, safeLocaleDate } from "@/lib/blog";
+import { tagToSlug } from "@/lib/tags";
 
 type Props = {
   post: BlogPostSummary;
-  basePath?: string;
 };
 
-const { post, basePath = "/blog" } = Astro.props;
-const humanized = humanizeTimestamp(post.created_at, "id-ID");
-const fullDate = safeLocaleDate(post.created_at, "id-ID", { day: "numeric", month: "long", year: "numeric" });
-// Shorter date for mobile: "12 Jan 2024"
-const shortDate = safeLocaleDate(post.created_at, "id-ID", { day: "numeric", month: "short" });
-
-const safeTags = Array.isArray(post.tags)
-  ? post.tags.filter((t): t is string => typeof t === "string")
-  : [];
+const { post } = Astro.props;
+const humanized = humanizeTimestamp(post.pubDatetime, "id-ID");
+const fullDate = safeLocaleDate(post.pubDatetime, "id-ID", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+const shortDate = safeLocaleDate(post.pubDatetime, "id-ID", { day: "numeric", month: "short" });
+const displayTags = post.tags.slice(0, 2);
 ---
 
-<a
-  href={`${basePath}/${post.slug}`}
-  class="no-typewriter group block py-4 sm:py-5 border-b border-neutral-100 dark:border-neutral-800/50 transition-colors"
-  data-astro-prefetch="hover"
->
-  <article class="flex items-start gap-3 sm:gap-4">
-    <div class="min-w-0 flex-1">
-      <h2 class="text-[15px] sm:text-[17px] font-semibold leading-snug text-neutral-900 group-hover:text-neutral-700 dark:text-neutral-100 dark:group-hover:text-neutral-300 transition-colors">
-        {post.title}
-      </h2>
+<article class="group relative py-5 sm:py-6">
+  <div class="relative z-10 flex items-start gap-4">
+    <ThumbnailFrame size="lg">
+      <CoverImage
+        src={post.coverImage}
+        alt=""
+        width={80}
+        height={80}
+        sizes="80px"
+        loading="lazy"
+        class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+      />
+    </ThumbnailFrame>
 
-      {post.excerpt && (
-        <p class="mt-1.5 text-[13px] sm:text-sm leading-relaxed text-neutral-500 dark:text-neutral-500 line-clamp-1 sm:line-clamp-2">
-          {post.excerpt}
+    <div class="min-w-0 flex-1 pt-0.5">
+      <h3 class="text-[15px] font-semibold leading-snug text-neutral-900 transition-colors group-hover:text-neutral-600 dark:text-neutral-100 dark:group-hover:text-neutral-300 sm:text-base">
+        {post.title}
+      </h3>
+
+      {post.description && (
+        <p class="mt-1.5 line-clamp-2 text-sm leading-relaxed text-neutral-500 dark:text-neutral-500">
+          {post.description}
         </p>
       )}
 
-      <div class="mt-1.5 sm:mt-2 flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-neutral-400 dark:text-neutral-600 flex-wrap">
-        {/* Mobile: short date, Desktop: humanized */}
-        <time datetime={post.created_at} title={fullDate} class="sm:hidden">{shortDate}</time>
-        <time datetime={post.created_at} title={fullDate} class="hidden sm:inline">{humanized}</time>
-        {safeTags.slice(0, 2).map((tag) => (
-          <>
-            <span class="text-neutral-300 dark:text-neutral-700">·</span>
-            <span class="text-neutral-500 dark:text-neutral-500">{tag}</span>
-          </>
+      <div class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-neutral-400 dark:text-neutral-500">
+        <time datetime={post.pubDatetime} title={fullDate} class="sm:hidden">{shortDate}</time>
+        <time datetime={post.pubDatetime} title={fullDate} class="hidden sm:inline">{humanized}</time>
+        {displayTags.map((tag) => (
+          <span class="relative z-20">
+            <TagPill name={tag} slug={tagToSlug(tag)} />
+          </span>
         ))}
-        {safeTags.length > 2 && (
-          <span class="text-neutral-400 dark:text-neutral-600 sm:hidden">+{safeTags.length - 2}</span>
-        )}
       </div>
     </div>
+  </div>
 
-    {post.cover_image_url && (
-      <div class="shrink-0 w-14 sm:w-20 overflow-hidden rounded bg-neutral-100 dark:bg-neutral-800/50" style="aspect-ratio: 1/1;">
-        <img
-          src={post.cover_image_url}
-          alt={post.cover_image_alt || ""}
-          width={80}
-          height={80}
-          loading="lazy"
-          decoding="async"
-          class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity"
-          style="aspect-ratio: 1/1;"
-        />
-      </div>
-    )}
-  </article>
-</a>
+  <a
+    href={`/blog/${post.slug}`}
+    class="no-typewriter absolute inset-0 z-0 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400 dark:focus-visible:outline-neutral-500"
+    aria-label={post.title}
+    data-astro-prefetch="hover"
+  >
+    <span class="sr-only">{post.title}</span>
+  </a>
+</article>

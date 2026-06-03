@@ -23,6 +23,16 @@ export default defineConfig({
 
   site: process.env.SITE_URL || "https://waltahh.vercel.app",
 
+  image: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fdkhfkxysmmtwjzgmuvy.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+
   vite: {
     build: {
       assetsInlineLimit: 4096,

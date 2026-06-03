@@ -1,6 +1,6 @@
 {
-  "name": "Fuji Halim Rabani - Personal Blog",
-  "short_name": "Fuji Blog",
+  "name": "Porto",
+  "short_name": "Porto",
   "description": "A quiet personal archive of thoughts, writing, and experiments.",
   "start_url": "/",
   "display": "standalone",
@@ -9,16 +9,22 @@
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "id",
-  "dir": "ltr",
   "icons": [
     {
       "src": "/favicon.ico",
       "sizes": "48x48",
       "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
-  ],
-  "categories": ["blog", "personal", "writing"],
-  "screenshots": [],
-  "related_applications": [],
-  "prefer_related_applications": false
+  ]
 }

@@ -1,6 +1,11 @@
 media:
-  input: public/images
-  output: /images
+  - name: images
+    label: Images
+    input: public/images
+    output: /images
+    categories: [image]
+    extensions: [jpg, jpeg, png, webp, gif]
+    rename: safe
 
 content:
   - name: post
@@ -10,9 +15,9 @@ content:
     format: yaml-frontmatter
     filename: "{fields.slug}.md"
     view:
-      fields: [title, created_at, is_published, tags]
+      fields: [title, pubDatetime, draft, tags]
       primary: title
-      sort: [created_at, desc]
+      sort: [pubDatetime, desc]
     fields:
       - name: title
         label: Title
@@ -22,34 +27,37 @@ content:
       - name: slug
         label: Slug
         type: string
-        description: URL path segment, e.g. my-post-title
+        description: URL segment and filename (e.g. my-post-title). Do not change after publishing.
 
-      - name: excerpt
-        label: Excerpt
+      - name: description
+        label: Description
         type: text
+        description: Short summary for listings and SEO
 
-      - name: cover_image_url
-        label: Cover Image URL
-        type: string
-        description: Full URL or /images/... path
+      - name: coverImage
+        label: Cover Image
+        type: image
+        options:
+          media: images
 
-      - name: cover_image_alt
-        label: Cover Image Alt
-        type: string
-
-      - name: created_at
-        label: Created At
+      - name: pubDatetime
+        label: Published Date
         type: date
         required: true
 
-      - name: updated_at
-        label: Updated At
+      - name: modDatetime
+        label: Modified Date
         type: date
 
-      - name: is_published
-        label: Published
+      - name: draft
+        label: Draft
         type: boolean
-        default: true
+        default: false
+
+      - name: featured
+        label: Featured
+        type: boolean
+        default: false
 
       - name: tags
         label: Tags
@@ -59,3 +67,5 @@ content:
       - name: body
         label: Content
         type: rich-text
+        options:
+          media: images

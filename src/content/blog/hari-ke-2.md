@@ -1,17 +1,13 @@
 ---
-id: 199b08cb-b54f-4f81-b755-535258823230
 slug: hari-ke-2
 title: "Hari ke 2: Sudah lama tidak lari pagi"
-excerpt: "hari kedua"
-cover_image_url: https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/blog/2026/05/17de0973-6fc9-44a3-9fb2-73c354e3f5b1.png
-cover_image_alt: ""
-created_at: 2026-05-29T22:13:50.087225+00:00
-updated_at: 
-is_published: false
+description: "hari kedua"
+pubDatetime: 2026-05-29T22:13:50.087225+00:00
+draft: false
+featured: false
 tags:
   - "personal"
 ---
-
 Sekarang sudah hari ke dua, tepatnya pukul 5 pagi. 
 
 Di mana saya ingin menulis secara konsisten, dan sekarang sudah hari ke dua. Jujur saja, saya sendiri bingung mau nulis apa...

@@ -2,26 +2,17 @@ const normalize = (value: string) => value.trim().toLowerCase();
 
 const getParams = () => new URLSearchParams(window.location.search);
 
-const buildUrl = (q: string, tag: string) => {
+const buildUrl = (q: string) => {
   const params = new URLSearchParams();
-  if (tag) params.set("tag", tag);
   if (q) params.set("q", q);
   const query = params.toString();
   return query ? `/?${query}` : "/";
 };
 
-const matchesItem = (item: HTMLElement, q: string, tag: string) => {
-  if (tag) {
-    const tags = (item.dataset.tags || "")
-      .split(",")
-      .map((t) => t.trim().toLowerCase())
-      .filter(Boolean);
-    if (!tags.includes(tag)) return false;
-  }
-
+const matchesItem = (item: HTMLElement, q: string) => {
   if (!q) return true;
 
-  const haystack = [item.dataset.title, item.dataset.excerpt, item.dataset.slug, item.dataset.tags]
+  const haystack = [item.dataset.title, item.dataset.description, item.dataset.slug, item.dataset.tags]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
@@ -37,24 +28,45 @@ const updateClearButton = (form: HTMLFormElement, input: HTMLInputElement) => {
   clearBtn.tabIndex = hasQuery ? 0 : -1;
 };
 
+const resetListVisibility = (list: HTMLElement) => {
+  list.querySelectorAll<HTMLElement>("[data-blog-item]").forEach((item) => {
+    item.hidden = false;
+  });
+  list.querySelectorAll<HTMLElement>("[data-blog-year]").forEach((section) => {
+    section.hidden = false;
+  });
+  const empty = list.querySelector<HTMLElement>("[data-blog-empty]");
+  const hasItems = list.querySelectorAll<HTMLElement>("[data-blog-item]").length > 0;
+  if (empty) empty.hidden = hasItems;
+  list.setAttribute("aria-busy", "false");
+};
+
 const applyFilters = (list: HTMLElement) => {
   const params = getParams();
   const q = normalize(params.get("q") || "");
-  const tag = normalize(params.get("tag") || "");
+
+  if (!q) {
+    resetListVisibility(list);
+    return;
+  }
 
   const items = list.querySelectorAll<HTMLElement>("[data-blog-item]");
   let visible = 0;
 
   items.forEach((item) => {
-    const show = matchesItem(item, q, tag);
+    const show = matchesItem(item, q);
     item.hidden = !show;
     if (show) visible += 1;
   });
 
+  list.querySelectorAll<HTMLElement>("[data-blog-year]").forEach((section) => {
+    const sectionItems = section.querySelectorAll<HTMLElement>("[data-blog-item]");
+    const sectionVisible = [...sectionItems].some((el) => !el.hidden);
+    section.hidden = !sectionVisible;
+  });
+
   const empty = list.querySelector<HTMLElement>("[data-blog-empty]");
-  if (empty) {
-    empty.hidden = visible > 0;
-  }
+  if (empty) empty.hidden = visible > 0;
 
   list.setAttribute("aria-busy", "false");
 };
@@ -63,10 +75,9 @@ const bindSearchForm = (form: HTMLFormElement, list: HTMLElement) => {
   if (form.dataset.searchBound === "true") return;
   form.dataset.searchBound = "true";
 
-  const input = form.querySelector<HTMLInputElement>('input[name="q"]');
+  const input = form.querySelector<HTMLInputElement>("#blog-search");
   if (!input) return;
 
-  const tag = form.dataset.activeTag || "";
   const baseClearHref = form.dataset.clearHref || "/";
 
   const navigate = (url: string) => {
@@ -77,19 +88,14 @@ const bindSearchForm = (form: HTMLFormElement, list: HTMLElement) => {
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const q = input.value.trim();
-    navigate(buildUrl(q, tag));
+    navigate(buildUrl(input.value.trim()));
   });
 
-  const clearBtn = form.querySelector<HTMLButtonElement>("[data-search-clear]");
-  clearBtn?.addEventListener("click", () => {
+  form.querySelector<HTMLButtonElement>("[data-search-clear]")?.addEventListener("click", () => {
     input.value = "";
     input.focus();
-    navigate(buildUrl("", tag));
+    navigate(buildUrl(""));
   });
-
-  const focusBtn = form.querySelector<HTMLButtonElement>("[data-search-focus]");
-  focusBtn?.addEventListener("click", () => input.focus());
 
   input.addEventListener("input", () => updateClearButton(form, input));
 
@@ -100,8 +106,24 @@ const bindSearchForm = (form: HTMLFormElement, list: HTMLElement) => {
       navigate(baseClearHref);
       input.focus();
     }
+    if (event.key === "Enter") {
+      event.preventDefault();
+      navigate(buildUrl(input.value.trim()));
+    }
   });
 
+  updateClearButton(form, input);
+};
+
+const syncFromUrl = () => {
+  const list = document.getElementById("blog-post-list");
+  const form = document.querySelector<HTMLFormElement>("[data-search-form]");
+  const input = form?.querySelector<HTMLInputElement>("#blog-search");
+  if (!list || !form || !input) return;
+
+  const params = getParams();
+  input.value = params.get("q")?.trim() || "";
+  applyFilters(list);
   updateClearButton(form, input);
 };
 
@@ -115,15 +137,8 @@ const init = () => {
 };
 
 init();
-document.addEventListener("astro:page-load", init);
-window.addEventListener("popstate", () => {
-  const list = document.getElementById("blog-post-list");
-  const form = document.querySelector<HTMLFormElement>("[data-search-form]");
-  const input = form?.querySelector<HTMLInputElement>('input[name="q"]');
-  if (!list || !form || !input) return;
-
-  const params = getParams();
-  input.value = params.get("q")?.trim() || "";
-  applyFilters(list);
-  updateClearButton(form, input);
+document.addEventListener("astro:page-load", () => {
+  init();
+  syncFromUrl();
 });
+window.addEventListener("popstate", syncFromUrl);

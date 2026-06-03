@@ -1,17 +1,19 @@
 ---
+import { tagToSlug } from "@/lib/tags";
+
 // REDIRECT: /blog -> / (homepage is now the blog)
 export const prerender = false;
 
 const query = Astro.url.searchParams.get("q")?.trim() || "";
-const activeTag = Astro.url.searchParams.get("tag")?.trim() || "";
+const legacyTag = Astro.url.searchParams.get("tag")?.trim() || "";
 
-// Build redirect URL with preserved query params
+if (legacyTag) {
+  return Astro.redirect(`/tags/${tagToSlug(legacyTag)}`, 301);
+}
+
 let redirectUrl = "/";
-if (query || activeTag) {
-  const params = new URLSearchParams();
-  if (query) params.set("q", query);
-  if (activeTag) params.set("tag", activeTag);
-  redirectUrl += "?" + params.toString();
+if (query) {
+  redirectUrl += `?q=${encodeURIComponent(query)}`;
 }
 
 return Astro.redirect(redirectUrl, 302);

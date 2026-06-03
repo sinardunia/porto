@@ -1,0 +1,58 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import TagPill from "@/components/blog/TagPill.astro";
+import { getAllPublishedBlogPostSummaries, collectTagCounts } from "@/lib/blog";
+import { SITE_URL } from "@/data/config";
+
+export const prerender = true;
+
+const posts = await getAllPublishedBlogPostSummaries();
+const tags = collectTagCounts(posts);
+
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Articles", item: SITE_URL },
+    { "@type": "ListItem", position: 2, name: "Tags", item: `${SITE_URL}/tags` },
+  ],
+};
+---
+
+<Layout
+  title="Tags"
+  description="Browse articles by topic."
+  keywords={["tags", "topics", "blog"]}
+  jsonLd={[breadcrumbJsonLd]}
+>
+  <div class="mx-auto w-full max-w-[42rem] pb-24">
+    <header class="mb-10 border-b border-neutral-200 pb-8 dark:border-neutral-800">
+      <nav class="mb-6" aria-label="Breadcrumb">
+        <a
+          href="/"
+          class="inline-flex min-h-[44px] items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
+          data-astro-prefetch="hover"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          Articles
+        </a>
+      </nav>
+      <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">Tags</h1>
+      <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-500">Browse articles by topic.</p>
+    </header>
+
+    {tags.length > 0 ? (
+      <ul class="flex flex-wrap gap-1.5" role="list">
+        {tags.map((tag) => (
+          <li>
+            <TagPill name={tag.name} slug={tag.slug} count={tag.count} showCount />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">No tags yet.</p>
+    )}
+  </div>
+</Layout>

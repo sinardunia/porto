@@ -1,9 +1,10 @@
 import { getCollection, type CollectionEntry } from "astro:content";
-import type { BlogPost, BlogPostSummary } from "@/types/blog";
+import type { BlogPost, BlogPostSummary, PostsByYear } from "@/types/blog";
+import { normalizePostTags, tagKey } from "@/lib/tags";
 
 type BlogEntry = CollectionEntry<"blog">;
 
-const getSlug = (entry: BlogEntry) => entry.data.slug ?? entry.id;
+const getSlug = (entry: BlogEntry) => entry.id;
 
 const toIsoString = (date: Date) => date.toISOString();
 
@@ -11,14 +12,14 @@ const entryToPost = (entry: BlogEntry): BlogPost => ({
   id: entry.id,
   slug: getSlug(entry),
   title: entry.data.title,
-  excerpt: entry.data.excerpt ?? null,
+  description: entry.data.description ?? null,
   content: entry.body ?? "",
-  cover_image_url: entry.data.cover_image_url ?? null,
-  cover_image_alt: entry.data.cover_image_alt ?? null,
-  tags: entry.data.tags ?? [],
-  created_at: toIsoString(entry.data.created_at),
-  updated_at: entry.data.updated_at ? toIsoString(entry.data.updated_at) : null,
-  is_published: entry.data.is_published,
+  coverImage: entry.data.coverImage ?? null,
+  tags: normalizePostTags(entry.data.tags),
+  pubDatetime: toIsoString(entry.data.pubDatetime),
+  modDatetime: entry.data.modDatetime ? toIsoString(entry.data.modDatetime) : null,
+  draft: entry.data.draft,
+  featured: entry.data.featured,
 });
 
 const entryToSummary = (entry: BlogEntry): BlogPostSummary => {
@@ -26,20 +27,25 @@ const entryToSummary = (entry: BlogEntry): BlogPostSummary => {
   return summary;
 };
 
-const sortByCreatedAt = (a: BlogEntry, b: BlogEntry) =>
-  b.data.created_at.getTime() - a.data.created_at.getTime();
+const sortByPubDate = (a: BlogEntry, b: BlogEntry) =>
+  b.data.pubDatetime.getTime() - a.data.pubDatetime.getTime();
 
 export async function getPublishedBlogEntries(): Promise<BlogEntry[]> {
-  const entries = await getCollection("blog", ({ data }) => data.is_published);
-  return entries.sort(sortByCreatedAt);
+  const entries = await getCollection("blog", ({ data }) => !data.draft);
+  return entries.sort(sortByPubDate);
 }
 
 export async function getPublishedBlogPosts(limit = 50): Promise<BlogPost[]> {
   return (await getPublishedBlogEntries()).slice(0, limit).map(entryToPost);
 }
 
-export async function getPublishedBlogPostSummaries(limit = 50): Promise<BlogPostSummary[]> {
-  return (await getPublishedBlogEntries()).slice(0, limit).map(entryToSummary);
+export async function getAllPublishedBlogPostSummaries(): Promise<BlogPostSummary[]> {
+  return (await getPublishedBlogEntries()).map(entryToSummary);
+}
+
+export async function getPublishedBlogPostSummaries(limit?: number): Promise<BlogPostSummary[]> {
+  const all = await getAllPublishedBlogPostSummaries();
+  return limit === undefined ? all : all.slice(0, limit);
 }
 
 export async function getBlogEntryBySlug(slug: string): Promise<BlogEntry | null> {
@@ -52,33 +58,39 @@ export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> 
   return entry ? entryToPost(entry) : null;
 }
 
-export const normalizeSearch = (value: string) =>
-  value.trim().toLowerCase();
+export const normalizeSearch = (value: string) => value.trim().toLowerCase();
 
 export const matchesSearch = (post: BlogPostSummary, search: string) => {
   const normalizedSearch = normalizeSearch(search);
   if (!normalizedSearch) return true;
   const tags = Array.isArray(post.tags) ? post.tags : [];
-  return [post.title, post.excerpt, post.slug, ...tags]
+  return [post.title, post.description, post.slug, ...tags]
     .filter(Boolean)
     .some((v) => String(v).toLowerCase().includes(normalizedSearch));
 };
 
 export const matchesTag = (post: BlogPostSummary, tag: string) => {
-  const normalizedTag = normalizeSearch(tag);
-  if (!normalizedTag) return true;
-  const postTags = Array.isArray(post.tags) ? post.tags : [];
-  return postTags.some((t) => typeof t === "string" && t.toLowerCase() === normalizedTag);
+  const key = tagKey(tag);
+  if (!key) return true;
+  return post.tags.some((t) => tagKey(t) === key);
 };
 
-export const getAllTags = (posts: BlogPostSummary[]) =>
-  Array.from(
-    new Set(
-      posts
-        .flatMap((p) => (Array.isArray(p.tags) ? p.tags : []))
-        .filter((t): t is string => typeof t === "string")
-    )
-  ).sort((a, b) => a.localeCompare(b));
+export { collectTagCounts, getPopularTags, filterPostsByTag, findTagBySlug, tagToSlug } from "@/lib/tags";
+
+export function groupPostsByYear(posts: BlogPostSummary[]): PostsByYear[] {
+  const byYear = new Map<number, BlogPostSummary[]>();
+
+  for (const post of posts) {
+    const year = new Date(post.pubDatetime).getFullYear();
+    const group = byYear.get(year) ?? [];
+    group.push(post);
+    byYear.set(year, group);
+  }
+
+  return [...byYear.entries()]
+    .sort(([a], [b]) => b - a)
+    .map(([year, yearPosts]) => ({ year, posts: yearPosts }));
+}
 
 export function estimateReadTime(content: string): number {
   const words = content.trim().split(/\s+/).filter(Boolean).length;
@@ -98,7 +110,7 @@ export const safeIsoDate = (value: string | null | undefined): string => {
 
 export const safeLocaleDate = (
   value: string | null | undefined,
-  locale = "en-US",
+  locale = "id-ID",
   options: Intl.DateTimeFormatOptions = { month: "long", day: "numeric", year: "numeric" }
 ): string => {
   const d = safeDate(value);
@@ -149,51 +161,41 @@ export function getRelatedPosts(
   if (!currentSlug) return [];
 
   const currentTags = new Set(
-    (currentPost.tags ?? [])
-      .map((t) => (typeof t === "string" ? t.toLowerCase().trim() : ""))
-      .filter(Boolean)
+    (currentPost.tags ?? []).map((t) => t.toLowerCase().trim()).filter(Boolean)
   );
 
-  const currentText = `${currentPost.title} ${currentPost.excerpt || ""}`.toLowerCase();
+  const currentText = `${currentPost.title} ${currentPost.description || ""}`.toLowerCase();
+  const stopWords = new Set(["dengan", "dalam", "untuk", "pada", "yang", "dari", "oleh"]);
   const currentKeywords = currentText
     .split(/\s+/)
-    .filter(w => w.length > 3 && !['dengan','dalam','untuk','pada','yang','dari','oleh'].includes(w));
+    .filter((w) => w.length > 3 && !stopWords.has(w));
 
   const scored = allPosts
-    .filter((p) => p && p.slug !== currentSlug)
+    .filter((p) => p.slug !== currentSlug)
     .map((p) => {
-      const postTags = (p.tags ?? [])
-        .map((t) => (typeof t === "string" ? t.toLowerCase().trim() : ""))
-        .filter(Boolean);
-
-      const tagOverlap = currentTags.size > 0
-        ? postTags.filter((t) => currentTags.has(t)).length
-        : 0;
+      const postTags = p.tags.map((t) => t.toLowerCase().trim()).filter(Boolean);
+      const tagOverlap =
+        currentTags.size > 0 ? postTags.filter((t) => currentTags.has(t)).length : 0;
       const tagScore = tagOverlap * 10;
 
-      const postText = `${p.title} ${p.excerpt || ""}`.toLowerCase();
-      const keywordMatches = currentKeywords.filter(kw => postText.includes(kw)).length;
+      const postText = `${p.title} ${p.description || ""}`.toLowerCase();
+      const keywordMatches = currentKeywords.filter((kw) => postText.includes(kw)).length;
       const textScore = Math.min(keywordMatches * 2, 10);
 
-      const categoryScore = (postTags.length > 0 && currentTags.size > 0)
-        ? Math.min(Math.abs(postTags.length - currentTags.size), 3)
-        : 0;
-
-      const createdAt = safeDate(p.created_at);
-      const currentDate = safeDate(currentPost.created_at);
+      const createdAt = safeDate(p.pubDatetime);
+      const currentDate = safeDate(currentPost.pubDatetime);
       let recencyScore = 0;
       if (createdAt && currentDate) {
-        const daysDiff = Math.abs(currentDate.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
+        const daysDiff =
+          Math.abs(currentDate.getTime() - createdAt.getTime()) / (1000 * 60 * 60 * 24);
         if (daysDiff < 30) recencyScore = 5;
         else if (daysDiff < 90) recencyScore = 3;
         else if (daysDiff < 180) recencyScore = 1;
       }
 
-      const totalScore = tagScore + textScore + recencyScore - categoryScore;
-
       return {
         post: p,
-        score: totalScore,
+        score: tagScore + textScore + recencyScore,
         tagOverlap,
         createdAt: createdAt ? createdAt.getTime() : 0,
       };
@@ -204,10 +206,8 @@ export function getRelatedPosts(
       return b.createdAt - a.createdAt;
     });
 
-  const strongMatches = scored.filter(s => s.score >= 5);
-  const finalResults = strongMatches.length >= limit
-    ? strongMatches
-    : scored;
+  const strongMatches = scored.filter((s) => s.score >= 5);
+  const finalResults = strongMatches.length >= limit ? strongMatches : scored;
 
   return finalResults.slice(0, limit).map((s) => s.post);
 }

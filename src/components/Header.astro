@@ -2,32 +2,20 @@
 import DarkModeToggle from "./DarkModeToggle.astro";
 ---
 
-<header id="main-header" class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-sm">
-  <div class="max-w-[720px] mx-auto px-4 sm:px-6 py-3 sm:py-4">
-    <div class="flex items-center justify-between min-w-0 gap-4">
+<header
+  id="main-header"
+  class="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/60 bg-white/85 backdrop-blur-md dark:border-neutral-800/60 dark:bg-[#0a0a0a]/85"
+>
+  <div class="mx-auto flex h-14 max-w-[720px] items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
+    <a
+      href="/"
+      class="no-typewriter truncate text-[15px] font-semibold tracking-tight text-neutral-900 transition-colors hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300 sm:text-base"
+    >
+      Blogs.
+    </a>
 
-      <a href="/" class="no-typewriter flex items-center justify-center w-10 h-10 -ml-2 rounded-lg text-neutral-800 dark:text-neutral-200 hover:text-neutral-600 dark:hover:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-all" title="Home">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 10 L12 3 L22 10"/>
-          <path d="M6 8 L6 5 L9 5"/>
-          <path d="M5 10 L5 20 L19 20 L19 10"/>
-          <path d="M10 20 L10 14 L14 14 L14 20"/>
-          <circle cx="12.8" cy="17" r="0.6" fill="currentColor" stroke="none"/>
-        </svg>
-      </a>
-
-      <nav class="flex items-center min-w-0">
-        <DarkModeToggle />
-      </nav>
-
-    </div>
+    <DarkModeToggle />
   </div>
 </header>
 
-<div class="h-[52px] sm:h-[60px] w-full block"></div>
-
-<style>
-  header { 
-    -webkit-tap-highlight-color: transparent;
-  }
-</style>
+<div class="h-14 w-full sm:h-16" aria-hidden="true"></div>

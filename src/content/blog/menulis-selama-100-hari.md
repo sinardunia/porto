@@ -1,17 +1,13 @@
 ---
-id: d43ea13e-ba99-4aa2-9c3e-42c97c45a0c3
 slug: menulis-selama-100-hari
 title: "Hari ke 1: Berencana menulis 100 hari tanpa AI"
-excerpt: "Menulis selama 100 hari, Tanpa bantuan AI. Melatih disiplin dan konsistensi"
-cover_image_url: https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/blog/2026/05/95d8f477-07ec-43aa-828a-4942cfa2cd47.png
-cover_image_alt: "Bulbasaur"
-created_at: 2026-05-28T23:25:35.723642+00:00
-updated_at: 
-is_published: false
+description: "Menulis selama 100 hari, Tanpa bantuan AI. Melatih disiplin dan konsistensi"
+pubDatetime: 2026-05-28T23:25:35.723642+00:00
+draft: false
+featured: false
 tags:
   - "personal"
 ---
-
 100 hari menulis tanpa bantuan AI
 
 Hari pertama, semoga konsisten. 

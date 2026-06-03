@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import { resolveImageSrc } from "@/lib/images";
+
+interface Props {
+  src: string | null | undefined;
+  alt: string;
+  width: number;
+  height: number;
+  loading?: "lazy" | "eager";
+  class?: string;
+  fallbackClass?: string;
+  sizes?: string;
+  /** Full-resolution URL for lightbox; defaults to resolved src. */
+  lightboxSrc?: string;
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  loading = "lazy",
+  class: className = "h-full w-full object-cover",
+  fallbackClass = "",
+  sizes,
+  lightboxSrc,
+} = Astro.props;
+
+const resolved = resolveImageSrc(src);
+const isRemote = resolved?.startsWith("http://") || resolved?.startsWith("https://");
+const isLocalPublic = resolved?.startsWith("/") && !isRemote;
+const fullSrc = lightboxSrc ?? resolved ?? undefined;
+---
+
+{resolved ? (
+  isLocalPublic ? (
+    <Image
+      src={resolved}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding="async"
+      class={className}
+      sizes={sizes}
+      data-lightbox-src={fullSrc}
+    />
+  ) : (
+    <img
+      src={resolved}
+      alt={alt}
+      width={width}
+      height={height}
+      loading={loading}
+      decoding="async"
+      class={className}
+      sizes={sizes}
+      data-lightbox-src={fullSrc}
+    />
+  )
+) : (
+  <div
+    class:list={[
+      "flex h-full w-full items-center justify-center bg-neutral-100 dark:bg-neutral-800/60",
+      fallbackClass,
+    ]}
+    aria-hidden="true"
+    data-lightbox-ignore
+  >
+    <svg
+      class="h-6 w-6 text-neutral-300 dark:text-neutral-600"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="1.5"
+        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+      />
+    </svg>
+  </div>
+)}

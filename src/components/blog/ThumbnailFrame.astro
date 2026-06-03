@@ -1,0 +1,30 @@
+---
+/** Fixed aspect-ratio frame for list thumbnails — prevents stretch and CLS. */
+interface Props {
+  aspect?: "square" | "video";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const { aspect = "square", size = "md", class: className = "" } = Astro.props;
+
+const sizeClass =
+  size === "sm"
+    ? "h-12 w-12"
+    : size === "lg"
+      ? "h-[72px] w-[72px] sm:h-20 sm:w-20"
+      : "h-14 w-14";
+
+const aspectClass = aspect === "video" ? "aspect-video" : "aspect-square";
+---
+
+<div
+  class:list={[
+    "relative shrink-0 overflow-hidden rounded-md bg-neutral-100 dark:bg-neutral-900",
+    sizeClass,
+    aspectClass,
+    className,
+  ]}
+>
+  <slot />
+</div>

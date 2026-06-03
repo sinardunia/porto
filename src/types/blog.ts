@@ -2,14 +2,25 @@ export type BlogPost = {
   id: string;
   slug: string;
   title: string;
-  excerpt: string | null;
+  description: string | null;
   content: string;
-  cover_image_url: string | null;
-  cover_image_alt: string | null;
+  coverImage: string | null;
   tags: string[];
-  created_at: string;
-  updated_at: string | null;
-  is_published: boolean;
+  pubDatetime: string;
+  modDatetime: string | null;
+  draft: boolean;
+  featured: boolean;
 };
 
 export type BlogPostSummary = Omit<BlogPost, "content">;
+
+export type TagCount = {
+  name: string;
+  slug: string;
+  count: number;
+};
+
+export type PostsByYear = {
+  year: number;
+  posts: BlogPostSummary[];
+};

@@ -1,17 +1,13 @@
 ---
-id: 76f1c951-14f5-4364-91c9-cca2e0c27419
 slug: kenapa-menikahi-rem-menjadi-ending-paling-tragis-untuk-subaru
 title: "Menikahi Rem Menjadi Ending Paling Tragis untuk Subaru"
-excerpt: "Kenapa pilihan paling bahagia sering kali menyimpan penderitaan paling ngeri"
-cover_image_url: https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/blog/2026/05/565a0fec-5021-42d7-a352-9a50ce912546.jpg
-cover_image_alt: "subaru"
-created_at: 2025-02-12T09:03:04.434424+00:00
-updated_at: 
-is_published: false
+description: "Kenapa pilihan paling bahagia sering kali menyimpan penderitaan paling ngeri"
+pubDatetime: 2025-02-12T09:03:04.434424+00:00
+draft: false
+featured: false
 tags:
   - "anime"
 ---
-
 Sosok wibu di dunia maya erat hubungannya dengan seorang yang nolep. 
 
 Hobinya rebahan, pengangguran, dan juga beban keluarga. Mereka biasanya tidak jauh-jauh dari hal yang bernuansa jejepangan seperti nonton anime seharian.

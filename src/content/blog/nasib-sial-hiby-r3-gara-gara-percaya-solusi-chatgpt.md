@@ -1,18 +1,14 @@
 ---
-id: a69dc2e5-1d21-4f23-9718-fbbc042cec17
 slug: nasib-sial-hiby-r3-gara-gara-percaya-solusi-chatgpt
 title: "Gara-gara Percaya ChatGPT"
-excerpt: "Dengan bantuan ChatGPT, perangkat audio jadi terasa seperti merakit bom."
-cover_image_url: https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/blog/2026/05/b6360d1f-208f-4566-a502-94731af036c1.png
-cover_image_alt: "hiby"
-created_at: 2026-05-15T06:48:32.627168+00:00
-updated_at: 
-is_published: true
+description: "Dengan bantuan ChatGPT, perangkat audio jadi terasa seperti merakit bom."
+pubDatetime: 2026-05-15T06:48:32.627168+00:00
+draft: false
+featured: false
 tags:
   - "tech"
   - "personal"
 ---
-
 Ketika malam tiba dan rasa cemas melanda... Musik sering kali menjadi benteng pertahanan terakhir. Supaya tidak *overthinking* memikirkan hari esok yang melelahkan.
 
 Demi menikmati musik dengan lebih khusyuk, banyak pencinta audio terjun ke dunia *audiophile* dan menggunakan DAP (*Digital Audio Player*). Hobi ini tidak bisa dibilang murah. Kualitas suaranya jauh lebih baik dibandingkan "hengset" biasa. Bahkan *eartips* yang "cuma karet" saja bisa dihargai hingga 150 ribu rupiah.
