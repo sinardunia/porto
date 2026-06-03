@@ -3,8 +3,8 @@ export const AUTHOR = {
   shortName: "Fuji",
   handle: "@fuhara16",
   tagline: "Catatan keresahan yang kebetulan ditulis.",
-  bio: "Menulis untuk mengingat, bukan untuk diingat. Topiknya berantakan—dari anime sampai hal yang tidak perlu dijelaskan di bio.",
+  bio: "Menulis untuk mengingat, bukan untuk diingat. Topiknya beragam, dari anime sampai hal-hal sederhana sehari-hari.",
   bioLong:
-    "Ini blog pribadi, bukan media. Tulisan di sini kebanyakan catatan malam, opini setengah matang, dan eksperimen kecil yang kebetulan tersimpan. Jika ada yang berguna, alhamdulillah.",
+    "Ini blog pribadi. Terkadang, saya menulis tentang pengalaman sehari-hari atau sekadar ber opini, Jika bermanfaat, alhamdulillah:)",
   url: "https://twitter.com/fuhara16",
 } as const;
