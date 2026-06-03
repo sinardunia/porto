@@ -2,13 +2,14 @@
 title: Menikahi Rem Menjadi Ending Paling Tragis untuk Subaru
 slug: kenapa-menikahi-rem-menjadi-ending-paling-tragis-untuk-subaru
 description: Kenapa pilihan paling bahagia sering kali menyimpan penderitaan paling ngeri
-coverImage: /images/natsukisubaruanime-1.png
+coverImage: /images/natsukisubaruanime.png
 pubDatetime: 2026-06-03
 modDatetime: 2026-06-03
 draft: false
 featured: false
 tags:
   - anime
+  - tokoh
 ---
 Sosok wibu di dunia maya erat hubungannya dengan seorang yang nolep. 
 
