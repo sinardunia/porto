@@ -1,10 +1,10 @@
 ---
+title: Intro to Olahraga
 slug: intro-to-olahraga
-title: "Intro to Olahraga"
-pubDatetime: 2026-06-01T14:15:25.843742+00:00
-draft: false
+pubDatetime: 2026-06-03
+modDatetime: 2026-06-03
+draft: true
 featured: false
-tags: []
 ---
 Ada satu fase sialan di usia 20-an yang membuat isi kepala mendadak jadi sangat berisik saat malam tiba. Kombinasi antara cemas dan stres sukses merusak siklus hidup sampai ke akarnya. 
 
