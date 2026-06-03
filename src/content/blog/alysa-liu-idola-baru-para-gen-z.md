@@ -1,17 +1,19 @@
 ---
+title: Alysa Liu Idola Baru Para Gen Z
 slug: alysa-liu-idola-baru-para-gen-z
-title: "Alysa Liu Idola Baru Para Gen Z"
-description: "seorang juara olympic figure skating di youtube jam dua pagi membuat saya melihat ulang ekspektasi saya tentang “orang hebat”"
-pubDatetime: 2026-03-03T12:14:23.235656+00:00
-draft: false
+description: seorang juara olympic figure skating di youtube jam dua pagi
+  membuat saya melihat ulang ekspektasi saya tentang “orang hebat”
+pubDatetime: 2026-06-03
+modDatetime: 2026-06-03
+draft: true
 featured: false
 tags:
-  - "tokoh"
-  - "personal"
+  - tokoh
+  - personal
 ---
 di beranda youtube saya yang random, pada pukul dua pagi, muncul tokoh unik dengan thumbnail yang sangat enganging.
 
-https://www.youtube.com/watch?v=NiHIr1TKfTE&t=6s
+[https://www.youtube.com/watch?v=NiHIr1TKfTE&t=6s](https://www.youtube.com/watch?v=NiHIr1TKfTE&t=6s)
 
 > “you can’t beat someone who’s having fun”
 
