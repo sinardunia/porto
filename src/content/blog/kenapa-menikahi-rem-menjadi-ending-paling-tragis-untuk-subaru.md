@@ -60,7 +60,7 @@ Banyak otaku dan wibu di medsos menganggap rute pernikahan ini adalah *happy end
 
 Kenapa bisa demikian? Karena demi bisa hidup tenang dan membangun keluarga bersama Rem, si Subaru terpaksa mengunci ingatan kalau dia sudah membiarkan Emilia dan teman-temannya di Kerajaan Lugnica mati terbantai secara sadis.
 
-
+![](/images/3kbgysrl0hc31.jpg)
 
 ✖ **Fakta pahit di balik rute ini:**
 
@@ -100,6 +100,6 @@ Sebab pada akhirnya, **mengabaikan kenyataan tidak akan pernah menghilangkan mas
 
 Menghadapi kenyataan pahit memang menguras energi, tapi itu seribu kali lebih terhormat daripada menabung bom waktu di dalam pikiran sendiri. Berhenti menjadi pengecut yang mengubur masalah, dan mulailah hadapi apa yang harus diselesaikan hari ini.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/819c1188-c509-432e-96ef-531b82ec6265.png)
+![](/images/re-zero-kara-hajimeru-isekai-seikatsu-quotes-36.png)
 
 Semoga artikel ini bisa memberikan sudut pandang baru yang bermanfaat untuk kalian. *Next*, kita bahas apa lagi, nih?
