@@ -3,7 +3,6 @@ media:
     label: Images
     input: public/images
     output: /images
-    categories: [image]
     extensions: [jpg, jpeg, png, webp, gif]
     rename: safe
 

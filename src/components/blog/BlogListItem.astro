@@ -22,7 +22,7 @@ const displayTags = post.tags.slice(0, 2);
 ---
 
 <article class="group relative py-5 sm:py-6">
-  <div class="relative z-10 flex items-start gap-4">
+  <div class="relative flex items-start gap-4">
     <ThumbnailFrame size="lg">
       <CoverImage
         src={post.coverImage}
@@ -60,7 +60,7 @@ const displayTags = post.tags.slice(0, 2);
 
   <a
     href={`/blog/${post.slug}`}
-    class="no-typewriter absolute inset-0 z-0 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400 dark:focus-visible:outline-neutral-500"
+    class="no-typewriter absolute inset-0 z-10 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400 dark:focus-visible:outline-neutral-500"
     aria-label={post.title}
     data-astro-prefetch="hover"
   >
