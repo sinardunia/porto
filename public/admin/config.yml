@@ -1,7 +1,7 @@
 backend:
   name: github
-  repo: waltahh/porto
-  branch: main
+  repo: sinardunia/porto
+  branch: master
 
 media_folder: "public/images"
 public_folder: "/images"
