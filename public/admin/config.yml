@@ -2,8 +2,6 @@ backend:
   name: github
   repo: waltahh/porto
   branch: main
-  base_url: https://api.github.com
-  site_domain: waltahh.vercel.app
 
 media_folder: "public/images"
 public_folder: "/images"
