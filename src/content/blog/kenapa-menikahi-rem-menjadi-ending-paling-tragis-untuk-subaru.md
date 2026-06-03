@@ -26,7 +26,7 @@ Kemampuan untuk hidup kembali setelah mati, atau yang biasa disebut RBD (*Return
 
 Kalau dibedah lebih detail, karakter Subaru memiliki kutukan hidup kembali tersebut dengan cara yang cukup merepotkan. Setiap kali dia mati mengenaskan, dia bakal kebangun di titik awal yang sama. Tepat di depan abang-abang tukang apel di pasar.
 
-
+![](/images/13.jpg)
 
 Nah, yang nonton anime ini, pernahkah kamu kepikiran satu skenario yang agak mengganggu mengenai kemampuan tersebut?
 
@@ -60,7 +60,7 @@ Banyak otaku dan wibu di medsos menganggap rute pernikahan ini adalah *happy end
 
 Kenapa bisa demikian? Karena demi bisa hidup tenang dan membangun keluarga bersama Rem, si Subaru terpaksa mengunci ingatan kalau dia sudah membiarkan Emilia dan teman-temannya di Kerajaan Lugnica mati terbantai secara sadis.
 
-![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/62f5cbae-7f29-434e-b694-0a28f240ef17.jpg)
+
 
 ✖ **Fakta pahit di balik rute ini:**
 
