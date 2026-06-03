@@ -1,13 +1,15 @@
 ---
+title: Gara-gara Percaya ChatGPT
 slug: nasib-sial-hiby-r3-gara-gara-percaya-solusi-chatgpt
-title: "Gara-gara Percaya ChatGPT"
-description: "Dengan bantuan ChatGPT, perangkat audio jadi terasa seperti merakit bom."
-pubDatetime: 2026-05-15T06:48:32.627168+00:00
+description: Dengan bantuan ChatGPT, perangkat audio jadi terasa seperti merakit bom.
+coverImage: /images/a1c4b958-bd39-47e0-9545-9f270eb73d72.png
+pubDatetime: 2026-06-03
+modDatetime: 2026-06-03
 draft: false
 featured: false
 tags:
-  - "tech"
-  - "personal"
+  - tech
+  - personal
 ---
 Ketika malam tiba dan rasa cemas melanda... Musik sering kali menjadi benteng pertahanan terakhir. Supaya tidak *overthinking* memikirkan hari esok yang melelahkan.
 
@@ -40,6 +42,7 @@ Karena dompet saya sudah tipis setelah diperas habis-habisan untuk membeli peran
 Saya sempat bertanya ke AI bagaimana cara mengganti baterai HiBy R3 yang sudah *drop* parah.
 
 ChatGPT menjawab:
+
 > Panaskan casing belakangnya dengan *hairdryer* untuk melelehkan lemnya, lalu congkel perlahan.
 
 Begitu saya bilang "*ga ada hairdryer*", si robot memberikan alternatif lain.
@@ -53,6 +56,7 @@ Saya ikuti petunjuk itu dengan penuh rasa percaya diri. Saya ambil alat pembuka 
 Kaca belakang *glossy* nan mewah itu retak seketika tepat di depan mata saya.
 
 Saat saya mengeluh bahwa kaca belakangnya hancur retak, robot itu membalas:
+
 > "Saya sangat menyesal mendengar bahwa perangkat Anda mengalami kerusakan. Sebagai kecerdasan buatan, saya tidak bermaksud memberikan arahan yang merugikan. Mohon maaf atas ketidaknyamanan ini... blablabla"
 
 Lhoo? Bagaimana jika di masa depan robot-robot ini mengambil alih dunia? Lalu saat mereka tidak sengaja menghancurkan peradaban manusia, mereka cuma bilang kalimat *template* itu? :)
@@ -76,9 +80,10 @@ Bagian ini menjadi yang paling menegangkan, karena timah sok asik di PCB berting
 Namun saat colokan terakhir dipasang, layar tiba-tiba berkedip dan logo akhirnya menyala. Perangkat tersebut berhasil hidup kembali, Yeayy ~
 
 Kondisi fisiknya saat ini:
-* **Casing belakang** hancur, retak.
-* **Bodi belakang** berubah menjadi ngejendol parah karena dipaksa menampung baterai yang kegedean.
-* **Tampilan akhir** kini mirip dengan bodi HP Android murah yang baterainya kembung karena mau meledak.
+
+- **Casing belakang** hancur, retak.
+- **Bodi belakang** berubah menjadi ngejendol parah karena dipaksa menampung baterai yang kegedean.
+- **Tampilan akhir** kini mirip dengan bodi HP Android murah yang baterainya kembung karena mau meledak.
 
 ## Kesimpulan Besar dari Seluruh Penderitaan
 
@@ -87,6 +92,6 @@ Meski bodinya rusak, setidaknya perangkat ini masih bisa menemani ritual mendeng
 Pada akhirnya, AI tidak merusak perangkat saya. Saya yang melakukannya sendiri. AI hanya memberi saran. Yang menanggung akibatnya tetap manusia. Termasuk menahan malu karena gadget impian saya sekarang malah terlihat seperti **bom rakitan btw**.
 
 ![image](https://fdkhfkxysmmtwjzgmuvy.supabase.co/storage/v1/object/public/blog-images/inline/2026/05/941c461f-0531-4533-a5f1-9827c60ec3c9.jpg)
-*_Pake sticker supaya tidak terlalu keliatan bom XD_*
+*Pake sticker supaya tidak terlalu keliatan bom XD*
 
 Sampai jumpa di keresahan selanjutnya, semoga.
