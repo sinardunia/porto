@@ -1,12 +1,13 @@
 ---
-slug: hari-ke-2
 title: "Hari ke 2: Sudah lama tidak lari pagi"
-description: "hari kedua"
-pubDatetime: 2026-05-29T22:13:50.087225+00:00
-draft: false
+slug: hari-ke-2
+description: hari kedua
+pubDatetime: 2026-06-03
+modDatetime: 2026-06-03
+draft: true
 featured: false
 tags:
-  - "personal"
+  - personal
 ---
 Sekarang sudah hari ke dua, tepatnya pukul 5 pagi. 
 
@@ -18,12 +19,12 @@ Hmm, coba dipikir-pikir dulu ya, kira-kira apa yang menarik? apa keresahan saya,
 
 mungkin, keresahan akhir-akhir ini saya bingung. saya bingung, itu aja?
 
-
 bingung karena bingung, apalah. masa tidak berkualitas begini isi kepala saya, padahal kemarin kepikiran berbagai hal untuk ditulis di day dua ini, tapi sekarang malah nge-blank.
 
 Ya, setidaknya saya mencoba dan tetap menulis.
 
---------
+---
+
 Hari ini, hari kamis. eh, sabtu.
 Di mana saya latihan pull day, alias menarik. tidak mendorong.
 
