@@ -2,9 +2,9 @@
 title: "Hari ke 2: Sudah lama tidak lari pagi"
 slug: hari-ke-2
 description: hari kedua
-pubDatetime: 2026-06-03
-modDatetime: 2026-06-03
-draft: true
+pubDatetime: 2025-06-03
+modDatetime: 2025-06-03
+draft: false
 featured: false
 tags:
   - personal

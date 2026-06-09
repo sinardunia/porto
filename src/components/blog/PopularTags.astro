@@ -7,13 +7,13 @@ interface Props {
 }
 
 const { posts } = Astro.props;
-const tags = getPopularTags(posts, 8);
+const tags = getPopularTags(posts, 5);
 ---
 
 {tags.length > 0 && (
   <nav aria-label="Popular tags" class="w-full min-w-0">
     <div class="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-      <ul class="flex min-w-0 flex-1 flex-wrap gap-1.5">
+      <ul class="flex min-w-0 flex-1 flex-wrap gap-2">
         {tags.map(({ name, slug, count }, index) => (
           <li
             class:list={[

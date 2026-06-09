@@ -3,7 +3,6 @@ import Layout from "@/layouts/Layout.astro";
 import SearchInput from "@/components/shared/SearchInput.astro";
 import PopularTags from "@/components/blog/PopularTags.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
-import AuthorCard from "@/components/author/AuthorCard.astro";
 import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
 import type { BlogPostSummary } from "@/types/blog";
@@ -27,6 +26,8 @@ try {
   allPosts = [];
 }
 
+const recentPosts = allPosts.slice(0, 2);
+
 Astro.response.headers.set(
   "Cache-Control",
   query
@@ -37,7 +38,7 @@ Astro.response.headers.set(
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Porto",
+  name: "Blogs",
   description: "A quiet personal archive of thoughts, writing, and experiments.",
   url: SITE_URL,
   publisher: {
@@ -66,42 +67,42 @@ const breadcrumbJsonLd = {
 
 const jsonLd = [websiteJsonLd, breadcrumbJsonLd];
 const pageTitle = "Articles";
-const pageDescription = "Catatan keresahan yang kebetulan ditulis. Jika bermanfaat, alhamdulillah.";
+const pageDescription = "Catatan yang kebetulan ditulis. Jika bermanfaat, alhamdulillah.";
 ---
 
 <Layout
   title={pageTitle}
   description={pageDescription}
-  keywords={["blog", "personal", "writing", "essays"]}
   jsonLd={jsonLd}
 >
-  <div class="flex w-full min-w-0 flex-col gap-8 pb-24">
-    <section
-      class="flex flex-col items-start gap-4 rounded-lg border border-neutral-200/60 bg-white/40 px-4 py-4 dark:border-neutral-800/60 dark:bg-neutral-900/20 sm:px-5"
-      aria-label="About this blog"
-    >
-      <div class="min-w-0 flex-1">
-        <AuthorCard variant="compact" />
-        <a
-          href="/about"
-          class="mt-2 inline-flex min-h-[44px] items-center text-xs text-neutral-500 underline-offset-2 hover:text-neutral-700 hover:underline dark:hover:text-neutral-300"
-          data-astro-prefetch="hover"
-        >
-          Read more
-        </a>
-      </div>
-    </section>
-
-    <section class="flex flex-col gap-5" aria-label="Search and filters">
-      <SearchInput value={query} placeholder="Search articles..." clearHref={clearHref} />
-      <PopularTags posts={allPosts} />
-    </section>
-
+  <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
     <section aria-labelledby="articles-heading">
       <h1 id="articles-heading" class="mb-6 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
         Articles
       </h1>
-      <BlogPostList search={query} />
+      
+      <section class="flex flex-col gap-5" aria-label="Search and filters">
+        <SearchInput value={query} placeholder="Search articles..." clearHref={clearHref} />
+        <PopularTags posts={allPosts} />
+      </section>
+      
+      <BlogPostList search={query} posts={recentPosts} />
+      
+      {recentPosts.length === 0 && (
+        <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
+          Belum ada artikel
+        </p>
+      )}
+      
+      {!query && allPosts.length > recentPosts.length && (
+        <a
+          href="/posts"
+          class="mt-6 inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
+          data-astro-prefetch="hover"
+        >
+          View all articles →
+        </a>
+      )}
     </section>
   </div>
 </Layout>

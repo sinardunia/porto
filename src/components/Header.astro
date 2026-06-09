@@ -4,17 +4,42 @@ import DarkModeToggle from "./DarkModeToggle.astro";
 
 <header
   id="main-header"
-  class="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/60 bg-white/85 backdrop-blur-md dark:border-neutral-800/60 dark:bg-[#0a0a0a]/85"
+  class="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/50 bg-white/90 backdrop-blur-md dark:border-neutral-800/50 dark:bg-[#0a0a0a]/90 transition-colors"
 >
-  <div class="mx-auto flex h-14 max-w-[720px] items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
+  <div class="mx-auto flex h-14 max-w-[720px] items-center justify-between gap-4 px-4 sm:h-16 sm:gap-6 sm:px-6">
     <a
       href="/"
-      class="no-typewriter truncate text-[15px] font-semibold tracking-tight text-neutral-900 transition-colors hover:text-neutral-600 dark:text-neutral-100 dark:hover:text-neutral-300 sm:text-base"
+      class="group flex items-center gap-2.5 no-typewriter truncate text-[15px] font-semibold tracking-tight text-neutral-900 transition-all duration-200 hover:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-100 dark:hover:text-neutral-300 dark:focus-visible:ring-neutral-600 sm:gap-3 sm:text-base"
     >
-      Blogs.
+      <img
+        src="/avatar.png"
+        alt="Fuji"
+        class="h-7 w-7 rounded-full object-cover ring-1 ring-neutral-200/50 transition-all duration-200 group-hover:ring-neutral-300/50 dark:ring-neutral-700/50 dark:group-hover:ring-neutral-600/50 sm:h-8 sm:w-8"
+      />
+      <span>Fuji</span>
     </a>
 
-    <DarkModeToggle />
+    <nav class="flex items-center gap-1.5 sm:gap-3" aria-label="Main navigation">
+      <a
+        href="/about"
+        class="flex items-center justify-center rounded-lg p-2 text-neutral-500 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:rounded-md sm:px-3 sm:py-1.5"
+        aria-label="About"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sm:hidden"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="hidden sm:inline text-[14px] font-medium">About</span>
+      </a>
+      <a
+        href="/contact"
+        class="flex items-center justify-center rounded-lg p-2 text-neutral-500 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:rounded-md sm:px-3 sm:py-1.5"
+        aria-label="Contact"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sm:hidden"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span class="hidden sm:inline text-[14px] font-medium">Contact</span>
+      </a>
+      <div class="flex items-center">
+        <DarkModeToggle />
+      </div>
+    </nav>
   </div>
 </header>
 

@@ -27,7 +27,7 @@ type Props = {
 
 const { title, description, noindex, keywords, og, jsonLd, article } = Astro.props;
 
-const SITE_NAME = "Porto";
+const SITE_NAME = "Blogs";
 const AUTHOR_NAME = AUTHOR.name;
 const DEFAULT_DESCRIPTION = "A quiet personal archive of thoughts, writing, and experiments.";
 const DEFAULT_KEYWORDS = ["blog", "personal", "writing", "essays"];
@@ -37,7 +37,7 @@ const pageDescription = description || DEFAULT_DESCRIPTION;
 const pageKeywords = keywords ? [...DEFAULT_KEYWORDS, ...keywords] : DEFAULT_KEYWORDS;
 
 const canonicalUrl = new URL(Astro.url.pathname, SITE_URL).toString();
-const ogImage = og?.image || new URL("/opengraph-image.jpg", SITE_URL).toString();
+const ogImage = og?.image || new URL("/opengraph-image.png", SITE_URL).toString();
 const locale = og?.locale || "id_ID";
 
 const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];

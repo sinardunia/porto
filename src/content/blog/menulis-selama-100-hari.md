@@ -4,7 +4,7 @@ slug: menulis-selama-100-hari
 description: Menulis selama 100 hari, Tanpa bantuan AI. Melatih disiplin dan konsistensi
 pubDatetime: 2026-06-03
 modDatetime: 2026-06-03
-draft: true
+draft: false
 featured: false
 tags:
   - personal

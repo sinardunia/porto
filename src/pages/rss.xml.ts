@@ -39,14 +39,14 @@ ${categoriesXml}
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Porto</title>
+    <title>Blogs</title>
     <link>${SITE_URL}</link>
     <description>A quiet personal archive of thoughts, writing, and experiments.</description>
     <language>id</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
     <image>
-      <url>${SITE_URL}/opengraph-image.jpg</url>
+      <url>${SITE_URL}/opengraph-image.png</url>
       <title>Porto</title>
       <link>${SITE_URL}</link>
     </image>

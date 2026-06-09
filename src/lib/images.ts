@@ -11,7 +11,7 @@ export function resolveImageSrc(src: string | null | undefined): string | null {
 
 export function resolveOgImageSrc(
   coverImage: string | null | undefined,
-  fallback = "/opengraph-image.jpg"
+  fallback = "/opengraph-image.png"
 ): string {
   const resolved = resolveImageSrc(coverImage);
   if (!resolved) return new URL(fallback, SITE_URL).toString();
