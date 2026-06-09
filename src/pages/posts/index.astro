@@ -7,18 +7,26 @@ import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
 import type { BlogPostSummary } from "@/types/blog";
 import { SITE_URL } from "@/data/config";
-import { AUTHOR } from "@/data/author";
 
 export const prerender = false;
 
+// 1. Handle legacy tag redirect
 const legacyTag = Astro.url.searchParams.get("tag")?.trim();
 if (legacyTag) {
   return Astro.redirect(`/tags/${tagToSlug(legacyTag)}`, 301);
 }
 
+// 2. Query & pagination params
 const query = Astro.url.searchParams.get("q")?.trim() || "";
-const clearHref = "/posts";
+let currentPage = 1;
+const pageParam = Astro.url.searchParams.get("page");
+if (pageParam && /^\d+$/.test(pageParam)) {
+  currentPage = parseInt(pageParam, 10);
+  if (currentPage < 1) currentPage = 1;
+}
+const POSTS_PER_PAGE = 10;
 
+// 3. Ambil semua post
 let allPosts: BlogPostSummary[] = [];
 try {
   allPosts = await getPublishedBlogPostSummaries();
@@ -26,44 +34,133 @@ try {
   allPosts = [];
 }
 
+// 4. Filter berdasarkan query (search)
+let filteredPosts = allPosts;
+if (query) {
+  const lowerQuery = query.toLowerCase();
+  filteredPosts = allPosts.filter(
+    (post) =>
+      post.title.toLowerCase().includes(lowerQuery) ||
+      (post.description && post.description.toLowerCase().includes(lowerQuery)) ||
+      (post.tags && post.tags.some((tag) => tag.toLowerCase().includes(lowerQuery)))
+  );
+}
+
+// 5. Pagination
+const totalPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+if (currentPage > totalPages && totalPages > 0) {
+  currentPage = totalPages;
+}
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const paginatedPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+// 6. Cache Control
 Astro.response.headers.set(
   "Cache-Control",
   query
     ? "public, max-age=30, stale-while-revalidate=300"
-    : "public, max-age=60, stale-while-revalidate=600"
+    : "public, max-age=3600, stale-while-revalidate=86400"
 );
 
+// 7. Canonical URL (manual, untuk dimasukkan ke head)
+const canonicalUrl = query
+  ? `${SITE_URL}/posts?q=${encodeURIComponent(query)}&page=${currentPage}`
+  : `${SITE_URL}/posts${currentPage > 1 ? `?page=${currentPage}` : ""}`;
+
+// 8. Breadcrumb JSON-LD
 const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Articles", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "All Articles", item: `${SITE_URL}/posts` },
+    { "@type": "ListItem", position: 1, name: "Beranda", item: SITE_URL },
+    { "@type": "ListItem", position: 2, name: "Semua Artikel", item: `${SITE_URL}/posts` },
   ],
 };
 
-const jsonLd = [breadcrumbJsonLd];
-const pageTitle = "All Articles";
-const pageDescription = "Semua catatan yang kebetulan ditulis.";
+// 9. JSON-LD untuk WebPage + ItemList
+const webPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: query ? `Hasil pencarian: ${query}` : "Semua Artikel",
+  description: query
+    ? `Artikel yang mengandung kata "${query}"`
+    : "Kumpulan lengkap tulisan tentang teknologi, anime, dan hal-hal yang membuat saya penasaran.",
+  url: canonicalUrl,
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: paginatedPosts.map((post, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      url: `${SITE_URL}/blog/${post.slug}`,
+    })),
+  },
+};
+
+const jsonLd = [breadcrumbJsonLd, webPageJsonLd];
+
+const pageTitle = query
+  ? `Hasil pencarian: ${query} (Halaman ${currentPage})`
+  : `Semua Artikel${currentPage > 1 ? ` – Halaman ${currentPage}` : ""}`;
+const pageDescription = query
+  ? `Menampilkan ${totalPosts} artikel yang mengandung kata "${query}".`
+  : `Kumpulan lengkap tulisan pribadi tentang teknologi, anime, dan hal-hal yang membuat saya penasaran. Total ${totalPosts} artikel.`;
 ---
 
 <Layout
   title={pageTitle}
   description={pageDescription}
-  keywords={["blog", "personal", "writing", "essays", "archive"]}
   jsonLd={jsonLd}
+  noindex={!!query}
 >
-  <div class="flex w-full min-w-0 flex-col gap-8 pb-24">
+  <!-- Tambahkan canonical link manual -->
+  <link rel="canonical" href={canonicalUrl} />
+  
+  <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
     <section class="flex flex-col gap-5" aria-label="Search and filters">
-      <SearchInput value={query} placeholder="Search all articles..." clearHref={clearHref} />
+      <SearchInput value={query} placeholder="Cari artikel..." clearHref="/posts" />
       <PopularTags posts={allPosts} />
     </section>
 
     <section aria-labelledby="articles-heading">
       <h1 id="articles-heading" class="mb-6 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-        All Articles
+        {query ? `Hasil pencarian: "${query}"` : "Semua Artikel"}
       </h1>
-      <BlogPostList search={query} />
+      
+      {totalPosts === 0 ? (
+        <p class="text-neutral-500 dark:text-neutral-400">Tidak ada artikel yang ditemukan.</p>
+      ) : (
+        <>
+          <BlogPostList search="" posts={paginatedPosts} />
+          
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <nav class="mt-8 flex flex-wrap items-center justify-center gap-2" aria-label="Paginasi artikel">
+              {currentPage > 1 && (
+                <a
+                  href={query ? `/posts?q=${encodeURIComponent(query)}&page=${currentPage - 1}` : `/posts?page=${currentPage - 1}`}
+                  class="inline-flex min-h-[44px] items-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                  data-astro-prefetch="hover"
+                >
+                  ← Sebelumnya
+                </a>
+              )}
+              <span class="text-sm text-neutral-600 dark:text-neutral-400">
+                Halaman {currentPage} dari {totalPages}
+              </span>
+              {currentPage < totalPages && (
+                <a
+                  href={query ? `/posts?q=${encodeURIComponent(query)}&page=${currentPage + 1}` : `/posts?page=${currentPage + 1}`}
+                  class="inline-flex min-h-[44px] items-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800"
+                  data-astro-prefetch="hover"
+                >
+                  Selanjutnya →
+                </a>
+              )}
+            </nav>
+          )}
+        </>
+      )}
     </section>
   </div>
 </Layout>

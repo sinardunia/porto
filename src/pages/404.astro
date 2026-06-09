@@ -4,29 +4,46 @@ import Layout from "../layouts/Layout.astro";
 export const prerender = true;
 ---
 
-<Layout title="Page not found" noindex={true}>
-  <main class="flex min-h-[60vh] flex-col items-center justify-center px-4 py-16 text-center">
-    {/* Minimal 404 - clean and calm */}
+<Layout title="Halaman Tidak Ditemukan" noindex={true}>
+  <main class="flex min-h-[50vh] flex-col items-center justify-center px-4 py-16 text-center">
     <div class="mb-6 text-6xl font-light text-neutral-300 dark:text-neutral-700 select-none">
       404
     </div>
 
     <h1 class="mb-3 text-lg font-medium text-neutral-800 dark:text-neutral-200">
-      Page not found
+      Wah, nyasar ya?
     </h1>
 
-    <p class="mb-8 max-w-xs text-sm text-neutral-500 dark:text-neutral-500 leading-relaxed">
-      The page you're looking for doesn't exist or has been moved.
+    <p class="mb-8 max-w-sm text-sm text-neutral-500 dark:text-neutral-500 leading-relaxed">
+      Halaman yang Anda cari tidak ada, mungkin sudah dipindah, atau Anda salah ketik alamat.
     </p>
 
-    <a
-      href="/"
-      class="inline-flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
-    >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-      </svg>
-      Back to home
-    </a>
+    <div class="flex flex-col items-center gap-4 sm:flex-row">
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+        aria-label="Kembali ke beranda"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        Beranda
+      </a>
+
+      <a
+        href="/posts"
+        class="inline-flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-4 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+        aria-label="Lihat semua artikel"
+      >
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+        Lihat semua artikel
+      </a>
+    </div>
+
+    <div class="mt-8 text-xs text-neutral-400 dark:text-neutral-600">
+      Atau coba gunakan fitur search di pojok kanan atas.
+    </div>
   </main>
 </Layout>

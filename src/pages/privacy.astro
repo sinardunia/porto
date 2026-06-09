@@ -2,8 +2,9 @@
 import Layout from "@/layouts/Layout.astro";
 import { SITE_URL } from "@/data/config";
 
-const title = "Privacy Policy";
-const description = "Kebijakan privasi dan perlindungan data pengunjung website.";
+const title = "Kebijakan Privasi";
+const description = "Bagaimana website ini memperlakukan data pengunjung.";
+const lastUpdated = "6 Juni 2026";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -11,43 +12,36 @@ const jsonLd = {
   name: title,
   description: description,
   url: `${SITE_URL}/privacy`,
-  mainEntity: {
-    "@type": "PrivacyPolicy",
-    name: "Privacy Policy",
-  },
 };
 ---
 
-<Layout title={title} description={description} keywords={["privacy", "kebijakan privasi", "data protection"]} jsonLd={jsonLd}>
+<Layout title={title} description={description} jsonLd={jsonLd}>
   <div class="max-w-none">
-    <h1 class="text-2xl sm:text-3xl font-semibold text-neutral-800 dark:text-neutral-200 mb-6">Privacy Policy</h1>
+    <h1 class="text-2xl sm:text-3xl font-semibold text-neutral-800 dark:text-neutral-200 mb-2">{title}</h1>
+    <p class="text-neutral-500 dark:text-neutral-500 text-sm mb-6">Terakhir diperbarui: {lastUpdated}</p>
     
     <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-      Dengan mengunjungi website ini, perlu Anda ketahui, bahwasanya privasi para pengunjung merupakan hal yang dihargai dan dijaga sebaik mungkin.
+      Bahwasanya website ini tidak meminta pendaftaran akun, tidak menyediakan sistem keanggotaan, dan tidak mengumpulkan data pribadi seperti nama, alamat, nomor telepon, atau informasi identitas lainnya secara langsung.
     </p>
     
     <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-      Website ini dibuat sebagai blog pribadi untuk menyimpan catatan, pemikiran, serta berbagai tulisan yang ingin dibagikan kepada para pembaca. Oleh karena itu, website ini tidak meminta pendaftaran akun, tidak menyediakan sistem keanggotaan, serta tidak mengumpulkan data pribadi seperti nama, alamat, nomor telepon, maupun informasi identitas lainnya secara langsung.
+      Seperti website pada umumnya, penyedia layanan hosting yang saya gunakan dapat mencatat informasi teknis, seperti alamat IP, jenis browser, perangkat, halaman yang dikunjungi, dan waktu akses. Informasi tersebut disimpan untuk keperluan keamanan dan pemeliharaan, biasanya tidak lebih dari 30 hari. Saya tidak akan pernah menggunakan informasi tersebut untuk mengenali identitas pribadi Anda.
     </p>
     
     <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-      Sebagaimana website pada umumnya, penyedia layanan hosting atau infrastruktur yang digunakan dapat mencatat informasi teknis tertentu, seperti alamat IP, jenis browser, perangkat yang digunakan, halaman yang dikunjungi, serta waktu akses. Informasi tersebut umumnya digunakan untuk keperluan keamanan, pemeliharaan, dan operasional website.
+      Website ini tidak sengaja memasang cookie. Namun, tautan atau konten dari pihak ketiga (misalnya gambar atau video yang disematkan) dapat menanamkan cookie sendiri. Saya tidak bertanggung jawab atas cookie atau pelacakan dari pihak ketiga tersebut.
     </p>
     
     <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-      Penulis website ini tidak menggunakan informasi tersebut untuk mengenali identitas pribadi pengunjung maupun melakukan pelacakan terhadap aktivitas pengunjung secara khusus.
+      Website ini dapat memuat tautan menuju situs pihak ketiga. Jika Anda mengunjungi situs tersebut, kebijakan privasi yang berlaku adalah kebijakan milik situs yang bersangkutan.
     </p>
     
     <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-      Website ini juga dapat memuat tautan menuju situs pihak ketiga. Apabila Anda mengunjungi situs tersebut, maka kebijakan privasi yang berlaku adalah kebijakan milik situs yang bersangkutan.
-    </p>
-    
-    <p class="text-neutral-600 dark:text-neutral-400 mb-6">
-      Kebijakan privasi ini dapat diperbarui sewaktu-waktu apabila terdapat perubahan pada fitur atau layanan website.
+      Kebijakan privasi ini dapat diperbarui sewaktu-waktu. Perubahan akan diumumkan melalui halaman ini.
     </p>
     
     <p class="text-neutral-600 dark:text-neutral-400">
-      Terima kasih atas kunjungan Anda.
+      Jika Anda memiliki pertanyaan seputar privasi, silakan hubungi melalui halaman <a href="/contact" class="text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-neutral-200 underline">Contact</a>.
     </p>
   </div>
 </Layout>
