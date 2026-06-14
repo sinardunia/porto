@@ -166,6 +166,12 @@ html.dark .post td {
   border-bottom-color: rgb(38, 38, 38);
 }
 
+@media (min-width: 641px) {
+  .post img {
+    max-width: 372px;
+  }
+}
+
 @media (max-width: 640px) {
   .post {
     font-size: 1rem;

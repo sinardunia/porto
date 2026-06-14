@@ -1,5 +1,5 @@
 ---
-title: Gara-gara Percaya ChatGPT
+title: Cerita Ganti Baterai DAP
 slug: nasib-sial-hiby-r3-gara-gara-percaya-solusi-chatgpt
 description: Dengan bantuan ChatGPT, perangkat audio jadi terasa seperti merakit bom.
 coverImage: /images/a1c4b958-bd39-47e0-9545-9f270eb73d72.png
@@ -11,89 +11,134 @@ tags:
   - tech
   - personal
 ---
-Ketika malam tiba dan rasa cemas melanda... Musik sering kali menjadi benteng pertahanan terakhir. Supaya tidak *overthinking* memikirkan hari esok yang melelahkan.
 
-Demi menikmati musik dengan lebih khusyuk, banyak pencinta audio terjun ke dunia *audiophile* dan menggunakan DAP (*Digital Audio Player*). Hobi ini tidak bisa dibilang murah. Kualitas suaranya jauh lebih baik dibandingkan "hengset" biasa. Bahkan *eartips* yang "cuma karet" saja bisa dihargai hingga 150 ribu rupiah.
+**Ketika malam tiba** dan cemas mulai melanda. Musik jadi pelarian biar tidak overthinking memikirkan hari esok.
 
-Demi mengejar kualitas suara seperti itu, salah satu perangkat legendaris yang sering diincar di forum Facebook sejak bertahun-tahun lalu adalah HiBy R3.
+Karena itu, saya terjun ke dunia audiophile. Ya, mencoba berburu perangkat audio yang sedikit lebih berkualitas.
+
+Salah satu yang paling sering muncul di forum jual beli adalah **HiBy R3**.
+
+Akhirnya saya dapat, meski *second*.
+
+Kemudian, beberapa minggu setelahnya, dengan bantuan **ChatGPT**, saya hampir mengubah DAP itu menjadi **bom rakitan**.
+
+Ini ceritanya.
 
 ![](/images/45d04f78-b2f1-48c3-b7a6-78dba2170d6d.jpg)
 
 ## Berburu di Pasar Bekas
 
-Karena harga unit barunya cukup menguras tabungan, berburu unit *second* menjadi jalan ninja yang paling realistis bagi saya. Di momen itu, saya sempat tergoda untuk menawar harga ke penjual di Shopee. Saya beli barangnya dari tegra39.
+Harga baru DAP menguras tabungan, jadi berburu unit *second* menjadi **jalan ninja** paling realistis.
 
-![](/images/c49329d6-0a64-43fb-abee-0a72d36863e1.png)
+## Baterai Sakaratul Maut
 
-## Derita Baterai Sakaratul Maut
+Terkadang, membeli barang bekas itu seperti judi.
 
-Risiko membeli barang bekas memang selalu menjadi misteri yang mesti siap diterima. Kesialan pertama datang begitu paketnya tiba. Saya baru sadar kalau kabel IEM saya tiba-tiba mati sebelah. Untungnya ada kabel bonus dari *seller*.
+Karena, baterai HiBy R3 ini drop parah.
 
-Sayangnya, kabel bonus tersebut menggunakan *jack* 2.5mm (kecil) yang hanya bisa dipakai di DAP ini, sehingga tidak bisa digunakan di HP maupun laptop. Belum kelar penderitaan soal kabel, apesnya baru bertambah saat saya menyadari bahwa baterainya sudah **sakaratul maut**.
+Umurnya bisa dihitung dalam jumlah lagu:  
+awalnya **10 lagu**, lalu **5**, lalu **3**, dan akhirnya **matot (mati total)**.
 
-Awalnya DAP ini masih kuat memutar sekitar 10 lagu. Namun lama-kelamaan performanya merosot drastis: dari 5 lagu... 4 lagu... hingga hanya kuat bertahan memutar **3 lagu saja**. Lalu mati total.
+Uang saya udah habis buat beli DAP-nya, jadi servis resmi jelas mustahil.
 
-Karena dompet saya sudah tipis setelah diperas habis-habisan untuk membeli perangkat ini, opsi servis resmi jelas mustahil. Pilihan terakhir yang tersisa adalah meminta bantuan pada teknologi masa depan yang gratisan. Yaitu **ChatGPT**.
+Maka, seperti manusia modern pada umumnya, saya bertanya ke **ChatGPT**.
 
 ![](/images/42c8fdac-da8e-4244-a986-ce6371aeadaf.png)
 
 ## Malapetaka
 
-Saya sempat bertanya ke AI bagaimana cara mengganti baterai HiBy R3 yang sudah *drop* parah.
+Saya tanya ChatGPT cara ganti baterai HiBy R3 yang sudah sekarat.
 
-ChatGPT menjawab:
+Awalnya disuruh memanaskan casing belakang dengan *hairdryer*.
 
-> Panaskan casing belakangnya dengan *hairdryer* untuk melelehkan lemnya, lalu congkel perlahan.
+**Ketika** saya bilang gak punya hairdryer, saya minta alternatif.
 
-Begitu saya bilang "*ga ada hairdryer*", si robot memberikan alternatif lain.
+1. **Kesalahan pertama.**
 
-> Saya disuruh menggunakan pencongkel LCD HP atau benda tipis lainnya untuk mencongkelnya langsung.
+ChatGPT menyuruh saya congkel langsung menggunakan alat pembuka LCD HP.
 
-Saya ikuti petunjuk itu dengan penuh rasa percaya diri. Saya ambil alat pembuka LCD, lalu menyelipkannya ke sela-sela bodi belakangnya... Dan ditekan sedikit.
+2. **Kesalahan kedua.**
 
-***KRAAAK!***
+Meskipun percaya diri saya lebih gede dari kemampuan saya 😅, saya mencoba saran tersebut tanpa berpikir panjang.
 
-Kaca belakang *glossy* nan mewah itu retak seketika tepat di depan mata saya.
+---
 
-Saat saya mengeluh bahwa kaca belakangnya hancur retak, robot itu membalas:
+***KRAAAK!**
 
-> "Saya sangat menyesal mendengar bahwa perangkat Anda mengalami kerusakan. Sebagai kecerdasan buatan, saya tidak bermaksud memberikan arahan yang merugikan. Mohon maaf atas ketidaknyamanan ini... blablabla"
+**Retak semua :)**  
+Kaca belakang premium berubah menjadi **puzzle**.
 
-Lhoo? Bagaimana jika di masa depan robot-robot ini mengambil alih dunia? Lalu saat mereka tidak sengaja menghancurkan peradaban manusia, mereka cuma bilang kalimat *template* itu? :)
+---
 
-Namun, penderitaan tidak berhenti di sana. Karena baterai originalnya tidak tersedia, ChatGPT menyarankan saya membeli baterai *no-brand* seharga sekitar 150 ribu di toko online. Dengan ukuran yang katanya "mendekati".
+Saat saya ngeluh, si robot langsung membalas:
 
-Sialnya, saat baterainya datang, ukurannya justru **terlalu BESAR**. Dan tidak muat di dalam bodi. Lagi-lagi, si ChatGPT meminta maaf dengan kalimat penyesalan yang *template*.
+> "Saya sangat menyesal mendengar bahwa perangkat Anda mengalami kerusakan. Sebagai kecerdasan buatan, saya tidak bermaksud memberikan arahan yang merugikan. Mohon maaf atas ketidaknyamanan ini..."
 
-Beberapa lama kemudian... ChatGPT menyarankan saya membeli lem LCD T4000 untuk merekatkan kembali bodi yang retak. Saya pun menuruti sarannya. Setelah berhari-hari mengecek Shopee dengan cemas, lemnya akhirnya datang. Sayangnya, setelah dicoba, retakan itu tetap tidak bisa direkatkan. Zonk lagi...
+Astaga...
 
-Namun ketika semua solusi terasa buntu, nekat memang jadi satu-satunya pilihan… bukan?
+*Jikalau suatu hari robot-robot ambil alih dunia, lalu hancurin peradaban manusia, apa mereka bakal minta maaf pake kalimat template itu?* 🙂
+
+---
+
+Tapi penderitaan **belum selesai**.
+
+Baterai original HiBy R3 udah gak ada yang jual. Saya beli baterai **tanpa merek** yang direkomendasiin ChatGPT.
+
+...
+
+Pas baterainya tiba, masalah baru muncul.
+
+Baterainya ternyata **kegedean**, jadi ngga muat di bodi wkwk.
+
+Saya panik. Udah beli mahal-mahal, masa gak muat? *Buat apa dong?*
+
+> *Saya tanya lagi ke ChatGPT, "gimana ini?"*
+
+Kemudian saya dikasih saran:
+
+Beli **lem LCD T4000** buat merekatkan kaca belakang yang retak, katanya.
+
+Beberapa hari kemudian, lemnya datang. Tetapi **zonk**. Retakannya tetep ngga bisa direkatkan.
+
+> Saya sempet marahin ChatGPT, tapi robot itu cuma minta maaf lagi.
 
 ![](/images/06488325-c556-494c-81e0-890abe419dc2.jpg)
-
 ## Tragedi
 
-Ketika emosi sudah di ubun-ubun, jalur nekat akhirnya diambil. Proses penggantian baterai yang kegedean itu akhirnya dilakukan dengan solder seadanya dan kehati-hatian penuh.
+Ketika emosi sudah di ubun-ubun, baterai kegedean itu saya **paksa masuk**, lalu proses soldernya dilakukan seadanya. Jadinya **deg-degan**.
 
-Bagian ini menjadi yang paling menegangkan, karena timah sok asik di PCB bertingkah terlalu mepet. Tangan sampai sedikit gemetar karena takut menyentuh komponen lain atau memicu korsleting pada baterai. Saya sempat pasrah.
+Sementara itu, timah di PCB bertingkah sok asik, bahkan sampai **meleleh ke mana-mana**.
 
-Namun saat colokan terakhir dipasang, layar tiba-tiba berkedip dan logo akhirnya menyala. Perangkat tersebut berhasil hidup kembali, Yeayy ~
+Karena itu, saya sempat **pasrah** juga, soalnya kebayang DAP bakal mati total dan cuma tinggal kenangan.
 
-Kondisi fisiknya saat ini:
+---
 
-- **Casing belakang** hancur, retak.
-- **Bodi belakang** berubah menjadi ngejendol parah karena dipaksa menampung baterai yang kegedean.
-- **Tampilan akhir** kini mirip dengan bodi HP Android murah yang baterainya kembung karena mau meledak.
+Namun, begitu colokan terakhir dipasang, layar langsung berkedip, lalu logo menyala.
 
-## Kesimpulan Besar dari Seluruh Penderitaan
+Akhirnya **hidup lagi**. *Yeayy ~*
 
-Meski bodinya rusak, setidaknya perangkat ini masih bisa menemani ritual mendengarkan musik sebelum tidur tanpa takut mati di tengah lagu. Musik tetap bisa dinikmati dengan detail. Meski kondisi bodi dan dompet setelah eksperimen ini sudah cukup mengenaskan.
+---
 
-Pada akhirnya, AI tidak merusak perangkat saya. Saya yang melakukannya sendiri. AI hanya memberi saran. Yang menanggung akibatnya tetap manusia. Termasuk menahan malu karena gadget impian saya sekarang malah terlihat seperti **bom rakitan btw**.
+Setelah itu, kondisi fisiknya berubah drastis:
+
+- Casing belakang **hancur, retak**.
+- Bodi belakang **kembung**.
+- Tampilan akhir mirip HP murah yang baterainya **mau meledak**.
+
+Tetapi, musik bisa diputar dengan baik. **Dan itu yang penting, kan?**
+
+## Kesimpulan
+
+**Meskipun** bodinya rusak, DAP ini masih bisa dipakai.
+
+Lagipula, AI gak merusak apa-apa, **karena saya sendiri yang melakukannya**.
+
+Jadi, gadget impian saya sekarang malah mirip **bom rakitan**.
 
 ![](/images/941c461f-0531-4533-a5f1-9827c60ec3c9-1.jpg)
 
-  
-*Pake sticker supaya tidak terlalu keliatan bom XD*
+*Pake sticker biar gak terlalu keliatan bom XD*
 
-Sampai jumpa di keresahan selanjutnya, semoga.
+---
+
+**Terima kasih sudah baca**, dan sampai jumpa di keresahan selanjutnya, semoga.

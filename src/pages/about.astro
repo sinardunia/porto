@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import AuthorCard from "@/components/author/AuthorCard.astro";
+import AuthorCard from "@/components/author/AuthorAvatar.astro";
+import AuthorAvatar from "@/components/author/AuthorAvatar.astro";
 import { AUTHOR } from "@/data/author";
 import { SITE_URL } from "@/data/config";
 
@@ -18,26 +19,34 @@ const jsonLd = {
 };
 ---
 
-<Layout title="About" description={description} jsonLd={jsonLd}>
+<Layout title="Tentang" description={description} jsonLd={jsonLd}>
   <div class="mx-auto w-full max-w-[42rem] pb-8">
     <header class="mb-10">
       <h1 class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 sm:text-3xl">
-      About
+        Tentang
       </h1>
     </header>
 
-    <section class="rounded-lg border border-neutral-200/80 bg-neutral-50/50 p-5 dark:border-neutral-800/80 dark:bg-neutral-900/30 sm:p-6">
-      <AuthorCard variant="full" />
-    </section>
+<section class="rounded-lg border border-neutral-200/80 bg-neutral-50/50 p-5 dark:border-neutral-800/80 dark:bg-neutral-900/30 sm:p-6">
+  <div class="flex items-center gap-4">
+    <AuthorAvatar size="lg" />
+    <p class="text-2xl font-semibold text-neutral-900 dark:text-neutral-50">👋</p>
+  </div>
+  <div class="mt-6 prose prose-neutral dark:prose-invert">
+    <p>Perkenalkan, saya Fuji. Di internet biasa dipanggil waltahh atau terserah yang mau manggil apa.</p>
+    <p>Nah, untuk mengisi waktu luang, saya mencatat hal-hal yang menarik di sini. Sesukanya, semaunya, seadanya. Bisa tentang teknologi, anime, atau sekadar refleksi.</p>
+  <p>Jikalau bermanfaat, alhamdulillah 🙂. Kalau tidak, tidak apa-apa.</p>
+  </div>
+</section>
 
     <p class="mt-8">
-  <a
-    href="/"
-    class="inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
-    data-astro-prefetch="hover"
-  >
-    ← Back to articles
-  </a>
+      <a
+        href="/"
+        class="inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
+        data-astro-prefetch="hover"
+      >
+        ← Kembali ke artikel
+      </a>
+    </p>
   </div>
 </Layout>
-

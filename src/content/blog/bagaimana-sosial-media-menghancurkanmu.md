@@ -5,7 +5,7 @@ description: "#BahasBuku menarik dan fenomena modern tentang sosial media"
 coverImage: /images/208826802.jpg
 pubDatetime: 2026-06-04
 modDatetime: 2026-06-04
-draft: false
+draft: true
 featured: false
 tags:
   - personal

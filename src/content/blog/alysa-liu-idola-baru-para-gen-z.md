@@ -5,7 +5,7 @@ description: seorang juara olympic figure skating di youtube jam dua pagi
   membuat saya melihat ulang ekspektasi saya tentang “orang hebat”
 pubDatetime: 2026-06-03
 modDatetime: 2026-06-03
-draft: false
+draft: true
 featured: false
 tags:
   - tokoh
