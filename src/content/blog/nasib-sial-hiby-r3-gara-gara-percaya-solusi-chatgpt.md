@@ -103,11 +103,16 @@ Beberapa hari kemudian, lemnya datang. Tetapi **zonk**. Retakannya tetep ngga bi
 > Saya sempet marahin ChatGPT, tapi robot itu cuma minta maaf lagi.
 
 ![](/images/06488325-c556-494c-81e0-890abe419dc2.jpg)
+
 ## Tragedi
 
-Ketika emosi sudah di ubun-ubun, baterai kegedean itu saya **paksa masuk**, lalu proses soldernya dilakukan seadanya. Jadinya **deg-degan**.
+Ketika emosi sudah di ubun-ubun, baterai kegedean itu saya **paksa masuk**, lalu proses soldernya dilakukan seadanya.
 
-Sementara itu, timah di PCB bertingkah sok asik, bahkan sampai **meleleh ke mana-mana**.
+Saya ambil solder. Tangan saya gemeter.
+
+Saya berhenti sejenak, menarik napas, lalu lanjut.
+
+Timah di PCB bertingkah sok asik, bahkan sampai **meleleh ke mana-mana**.
 
 Karena itu, saya sempat **pasrah** juga, soalnya kebayang DAP bakal mati total dan cuma tinggal kenangan.
 
@@ -125,7 +130,7 @@ Setelah itu, kondisi fisiknya berubah drastis:
 - Bodi belakang **kembung**.
 - Tampilan akhir mirip HP murah yang baterainya **mau meledak**.
 
-Tetapi, musik bisa diputar dengan baik. **Dan itu yang penting, kan?**
+Tetapi, musik bisa diputar dengan baik. **Dan itu yang penting.**
 
 ## Kesimpulan
 
