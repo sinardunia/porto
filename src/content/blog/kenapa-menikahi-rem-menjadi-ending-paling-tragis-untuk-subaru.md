@@ -8,11 +8,11 @@ modDatetime: 2024-05-03
 draft: false
 featured: false
 tags:
+  - anime
+  - tokoh
   - rezero
   - subaru
   - rem
-  - anime
-  - tokoh
 ---
 
 > ⚠️ **SPOILER ALERT!**  
