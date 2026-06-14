@@ -1,10 +1,23 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
+import remarkExternalLinks from "remark-external-links";
 
 export default defineConfig({
   output: "server",
   adapter: vercel(),
+
+  markdown: {
+    remarkPlugins: [
+      [
+        remarkExternalLinks,
+        {
+          target: "_blank",
+          rel: ["noopener", "noreferrer"],
+        },
+      ],
+    ],
+  },
 
   security: {
     checkOrigin: false,
