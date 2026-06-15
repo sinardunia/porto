@@ -2,7 +2,7 @@
 title: Apa Saya Ada Kalau Tidak Upload di Sosmed?
 slug: apa-saya-ada-kalau-tidak-upload-di-sosmed
 description: Tentang oversharing, FOMO, dan pertanyaan "Ke mana aja?"
-coverImage: /images/208826802.jpg
+coverImage: /images/kuda.png
 pubDatetime: 2026-05-15
 modDatetime: 2026-05-15
 draft: false
@@ -10,70 +10,115 @@ featured: false
 tags:
   - personal
   - refleksi
-  - oversharing
-  - hiperrealitas
   - bahas_buku
+  - hiperrealitas
+  - oversharing
 ---
 
 **“Ke mana aja?”**  
-Teman saya bertanya dengan wajah heran.
+Teman saya yang baik bertanya, dengan wajah heran.
 
-Saya sedang tidak buka HP selama beberapa hari.  
-Saya **ada** di rumah. Makan, tidur, menyapa kucing, dan sebagainya wkwk.
+Saya sedang tidak buka HP selama beberapa hari.
+
+Ada kok di rumah, makan, tidur, menyapa kucing, dan sebagainya wkwk.
 
 ---
-
-Pertanyaan itu membuat saya teringat masa lalu.  
-Dulu, saya justru **tidak bisa lepas** dari ponsel.
+Ini menarik, karena pertanyaan itu membuat saya teringat bahwa dulu saya tidak bisa lepas dari HP.
 
 Waktu pandemi, saya tidak keluar rumah berminggu-minggu.  
 **Tiga bulan** hampir tidak bertemu orang 😅
 
-Saya habiskan waktu di depan layar untuk main game, sosmed, apa saja yang membuat lupa waktu.
+Saya menghabiskan waktu untuk main game, sosmed, dan apa saja yang membuat lupa waktu.
 
 Screentime pernah tembus **19 jam** dalam sehari. 
 
-Saat bangun tidur, HP sudah di tangan. Saat tidur pun, HP masih menyala.
+Bahkan saat bangun tidur-pun, HP sudah ada di tangan. Dan saat akan tidur, layarnya masih menyala. Itu gila sekali.
 
-Itu gila. tapi waktu itu saya merasa tidak ada yang keliru dengan kebiasaan itu.
+tapi waktu itu saya merasa tidak ada yang keliru dengan kebiasaan itu wkwk.
 
 ![](/images/scroll.gif)
 
 ---
+
 ## Reality vs Hyperreality
 
-Dalam buku *Bagaimana Sosial Media Menghancurkanmu* karya Eno Bening, disebutkan kurang lebih begini:
+Saya mencoba kurangi screentime.  
+Bolak-balik. Online, offline, online lagi.
 
-> **Zaman sekarang, orang dianggap ada kalau akun medsosnya aktif. Kalau tidak, seolah tidak ada.**
+...
 
-Pernah saya coba kurangi screentime.
-Tapi rasanya aneh. Ada semacam tarikan untuk kembali membuka HP.
-
-Saya bolak-balik. Online, offline, online lagi.
-Setiap kali berusaha mengurangi screentime, saya gagal terus.
+Kok terasa ada yang kurang, ya? kalau tanpa HP?
 
 ---
 
-## Kenapa bisa gagal?
+Suatu malam, saya lagi buka YouTube.
 
-Saya penasaran, kenapa susah banget lepas?
-Ternyata di buku itu dijelaskan: sosial media kini bukan sekadar platform untuk *sharing* lagi.
+Scroll.  
+Scroll.  
+Ngga jelas.
 
-Sosmed telah **dirancang** untuk menarik atensi kita.  
-Setiap scroll, notifikasi, video pendek semuanya dibuat supaya kita tidak bisa lepas.
+Tiba-tiba ada video kolaborasi Kevin Anggara sama Eno Bening.
+
+Saya dengar Kevin bertanya, *“Eh, lo punya buku?”*
+
+...
+
+Saya baru tahu.  
+Ternyata Eno Bening nulis buku.
+
+Kemudian saya cari di Shopee.
+
+Cover buku-nya gambar anime gitu. Entah kenapa, menarik 😅
+
+Jadi, saya beli.
+
+![](/images/208826802.jpg)
+
+<small>*Bagaimana Sosial Media Menghancurkanmu* karya Eno Bening.</small>
+
+---
+
+...
+
+Selama saya membaca bukunya, saya menemukan fakta menarik.
+
+Bahwa, sosial media yang dulunya sekadar tempat buat sharing, sekarang perlahan berubah jadi industri.
+
+Sosial media bukan lagi sekadar ajang curhat atau lihat-lihat foto teman.
+
+Sekarang dirancang supaya kita betah berlama-lama, karena di situlah uang mereka berasal. Dan dengan adanya algoritma, semuanya berubah.
+
+
+
+> *Orang bisa dianggap ada kalau akun medsosnya aktif.  
+> Kalau tidak, seolah hilang dari sejarah*
+
+---
+
+
+### Hiperealitas
+
+Sesuatu yang tidak nyata, tapi terasa lebih nyata daripada kenyataan itu sendiri.
+
+Media sosial adalah contoh hiperealitas paling dekat.
+Kita percaya bahwa like, komentar, dan unggahan adalah ukuran keberadaan seseorang.
+
+---
+
+## Kenapa susah banget stop scroll?
 
 Sosmed sudah menjadi **industri**.
 
+> Angka = Uang
+
 **Atensi adalah mata uang baru di era digital.**  
-Perhatian kita adalah uang bagi mereka.
+Perhatian menjadi uang bagi mereka.
 
 Dari iklan, dari data, dari algoritma yang terus belajar agar kita semakin lama berlama-lama.
 
 Bisa saja kita yang tidak menggunakan sosmed. tapi **sosmed yang menggunakan kita**.
 
 ---
-
-![](/images/kuda.png)
 
 ## Fenomena FOMO
 
@@ -95,54 +140,38 @@ Apakah saya iri?
 Tentunya. wkwk
 
 Tapi lama-lama saya tidak terlalu memikirkan itu.
-Setiap orang punya jalannya masing-masing.
+Lagipula, Setiap orang punya jalannya masing-masing.
 
 ---
 
-Melihat orang bergerak sedikit, kepala langsung merasa tertinggal.  
-Padahal, apa yang saya lihat di sosmed belum tentu seutuhnya benar.
+Melihat orang bergerak sedikit, kepala langsung merasa tertinggal. 
 
-**Kalau kalian lihat apa yang saya post di sosmed, itu yang happy-happy aja yang saya share.**  
-Karena aslinya saya stres juga. Tulisan ini aja diketik tengah malam karena overthinking 😅
+Padahal, apa yang saya lihat di sosmed belum tentu seutuhnya benar, kan?.
 
 ...
 
-
-Tapi lama-lama saya bertanya sendiri, buat apa terlalu dipusingkan?
-
 ---
 
+## Mengurangi kecanduan
 
+Saya pernah melihat seorang programmer bernama Saugi. Dia bercerita di Facebook bahwa dia berhenti menggunakan sosial media selama 30 hari, dan menurutnya efeknya baik.
 
+Kemudian saya ikut mencoba, tetapi hanya selama 3 hari.
 
-## Lagipula, hidup akan berakhir
+Awalnya saya mengira itu akan mudah.
 
-Pernah kepikiran nggak, besok kamu bisa tidak bangun?  
-Lalu apa yang akan tertinggal?
+Namun selama tiga hari itu, saya justru menyadari betapa seringnya saya membuka media sosial karena kebiasaan.
 
-Mungkin beberapa postingan. Beberapa like. Beberapa komentar.  
-Tapi semua itu tidak akan menemani kamu ke mana pun.
-
-Setiap orang mati sendiri-sendiri.  
-Kamu juga.
-
-**Kalau kamu offline seminggu, apa yang benar-benar hilang?**  
-
-Lepas dari sosmed bukan berarti menghilang.  
-Kamu tetap ada. Hanya tidak terlihat di layar.
-
-Dan itu tidak masalah.
-
+Biasanya saya mengirim stiker, membagikan reels, atau sekadar melihat meme. Tiba-tiba semua itu hilang.
 ---
-
 Saya pernah membaca kutipan ini di internet:
 
 > 2016: sosmed digunakan untuk kabur dari realita.  
 > 2026: realita digunakan untuk kabur dari sosmed.
 
-Sosmed saat ini memang tidak bisa dihindari sepenuhnya. Susah, karena ini sudah menjadi industri besar.
+Sosmed saat ini memang tidak bisa dihindari sepenuhnya, karena ini sudah menjadi industri besar. Namun, setidaknya kita bisa mencoba tidak dikendalikan sepenuhnya.
 
-Tapi setidaknya, kita bisa mencoba tidak dikendalikan sepenuhnya.
+Jadi, kalau kamu offline seminggu, apa yang benar-benar hilang?
 
 ---
 
