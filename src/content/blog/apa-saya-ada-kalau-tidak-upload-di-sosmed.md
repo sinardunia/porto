@@ -20,65 +20,46 @@ Teman saya yang baik bertanya, dengan wajah heran.
 
 Saya sedang tidak buka HP selama beberapa hari.
 
-Ada kok di rumah, makan, tidur, menyapa kucing, dan sebagainya wkwk.
+Ada di rumah, makan, tidur, menyapa kucing.
 
----
-Ini menarik, karena pertanyaan itu membuat saya teringat bahwa dulu saya tidak bisa lepas dari HP.
-
-Waktu pandemi, saya tidak keluar rumah berminggu-minggu.  
-**Tiga bulan** hampir tidak bertemu orang 😅
-
-Saya menghabiskan waktu untuk main game, sosmed, dan apa saja yang membuat lupa waktu.
-
-Screentime pernah tembus **19 jam** dalam sehari. 
-
-Bahkan saat bangun tidur-pun, HP sudah ada di tangan. Dan saat akan tidur, layarnya masih menyala. Itu gila sekali.
-
-tapi waktu itu saya merasa tidak ada yang keliru dengan kebiasaan itu wkwk.
-
-![](/images/scroll.gif)
+> Saya hidup, Saya ada. Tapi karena tidak terlihat di media sosial saya jadi dianggap **tidak ada** :)
 
 ---
 
-## Reality vs Hyperreality
+Pertanyaan itu mengingatkan saya pada masa ketika saya **tidak bisa lepas** dari HP.
 
-Saya mencoba kurangi screentime.  
-Bolak-balik. Online, offline, online lagi.
+Pandemi membuat saya tidak keluar rumah hingga **tiga bulan**, dan screentime pernah tembus **19 jam** sehari.
 
-...
+Tangan saya selalu memegang HP, bahkan saat tidur.
 
-Kok terasa ada yang kurang, ya? kalau tanpa HP?
+Waktu itu, saya tidak merasa ada yang keliru dengan kebiasaan tersebut.
 
 ---
 
-Suatu malam, saya lagi buka YouTube.
+Saya mencoba kurangi screentime, tetapi gagal terus.
 
-Scroll.  
-Scroll.  
-Ngga jelas.
+Online, offline, online lagi.
 
-Tiba-tiba ada video kolaborasi Kevin Anggara sama Eno Bening.
+Terasa ada yang kurang, kalau tanpa HP...
 
-Saya dengar Kevin bertanya, *“Eh, lo punya buku?”*
+---
 
-...
+Suatu malam, saya lagi buka YouTube dan menemukan [Podcast Kevin Anggara & Eno Bening](https://www.youtube.com/watch?v=mpfDmKgKVtc&t=885s).
 
-Saya baru tahu.  
-Ternyata Eno Bening nulis buku.
+Di podcast tersebut, Saya dengar Kevin bertanya, “Eh, lo kan punya buku?”
 
-Kemudian saya cari di Shopee.
+Saya baru tahu.
+Ternyata Eno Bening menulis buku, karena penasaran, saya cari di shopee...
 
 Cover buku-nya gambar anime gitu. Entah kenapa, menarik 😅
 
-Jadi, saya beli.
+Jadi, saya beli :v
 
 ![](/images/208826802.jpg)
 
-<small>*Bagaimana Sosial Media Menghancurkanmu* karya Eno Bening.</small>
+*Bagaimana Sosial Media Menghancurkanmu* – Eno Bening dkk.
 
 ---
-
-...
 
 Selama saya membaca bukunya, saya menemukan fakta menarik.
 
@@ -86,92 +67,59 @@ Bahwa, sosial media yang dulunya sekadar tempat buat sharing, sekarang perlahan 
 
 Sosial media bukan lagi sekadar ajang curhat atau lihat-lihat foto teman.
 
-Sekarang dirancang supaya kita betah berlama-lama, karena di situlah uang mereka berasal. Dan dengan adanya algoritma, semuanya berubah.
-
-
-
-> *Orang bisa dianggap ada kalau akun medsosnya aktif.  
-> Kalau tidak, seolah hilang dari sejarah*
-
----
-
+> Orang bisa dianggap **ADA** kalau akun medsosnya aktif.
+> Kalau tidak, seolah HILANG dari sejarah
 
 ### Hiperealitas
 
-Sesuatu yang tidak nyata, tapi terasa lebih nyata daripada kenyataan itu sendiri.
+sesuatu yang tidak nyata, tetapi terasa lebih nyata daripada kenyataan itu sendiri.
 
-Media sosial adalah contoh hiperealitas paling dekat.
-Kita percaya bahwa like, komentar, dan unggahan adalah ukuran keberadaan seseorang.
-
----
-
-## Kenapa susah banget stop scroll?
-
-Sosmed sudah menjadi **industri**.
-
-> Angka = Uang
-
-**Atensi adalah mata uang baru di era digital.**  
-Perhatian menjadi uang bagi mereka.
-
-Dari iklan, dari data, dari algoritma yang terus belajar agar kita semakin lama berlama-lama.
-
-Bisa saja kita yang tidak menggunakan sosmed. tapi **sosmed yang menggunakan kita**.
+Kita mulai percaya bahwa like, komentar, dan unggahan adalah ukuran keberadaan seseorang.
 
 ---
 
-## Fenomena FOMO
+Sekarang, Saya jadi tidak terlalu takut jikalau tidak online.
 
-Buku itu juga membahas **FOMO** (*fear of missing out*).  
-Takut ketinggalan, takut tidak *update*, takut dilupakan.
+Karena dulu memang sudah terbiasa, setiap gabut langsung buka reels, kirim stiker ke temen, share postingan di fb, otomatis aja.
 
-Saya pernah, saat terjerat sosmed, menjadi **tidak sabaran**.
+### Fenomena FOMO
 
-Contoh: 
+Pernah nggak, kamu melihat orang lain bergerak sedikit saja, lalu kepala langsung merasa tertinggal?
 
-Saya sering buka HP buat ngecek notif, lalu lupa waktu.
+Kita jadi takut ketinggalan sesuatu, tetapi malah meninggalkan mimpi kita sendiri.
 
-> *Malas mengerjakan hal yang penting, tapi kelewat rajin untuk hal yang tidak penting.*
+Akibatnya, malas mengerjakan hal yang penting, tetapi kelewat rajin untuk hal yang tidak berguna.
 
-Di sosmed, saya melihat teman-teman sudah menikah, sudah kuliah, hidupnya terasa lurus-lurus saja, tujuan hidupnya jelas.
+Fenomena ini disebut **FOMO** (*fear of missing out*).
 
-Apakah saya iri?
-
-Tentunya. wkwk
-
-Tapi lama-lama saya tidak terlalu memikirkan itu.
-Lagipula, Setiap orang punya jalannya masing-masing.
+Di dalam buku itu, **FOMO** juga dijelaskan memengaruhi perilaku kita sehari-hari.
 
 ---
 
-Melihat orang bergerak sedikit, kepala langsung merasa tertinggal. 
+![](/images/escape.jpeg)
 
-Padahal, apa yang saya lihat di sosmed belum tentu seutuhnya benar, kan?.
+Sebuah meme dari gambar tersebut mengingatkan kita bahwa sosmed sudah berubah.
 
-...
+Sosmed sudah menjadi industri.
 
 ---
 
-## Mengurangi kecanduan
+Saya sempat tidak buka HP selama beberapa hari.
 
-Saya pernah melihat seorang programmer bernama Saugi. Dia bercerita di Facebook bahwa dia berhenti menggunakan sosial media selama 30 hari, dan menurutnya efeknya baik.
+Mencoba hidup di dunia nyata.
 
-Kemudian saya ikut mencoba, tetapi hanya selama 3 hari.
+Saya ke kebun, menyiram tanaman, melihat langit, main sama kucing.
 
-Awalnya saya mengira itu akan mudah.
+**Hari-hari awal 1-3 hari** terasa berat sekali.  
+Karena tidak ada lagi reels kocak dan kekonyolan di internet. Hidup terasa hampa.
 
-Namun selama tiga hari itu, saya justru menyadari betapa seringnya saya membuka media sosial karena kebiasaan.
+Tapi setelah tiga hari ke depan, rasanya sedikit tenang.
 
-Biasanya saya mengirim stiker, membagikan reels, atau sekadar melihat meme. Tiba-tiba semua itu hilang.
----
-Saya pernah membaca kutipan ini di internet:
+Ternyata, **saya tetap hidup**.
 
-> 2016: sosmed digunakan untuk kabur dari realita.  
-> 2026: realita digunakan untuk kabur dari sosmed.
+Ternyata, tanpa sosmed, saya hanya manusia biasa yang makan, tidur, dan tidur lagi:v
 
-Sosmed saat ini memang tidak bisa dihindari sepenuhnya, karena ini sudah menjadi industri besar. Namun, setidaknya kita bisa mencoba tidak dikendalikan sepenuhnya.
-
-Jadi, kalau kamu offline seminggu, apa yang benar-benar hilang?
+Hanya manusia biasa, makan nasi...
 
 ---
 
