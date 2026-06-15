@@ -3,8 +3,8 @@ title: Apa Saya Ada Kalau Tidak Upload di Sosmed?
 slug: apa-saya-ada-kalau-tidak-upload-di-sosmed
 description: Tentang oversharing, FOMO, dan pertanyaan "Ke mana aja?"
 coverImage: /images/kuda.png
-pubDatetime: 2026-05-15
-modDatetime: 2026-05-15
+pubDatetime: 2026-04-30
+modDatetime: 2026-04-30
 draft: false
 featured: false
 tags:
@@ -22,7 +22,7 @@ Saya sedang tidak buka HP selama beberapa hari.
 
 Ada di rumah, makan, tidur, menyapa kucing.
 
-> Saya hidup, Saya ada. Tapi karena tidak terlihat di media sosial saya jadi dianggap **tidak ada** :)
+> Saya hidup, saya ada. Tapi karena tidak terlihat di media sosial saya jadi dianggap **tidak ada** :)
 
 ---
 
@@ -76,6 +76,10 @@ sesuatu yang tidak nyata, tetapi terasa lebih nyata daripada kenyataan itu sendi
 
 Kita mulai percaya bahwa like, komentar, dan unggahan adalah ukuran keberadaan seseorang.
 
+Saya upload story agar terlihat masih hidup.
+
+Karena realitas saat ini telah bergeser menjadi hiperealitas, di mana banyak orang menganggap media sosial sebagai kenyataan itu sendiri.
+
 ---
 
 Sekarang, Saya jadi tidak terlalu takut jikalau tidak online.
@@ -92,7 +96,7 @@ Akibatnya, malas mengerjakan hal yang penting, tetapi kelewat rajin untuk hal ya
 
 Fenomena ini disebut **FOMO** (*fear of missing out*).
 
-Di dalam buku itu, **FOMO** juga dijelaskan memengaruhi perilaku kita sehari-hari.
+Di dalam buku itu, **FOMO** juga dijelaskan memengaruhi perilaku kita sehari-hari, silakan baca sendiri buku-nya untuk lebih detail.
 
 ---
 
