@@ -1,7 +1,7 @@
 ---
 title: izin off
 slug: izin-off
-description: Tentang oversharing, FOMO, dan pertanyaan "Ke mana aja?"
+description: Dari iseng scroll YouTube sampai nemu buku Eno Bening, saya jadi sadar soal hiperealitas. Lalu saya coba 'izin off' dan melihat langsung perbedaannya.
 coverImage: /images/kuda.png
 pubDatetime: 2026-04-30
 modDatetime: 2026-04-30
@@ -10,9 +10,9 @@ featured: false
 tags:
   - personal
   - refleksi
-  - bahas_buku
-  - hiperrealitas
-  - oversharing
+  - sosial-media
+  - fomo
+  - bahas-buku
 ---
 
 **“Ke mana aja?”**
