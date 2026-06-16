@@ -44,7 +44,7 @@ Terasa ada yang kurang kalau tanpa HP.
 
 ---
 
-Suatu malam, saya lagi buka YouTube. Nontonin podcast Kevin Anggara dan Eno Bening. [Podcast Kevin Anggara & Eno Bening](https://www.youtube.com/watch?v=mpfDmKgKVtc&t=885s).
+Suatu malam, saya lagi buka YouTube. Nontonin [podcast Kevin Anggara & Eno Bening.](https://www.youtube.com/watch?v=mpfDmKgKVtc&t=885s).
 
 *“Eh, lo kan punya buku?”* ucap Kevin bertanya kepada Eno.
 
