@@ -42,6 +42,8 @@ Waktu itu, saya tidak merasa ada yang keliru dengan kebiasaan tersebut.
 Saya mencoba untuk mengurangi screentime, tetapi gagal terus.  
 Terasa ada yang kurang kalau tanpa HP.
 
+...
+
 ---
 
 Suatu malam, saya lagi buka YouTube. Nontonin [podcast Kevin Anggara & Eno Bening.](https://www.youtube.com/watch?v=mpfDmKgKVtc&t=885s).
@@ -78,19 +80,15 @@ Di mana kita sudah menganggap sosial media sebagai kenyataan itu sendiri.
 ---
 ![](/images/escape.jpeg)
 
-Sosmed sekarang sudah menjadi industri.
-
----
-
 
 ---
 Saat saya kecanduan, sudah otomatis aja.
 
 Jikalau gabut, langsung buka sosmed. Gatau ngapain.
 
-Kadang colek-colek orang di FB, kirim-kirim stiker ke temen di WhatsApp, nyari foto di Pinterest buat dijadikan foto profil (ganti-ganti wkwk).
+Kadang colek-colek orang di FB, kirim-kirim stiker ke temen di WhatsApp, -nyari foto di Pinterest buat dijadikan foto profil (ganti-ganti wkwk).
 
-Penuh dengan ketidakpentingan...
+Fomo doang, penuh dengan ketidakpentingan...
 
 ---
 
