@@ -23,11 +23,11 @@ tags:
 
 **Subaru mati berkali-kali. Dan setiap kali mati, dia kembali ke titik awal.**
 
-Kemampuan ini bernama **Return by Death**. Sekilas keren. Tapi coba bayangkan: mati puluhan kali, hidup lagi, mati lagi. Setiap kematian terasa nyata. Setiap rasa sakit dia ingat.
+Kemampuan ini bernama **Return by Death**. Sekilas keren. Tapi coba bayangkan, mati puluhan kali, hidup lagi, mati lagi. Setiap kematian terasa nyata. Setiap rasa sakit dia ingat.
 
-Lalu, yang paling gila: **jikalau dia mati tua di umur 80 tahun**, dia tetap akan **respawn** di depan tukang apel 😅
+Lalu, **jikalau dia mati tua di umur 80 tahun**, dia tetap akan **respawn** di depan tukang apel 😅
 
-Mati terus, hidup lagi. Nggak pernah selesai.
+Mati terus, hidup lagi. Tanpa pernah selesai.
 
 ![](/images/13.jpg)
 
@@ -67,7 +67,7 @@ Kenapa dinamakan rute Sloth? Bukan karena Subaru malas bekerja. Dia tetap kerja 
 
 Arti malas di sini adalah **kemalasan jiwa dan mental**.
 
-Subaru yang tadinya keras kepala, memilih **menyerah**: lari dari tanggung jawab, kabur dari kenyataan.
+Subaru yang tadinya keras kepala, memilih **menyerah** lari dari tanggung jawab, kabur dari kenyataan.
 
 ---
 

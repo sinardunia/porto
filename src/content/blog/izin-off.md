@@ -1,7 +1,7 @@
 ---
 title: izin off
 slug: izin-off
-description: Dari iseng scroll YouTube sampai nemu buku Eno Bening, saya jadi sadar soal hiperealitas. Lalu saya coba 'izin off' dan melihat langsung perbedaannya.
+description: Refleksi setelah mencoba off dari sosial media.
 coverImage: /images/kuda.png
 pubDatetime: 2026-04-30
 modDatetime: 2026-04-30
@@ -11,7 +11,7 @@ tags:
   - personal
   - refleksi
   - sosial-media
-  - fomo
+  - keresahan
   - bahas-buku
 ---
 
@@ -76,6 +76,7 @@ Ya, mungkin itu menjadi salah satu penyebab, tapi ini menandakan bahwa sosmed su
 
 Di mana kita sudah menganggap sosial media sebagai kenyataan itu sendiri.
 
+Saya mulai memperhatikan, kebiasaan saya saat membuka sosmed.
 
 ---
 ![](/images/escape.jpeg)

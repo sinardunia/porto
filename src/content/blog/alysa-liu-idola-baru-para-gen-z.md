@@ -1,8 +1,7 @@
 ---
 title: Alysa Liu Idola Baru Para Gen Z
 slug: alysa-liu-idola-baru-para-gen-z
-description: seorang juara olympic figure skating di youtube jam dua pagi
-  membuat saya melihat ulang ekspektasi saya tentang “orang hebat”
+description: seorang juara olympic figure skating 
 pubDatetime: 2026-06-03
 modDatetime: 2026-06-03
 draft: true
@@ -21,20 +20,12 @@ bawaannya ingin sekali saya klik thumbnail tersebut.
 
 setelah saya klik dan tonton, dia seorang juara olympic figure skating (Atlet Seluncur Es), pernah meraih medali emas untuk negaranya.
 
-tapi cara dia berbicara tidak terasa seperti “atlet juara dunia” seperti yang biasanya saya bayangkan.
-
-lebih santai, seperti sedang menyampaikan hal biasa saja.
+Berbeda dengan kebanyakan atlet, ia memiliki pola pikir yang sangat menarik:
 
 > “you can’t beat someone who’s having fun.  
 > “i love struggling, actually. it makes me feel alive.”  
 > “what is there to lose? every second you're there, you're gaining something. i'm just blindly confident.”
 
-saya tidak langsung menangkap itu sebagai sesuatu yang besar atau dalam.
+Parasnya yang cantik dan unik, disukai banyak orang, terutama para Gen Z.
 
-lebih seperti ada jarak kecil antara ekspektasi saya dan cara dia muncul di situ.
-
-biasanya, ketika mendengar “olympic gold medalist”, yang terbayang adalah sosok yang serius, penuh tekanan, atau setidaknya terasa jauh dari cara bicara sehari-hari.
-
-tapi ini tidak terasa seperti itu.
-
-dia tidak membawa statusnya ke dalam cara berbicara.
+Ia mempunyai gaya rambut pirang dengan gaya racoon yang khas.
