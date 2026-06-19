@@ -7,18 +7,30 @@ import DarkModeToggle from "./DarkModeToggle.astro";
   class="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/50 bg-white/90 backdrop-blur-md dark:border-neutral-800/50 dark:bg-[#0a0a0a]/90 transition-colors"
 >
   <div class="mx-auto flex h-14 max-w-[720px] items-center justify-between gap-4 px-4 sm:h-16 sm:gap-6 sm:px-6">
-    <a
+   <a
       href="/"
-      class="group flex items-center gap-2.5 no-typewriter truncate text-[15px] font-semibold tracking-tight text-neutral-900 transition-all duration-200 hover:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-100 dark:hover:text-neutral-300 dark:focus-visible:ring-neutral-600 sm:gap-3 sm:text-base"
+      class="group flex items-center no-typewriter truncate text-neutral-900 transition-all duration-200 hover:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-100 dark:hover:text-neutral-300 dark:focus-visible:ring-neutral-600"
     >
-      <img
-        src="/avatar.png"
-        alt="Fuji"
-        class="h-7 w-7 rounded-full object-cover ring-1 ring-neutral-200/50 transition-all duration-200 group-hover:ring-neutral-300/50 dark:ring-neutral-700/50 dark:group-hover:ring-neutral-600/50 sm:h-8 sm:w-8"
-      />
-      <span>Fuji</span>
+      <!-- Ikon Home (mobile) -->
+      <svg
+        class="sm:hidden h-5 w-5"
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        <polyline points="9 22 9 12 15 12 15 22" />
+      </svg>
+      <!-- Teks Home (desktop) -->
+      <span class="hidden sm:inline text-[14px] font-medium">Home</span>
     </a>
-
     <nav class="flex items-center gap-1.5 sm:gap-3" aria-label="Main navigation">
       <a
         href="/about"

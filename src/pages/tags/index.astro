@@ -13,21 +13,21 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Articles", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "Tags", item: `${SITE_URL}/tags` },
+    { "@type": "ListItem", position: 1, name: "Artikel", item: SITE_URL },
+    { "@type": "ListItem", position: 2, name: "Tag", item: `${SITE_URL}/tags` },
   ],
 };
 ---
 
 <Layout
-  title="Tags"
-  description="Browse articles by topic."
-  keywords={["tags", "topics", "blog"]}
+  title="Tag"
+  description="Telusuri artikel berdasarkan topik."
+  keywords={["tag", "topik", "blog"]}
   jsonLd={[breadcrumbJsonLd]}
 >
   <div class="mx-auto w-full max-w-[42rem] pb-24">
     <header class="mb-10 border-b border-neutral-200 pb-8 dark:border-neutral-800">
-      <nav class="mb-6" aria-label="Breadcrumb">
+      <nav class="mb-6" aria-label="Navigasi breadcrumb">
         <a
           href="/"
           class="inline-flex min-h-[44px] items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
@@ -36,15 +36,15 @@ const breadcrumbJsonLd = {
           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
-          Articles
+          Artikel
         </a>
       </nav>
-      <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">Tags</h1>
-      <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-500">Browse articles by topic.</p>
+      <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">Tag</h1>
+      <p class="mt-2 text-sm text-neutral-500 dark:text-neutral-500">Telusuri artikel berdasarkan topik.</p>
     </header>
 
     {tags.length > 0 ? (
-      <ul class="flex flex-wrap gap-1.5" role="list">
+      <ul class="flex flex-wrap gap-1.5 sm:gap-2" role="list">
         {tags.map((tag) => (
           <li>
             <TagPill name={tag.name} slug={tag.slug} count={tag.count} showCount />
@@ -52,7 +52,7 @@ const breadcrumbJsonLd = {
         ))}
       </ul>
     ) : (
-      <p class="text-sm text-neutral-500 dark:text-neutral-400">No tags yet.</p>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">Belum ada tag.</p>
     )}
   </div>
 </Layout>

@@ -33,15 +33,15 @@ if (!tagInfo) {
   Astro.response.status = 404;
 }
 
-const articleLabel = posts.length === 1 ? "article" : "articles";
+const articleLabel = posts.length === 1 ? "artikel" : "artikel";
 
 const breadcrumbJsonLd = tagInfo
   ? {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Articles", item: SITE_URL },
-        { "@type": "ListItem", position: 2, name: "Tags", item: `${SITE_URL}/tags` },
+        { "@type": "ListItem", position: 1, name: "Artikel", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tag", item: `${SITE_URL}/tags` },
         {
           "@type": "ListItem",
           position: 3,
@@ -54,17 +54,17 @@ const breadcrumbJsonLd = tagInfo
 ---
 
 <Layout
-  title={tagInfo ? tagInfo.name : "Tag not found"}
-  description={tagInfo ? `${posts.length} ${articleLabel} tagged "${tagInfo.name}".` : "This tag does not exist."}
+  title={tagInfo ? tagInfo.name : "Tag tidak ditemukan"}
+  description={tagInfo ? `${posts.length} ${articleLabel} dengan tag "${tagInfo.name}".` : "Tag ini tidak ada."}
   noindex={!tagInfo}
-  keywords={tagInfo ? [tagInfo.name, "blog", "articles"] : undefined}
+  keywords={tagInfo ? [tagInfo.name, "blog", "artikel"] : undefined}
   jsonLd={breadcrumbJsonLd ? [breadcrumbJsonLd] : undefined}
 >
   <div class="mx-auto w-full max-w-[42rem] pb-24">
     {tagInfo ? (
       <>
         <header class="mb-10">
-          <nav class="mb-6" aria-label="Breadcrumb">
+          <nav class="mb-6" aria-label="Navigasi breadcrumb">
             <a
               href="/tags"
               class="inline-flex min-h-[44px] items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
@@ -73,7 +73,7 @@ const breadcrumbJsonLd = tagInfo
               <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
-              Tags
+              Tag
             </a>
           </nav>
           <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
@@ -84,17 +84,19 @@ const breadcrumbJsonLd = tagInfo
           </p>
         </header>
 
-        <BlogPostList posts={posts} />
+        <div class="min-w-0">
+          <BlogPostList posts={posts} />
+        </div>
       </>
     ) : (
       <div class="py-16 text-center">
-        <h1 class="mb-3 text-xl font-semibold text-neutral-900 dark:text-neutral-100">Tag not found</h1>
-        <p class="mb-6 text-sm text-neutral-500 dark:text-neutral-400">No articles use this tag.</p>
+        <h1 class="mb-3 text-xl font-semibold text-neutral-900 dark:text-neutral-100">Tag tidak ditemukan</h1>
+        <p class="mb-6 text-sm text-neutral-500 dark:text-neutral-400">Tidak ada artikel yang menggunakan tag ini.</p>
         <a
           href="/tags"
           class="text-sm font-medium text-neutral-700 underline-offset-2 hover:underline dark:text-neutral-300"
         >
-          Browse all tags
+          Lihat semua tag
         </a>
       </div>
     )}

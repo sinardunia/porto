@@ -1,5 +1,6 @@
 export const AUTHOR = {
   name: "Fuji",
+  pseudonym: "Waltahh",
   shortName: "Perkenalkan, saya Fuji. Di internet biasa dipanggil waltahh atau terserah yang mau manggil apa.",
   handle: "Blog ini tempat saya mencatat hal-hal yang menarik. Sesukanya, semaunya, seadanya. Bisa teknologi, anime, atau sekadar renungan.",
   tagline: "Jikalau bermanfaat, alhamdulillah 🙂. Kalau tidak, tidak apa-apa.",

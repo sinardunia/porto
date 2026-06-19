@@ -13,15 +13,16 @@ tags:
   - keresahan
   - personal
 ---
+
 Saya membeli bitcoin setiap awal bulan. Ngga banyak, tapi rutin.
 
 Bukan karena yakin akan tiba-tiba kaya dengan itu. Tapi karena dunia terasa semakin gila.
 
-Ketidakpastian masa depan, AI, dan MBG. 😫
+Ketidakpastian masa depan, AI, dan MBG 😫
 
-Lagi ramai di internet ungkapan "you'll own nothing and you'll be happy". Memprediksi tahun 2030 akan menjadi serba rental.
+Lagi ramai di internet ungkapan "you'll own nothing and you'll be happy". Yang memprediksi tahun 2030 akan menjadi serba rental.
 
-Rajin menabung. Tapi menyimpan uang di rekening sekarang terasa was-was. Inflasi bisa menggerus kita kapan saja.
+Rajin menabung, tapi sekarang malah terasa was-was. Inflasi bisa menggerus kapan saja.
 
 Rupiah terus kehilangan daya beli. Inflasi begitu parah. Harga kebutuhan naik setiap bulan. Sementara gaji? Ngga naik-naik.
 

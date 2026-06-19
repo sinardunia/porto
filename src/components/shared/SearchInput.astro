@@ -8,7 +8,7 @@ interface Props {
 
 const {
   value = "",
-  placeholder = "Search articles...",
+  placeholder = "Cari artikel...",
   clearHref = "/",
   activeTag = "",
 } = Astro.props;
@@ -26,7 +26,7 @@ const hasQuery = value.length > 0;
   data-active-tag={activeTag}
 >
   {activeTag && <input type="hidden" name="tag" value={activeTag} />}
-  <label for="blog-search" class="sr-only">Search articles</label>
+  <label for="blog-search" class="sr-only">Cari artikel</label>
   <div class="relative">
     <span
       class="pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-neutral-400 dark:text-neutral-500"
@@ -56,7 +56,7 @@ const hasQuery = value.length > 0;
       data-search-clear
       hidden={!hasQuery}
       tabindex={hasQuery ? 0 : -1}
-      aria-label="Clear search"
+      aria-label="Hapus pencarian"
       class="absolute right-1.5 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-neutral-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900/20 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-white/20"
     >
       <svg

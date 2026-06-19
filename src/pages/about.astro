@@ -13,6 +13,7 @@ const jsonLd = {
   mainEntity: {
     "@type": "Person",
     name: AUTHOR.name,
+    alternateName: AUTHOR.pseudonym,
     description: AUTHOR.bioLong,
     url: SITE_URL,
   },
@@ -31,12 +32,11 @@ const jsonLd = {
   <div class="flex items-center">
     <AuthorAvatar size="lg" />
   </div>
-  <div class="mt-6 prose prose-neutral dark:prose-invert">
-<p>Perkenalkan 👋, saya Fuji. Di internet biasa dipanggil waltahh, atau terserah mau manggil apa.</p>
-  <p>Nah, untuk mengisi waktu luang, saya mencatat hal-hal yang menarik buat saya. Dan semoga juga menarik buat kamu.</p>
-  <p>Sesukanya, semaunya, seadanya.</p>
+<div class="mt-6 prose prose-neutral dark:prose-invert">
+  <p>Perkenalkan 👋, saya Fuji. Di internet biasa dipanggil waltahh, atau terserah mau manggil apa.</p>
+  <p>Blog ini iseng-iseng aja, tempat saya mencatat hal-hal yang menarik buat saya. Dan semoga juga menarik buat kamu. Pokoknya di sini mah... sesukanya, semaunya, seadanya.</p>
   <p>Jikalau bermanfaat, alhamdulillah 🙂 Kalau tidak, tidak apa-apa.</p>
-  </div>
+</div>
 </section>
 
     <p class="mt-8">

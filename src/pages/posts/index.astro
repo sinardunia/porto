@@ -7,6 +7,7 @@ import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
 import type { BlogPostSummary } from "@/types/blog";
 import { SITE_URL } from "@/data/config";
+import { AUTHOR } from "@/data/author";
 
 export const prerender = false;
 
@@ -87,6 +88,11 @@ const webPageJsonLd = {
     ? `Artikel yang mengandung kata "${query}"`
     : "Kumpulan lengkap tulisan tentang teknologi, anime, dan hal-hal yang membuat saya penasaran.",
   url: canonicalUrl,
+  author: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    alternateName: AUTHOR.pseudonym,
+  },
   mainEntity: {
     "@type": "ItemList",
     itemListElement: paginatedPosts.map((post, idx) => ({
@@ -117,12 +123,12 @@ const pageDescription = query
   <link rel="canonical" href={canonicalUrl} />
   
   <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
-    <section class="flex flex-col gap-5" aria-label="Search and filters">
+    <section class="flex flex-col gap-5" aria-label="Pencarian dan filter">
       <SearchInput value={query} placeholder="Cari artikel..." clearHref="/posts" />
       <PopularTags posts={allPosts} />
     </section>
 
-    <section aria-labelledby="articles-heading">
+    <section aria-labelledby="articles-heading" class="min-w-0">
       <h1 id="articles-heading" class="mb-6 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
         {query ? `Hasil pencarian: "${query}"` : "Semua Artikel"}
       </h1>

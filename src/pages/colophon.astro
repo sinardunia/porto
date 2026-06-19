@@ -1,0 +1,106 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { AUTHOR } from "@/data/author";
+import { SITE_URL } from "@/data/config";
+
+const description = "Kolofon: filosofi desain, teknologi yang digunakan, dan kepemilikan arsip pribadi ini.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Kolofon",
+  description,
+  url: new URL("/colophon", SITE_URL).toString(),
+  author: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    alternateName: AUTHOR.pseudonym,
+  },
+};
+---
+<Layout title="Kolofon" description={description} jsonLd={jsonLd}>
+  <div class="mx-auto w-full max-w-[42rem] pb-8">
+    <header class="mb-10">
+      <h1 class="text-2xl font-bold tracking-tight text-neutral-900 dark:text-neutral-50 sm:text-3xl">
+        Kolofon
+      </h1>
+    </header>
+
+    <div class="prose prose-neutral dark:prose-invert">
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-4">Kepemilikan</h2>
+        <p>
+          Situs ini dirancang dan ditulis oleh <span class="font-medium">Waltahh</span> — pseudonim pribadi yang digunakan untuk karya kreatif dan kehadiran digital.
+        </p>
+        <p class="text-sm text-neutral-500 dark:text-neutral-500 mt-2">
+          Seluruh konten, keputusan desain, dan implementasi teknis mencerminkan visi tunggal: menciptakan ruang yang tenang, minimal, dan pribadi untuk menulis dan mengarsipkan.
+        </p>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-4">Filosofi Desain</h2>
+        <p>
+          Desain mengikuti prinsip minimalisme dan pengendalian:
+        </p>
+        <ul class="list-disc pl-6 space-y-1 mt-2">
+          <li>Pendekatan konten terlebih dahulu dengan gangguan visual minimal</li>
+          <li>Desain responsif mobile-first</li>
+          <li>Dukungan mode gelap dengan deteksi preferensi sistem</li>
+          <li>Memuat cepat tanpa JavaScript yang tidak perlu</li>
+          <li>Tipografi dan spasi yang mudah diakses</li>
+          <li>Tanpa metrik sosial, suka, atau umpan keterlibatan</li>
+          <li>Animasi halus yang meningkatkan, bukan mengalihkan perhatian</li>
+        </ul>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-4">Teknologi yang Digunakan</h2>
+        <p>
+          Dibuat dengan teknologi web modern dengan menjaga kompleksitas tetap rendah:
+        </p>
+        <ul class="list-disc pl-6 space-y-1 mt-2">
+          <li><strong>Astro 5</strong> — Generator situs statis dengan hidrasi parsial</li>
+          <li><strong>Tailwind CSS 3</strong> — Framework CSS utility-first</li>
+          <li><strong>Inter font</strong> — Font variabel untuk tipografi yang bersih</li>
+          <li><strong>Netlify</strong> — Platform hosting dan deployment</li>
+          <li><strong>Supabase</strong> — Backend untuk konten dinamis (esai, pemikiran)</li>
+          <li><strong>Content Collections</strong> — Manajemen konten yang aman secara tipe</li>
+        </ul>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-4">Performa</h2>
+        <p>
+          Situs ini memprioritaskan performa melalui:
+        </p>
+        <ul class="list-disc pl-6 space-y-1 mt-2">
+          <li>Generasi HTML statis jika memungkinkan</li>
+          <li>JavaScript minimal (hanya untuk interaksi penting)</li>
+          <li>Font yang dioptimalkan dengan subsetting</li>
+          <li>CSS efisien dengan purging Tailwind</li>
+          <li>Lazy loading untuk gambar</li>
+        </ul>
+      </section>
+
+      <section class="mb-10">
+        <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-50 mb-4">Hak Cipta & Lisensi</h2>
+        <p>
+          Seluruh konten dilindungi hak cipta © 2024–Sekarang oleh Waltahh. Kecuali ditandai lain, seluruh tulisan dan karya desain adalah asli dan dilindungi hak cipta.
+        </p>
+        <p class="text-sm text-neutral-500 dark:text-neutral-500 mt-2">
+          Untuk pertanyaan atau izin, silakan hubungi melalui halaman kontak.
+        </p>
+      </section>
+
+      <p class="mt-8">
+        <a
+          href="/"
+          class="inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
+          data-astro-prefetch="hover"
+        >
+          ← Kembali ke artikel
+        </a>
+      </p>
+    </div>
+  </div>
+</Layout>

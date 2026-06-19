@@ -27,10 +27,11 @@ type Props = {
 
 const { title, description, noindex, keywords, og, jsonLd, article } = Astro.props;
 
-const SITE_NAME = "Article";
+const SITE_NAME = "Artikel";
 const AUTHOR_NAME = AUTHOR.name;
-const DEFAULT_DESCRIPTION = "A quiet personal archive of thoughts, writing, and experiments.";
-const DEFAULT_KEYWORDS = ["blog", "personal", "writing", "essays"];
+const AUTHOR_PSEUDONYM = AUTHOR.pseudonym;
+const DEFAULT_DESCRIPTION = "Arsip pribadi yang tenang tentang pemikiran, tulisan, dan eksperimen.";
+const DEFAULT_KEYWORDS = ["blog", "pribadi", "tulisan", "esai", "Waltahh"];
 
 const pageTitle = title ? `${title} · ${SITE_NAME}` : SITE_NAME;
 const pageDescription = description || DEFAULT_DESCRIPTION;
@@ -105,6 +106,8 @@ const jsonLdScript = jsonLdBlocks
       { name: "theme-color", content: "#0a0a0a", media: "(prefers-color-scheme: dark)" },
       { name: "theme-color", content: "#ffffff", media: "(prefers-color-scheme: light)" },
       { name: "author", content: AUTHOR_NAME },
+      { name: "creator", content: AUTHOR_PSEUDONYM },
+      { name: "copyright", content: `2024–Present ${AUTHOR_PSEUDONYM}` },
       { name: "keywords", content: pageKeywords.join(", ") },
       { name: "language", content: "id" },
       {

@@ -35,8 +35,6 @@ Tangan saya selalu memegang HP, bahkan saat tidur.
 
 Waktu itu, saya tidak merasa ada yang keliru dengan kebiasaan tersebut.
 
-
-
 ---
 
 Saya mencoba untuk mengurangi screentime, tetapi gagal terus.  
@@ -46,13 +44,13 @@ Terasa ada yang kurang kalau tanpa HP.
 
 ---
 
-Suatu malam, saya lagi buka YouTube. Nontonin [podcast Kevin Anggara & Eno Bening.](https://www.youtube.com/watch?v=mpfDmKgKVtc&t=885s).
+Suatu malam, saya lagi buka YouTube. Nontonin [podcast Kevin Anggara & Eno Bening.](https://www.youtube.com/watch?v=mpfDmKgKVtc&t=885s)
 
 *“Eh, lo kan punya buku?”* ucap Kevin bertanya kepada Eno.
 
 Di situ saya baru tahu, ternyata Eno Bening menulis buku.
 
-Karena penasaran, saya cari di Shopee, dan ternyata ada. Cover bukunya gambar anime, entah kenapa menarik 😅 
+Karena penasaran, saya cari di Shopee, dan ternyata ada. Cover bukunya gambar anime, entah kenapa menarik 😅
 
 Jadi, saya beli :v
 
@@ -76,24 +74,21 @@ Ya, mungkin itu menjadi salah satu penyebab, tapi ini menandakan bahwa sosmed su
 
 Di mana kita sudah menganggap sosial media sebagai kenyataan itu sendiri.
 
-Saya mulai memperhatikan, kebiasaan saya saat membuka sosmed.
-
 ---
+
 ![](/images/escape.jpeg)
 
-
 ---
+
 Saat saya kecanduan, sudah otomatis aja.
 
 Jikalau gabut, langsung buka sosmed. Gatau ngapain.
 
-Kadang colek-colek orang di FB, kirim-kirim stiker ke temen di WhatsApp, -nyari foto di Pinterest buat dijadikan foto profil (ganti-ganti wkwk).
+Kadang colek-colek orang di FB, kirim-kirim stiker ke temen di WhatsApp, nyari foto di Pinterest buat dijadikan foto profil (ganti-ganti wkwk).
 
 Fomo doang, penuh dengan ketidakpentingan...
 
 ---
-
-
 
 ## Fenomena FOMO
 
@@ -104,8 +99,6 @@ Pernah ngga? Saat kamu melihat orang lain *“bergerak”* sedikit saja, kepala 
 
 - **Malas** mengerjakan yang penting
 - tapi kelewat **rajin** mengerjakan hal yang tidak berguna
-
-Nah, di dalam buku itu, dijelaskan bahwa FOMO bisa mempengaruhi perilaku kita sehari-hari, lho.
 
 Saya rekomendasikan untuk membacanya sendiri untuk lebih detail...
 

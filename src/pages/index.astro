@@ -53,12 +53,13 @@ Astro.response.headers.set(
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Blogs",
-  description: "A quiet personal archive of thoughts, writing, and experiments.",
+  name: "Blog",
+  description: "Arsip pribadi yang tenang tentang pemikiran, tulisan, dan eksperimen.",
   url: SITE_URL,
   publisher: {
     "@type": "Person",
     name: AUTHOR.name,
+    alternateName: AUTHOR.pseudonym,
     url: SITE_URL,
   },
   potentialAction: {
@@ -76,12 +77,12 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Articles", item: SITE_URL },
+    { "@type": "ListItem", position: 1, name: "Artikel", item: SITE_URL },
   ],
 };
 
 const jsonLd = [websiteJsonLd, breadcrumbJsonLd];
-const pageTitle = query ? `Hasil pencarian: ${query}` : "Articles";
+const pageTitle = query ? `Hasil pencarian: ${query}` : "Artikel";
 const pageDescription = query
   ? `Artikel yang mengandung kata "${query}"`
   : "Catatan yang kebetulan ditulis. Jika bermanfaat, alhamdulillah.";
@@ -93,13 +94,13 @@ const pageDescription = query
   jsonLd={jsonLd}
 >
   <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
-    <section aria-labelledby="articles-heading">
+    <section aria-labelledby="articles-heading" class="min-w-0">
       <h1 id="articles-heading" class="mb-6 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-        {query ? `Hasil pencarian: "${query}"` : "Articles"}
+        {query ? `Hasil pencarian: "${query}"` : "Artikel Terbaru"}
       </h1>
       
-      <section class="flex flex-col gap-5" aria-label="Search and filters">
-        <SearchInput value={query} placeholder="Search articles..." clearHref={clearHref} />
+      <section class="flex flex-col gap-5" aria-label="Pencarian dan filter">
+        <SearchInput value={query} placeholder="Cari artikel..." clearHref={clearHref} />
         <PopularTags posts={allPosts} />
       </section>
       
@@ -117,7 +118,7 @@ const pageDescription = query
               class="mt-6 inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
               data-astro-prefetch="hover"
             >
-              View all articles →
+              Lihat semua artikel →
             </a>
           )}
         </>

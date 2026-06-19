@@ -70,7 +70,7 @@ const fullDate = post
 const isoDate = post ? safeIsoDate(post.pubDatetime) : "";
 const description =
   post?.description ||
-  (post ? `${post.title}. A ${readTime}-minute read.` : "The requested post could not be found.");
+  (post ? `${post.title}. Bacaan ${readTime} menit.` : "Artikel yang diminta tidak ditemukan.");
 const ogImage = post ? resolveOgImageSrc(post.coverImage) : undefined;
 const canonicalPath = post ? `/blog/${post.slug}` : Astro.url.pathname;
 
@@ -80,11 +80,11 @@ const articleJsonLd = post
       "@type": "BlogPosting",
       headline: post.title,
       description,
-      image: ogImage ? [ogImage] : undefined,
+      ...(ogImage && { image: [ogImage] }),
       datePublished: isoDate,
       dateModified: safeIsoDate(post.modDatetime) || isoDate,
-      author: { "@type": "Person", name: AUTHOR.name, url: SITE_URL },
-      publisher: { "@type": "Person", name: AUTHOR.name, url: SITE_URL },
+      author: { "@type": "Person", name: AUTHOR.name, alternateName: AUTHOR.pseudonym, url: SITE_URL },
+      publisher: { "@type": "Person", name: AUTHOR.name, alternateName: AUTHOR.pseudonym, url: SITE_URL },
       mainEntityOfPage: {
         "@type": "WebPage",
         "@id": new URL(canonicalPath, SITE_URL).toString(),
@@ -99,7 +99,7 @@ const breadcrumbJsonLd = post
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Articles", item: SITE_URL },
+        { "@type": "ListItem", position: 1, name: "Artikel", item: SITE_URL },
         {
           "@type": "ListItem",
           position: 2,
@@ -110,7 +110,7 @@ const breadcrumbJsonLd = post
     }
   : undefined;
 
-const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
+const jsonLd = post ? [articleJsonLd!, breadcrumbJsonLd!] : undefined;
 ---
 
 <Layout
@@ -142,7 +142,7 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
         data-lightbox-scope
       >
         <header class="mb-10">
-          <nav class="mb-8" aria-label="Breadcrumb">
+          <nav class="mb-8" aria-label="Navigasi breadcrumb">
             <a
               href="/"
               class="inline-flex min-h-[44px] items-center gap-1.5 text-sm text-neutral-500 transition-colors hover:text-neutral-800 dark:text-neutral-500 dark:hover:text-neutral-300"
@@ -162,7 +162,7 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
                   d="M15 19l-7-7 7-7"
                 />
               </svg>
-              Articles
+              Artikel
             </a>
           </nav>
 
@@ -173,16 +173,16 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
             {post.title}
           </h1>
 
-          <div class="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-neutral-500 dark:text-neutral-500">
+          <div class="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-neutral-500 dark:text-neutral-500 sm:gap-x-3 sm:gap-y-2">
             <time datetime={post.pubDatetime} itemprop="datePublished" title={fullDate}>
               {dateStr}
             </time>
             <span aria-hidden="true">·</span>
-            <span>{readTime} min read</span>
+            <span>{readTime} menit baca</span>
             {safeTags.length > 0 && (
               <>
                 <span aria-hidden="true">·</span>
-                <ul class="flex flex-wrap gap-1.5" aria-label="Tags">
+                <ul class="flex flex-wrap gap-1.5 sm:gap-2" aria-label="Tags">
                   {safeTags.map((tag) => (
                     <li>
                       <TagPill name={tag} slug={tagToSlug(tag)} />
@@ -219,7 +219,7 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
             <AuthorCard variant="compact" />
           </section>
           <div class="flex items-center justify-between gap-4">
-            <span class="text-xs text-neutral-500 dark:text-neutral-400">Share</span>
+            <span class="text-xs text-neutral-500 dark:text-neutral-400">Bagikan</span>
             <ShareButtons url={`${SITE_URL}/blog/${post.slug}`} title={post.title} />
           </div>
         </footer>
@@ -228,15 +228,15 @@ const jsonLd = post ? [articleJsonLd, breadcrumbJsonLd] : undefined;
       </article>
     ) : (
       <div class="mx-auto max-w-[42rem] py-16 text-center">
-        <h1 class="mb-3 text-2xl font-bold text-neutral-900 dark:text-neutral-100">Not found</h1>
+        <h1 class="mb-3 text-2xl font-bold text-neutral-900 dark:text-neutral-100">Tidak ditemukan</h1>
         <p class="mb-8 text-neutral-500 dark:text-neutral-400">
-          This article does not exist or is not published.
+          Artikel ini tidak ada atau belum diterbitkan.
         </p>
         <a
           href="/"
           class="inline-flex min-h-[44px] items-center justify-center rounded-lg bg-neutral-100 px-6 py-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
         >
-          Back to articles
+          Kembali ke artikel
         </a>
       </div>
     )
