@@ -1,7 +1,7 @@
 ---
 title: Kok kartun bisa cantik, sih?
 slug: kok-kartun-bisa-cantik-sih
-description: Saya masih ingat komentar Facebook tahun 2022. Yang aneh, mereka mungkin sudah lupa. Tapi saya masih ingat.
+description: Tentang postingan Facebook yang masih keinget.
 coverImage: /images/mu.jpg
 pubDatetime: 2024-09-19
 modDatetime: 2024-09-19
@@ -13,60 +13,58 @@ tags:
   - refleksi
 ---
 
-> **“SAYA HERAN KENAPA KARTUN BISA CANTIK”**
+> "GW HERAN KENAPA KARTUN BISA CANTIK"
 
-Saya masih ingat postingan itu.
+Pernahkah kamu melihat postingan itu?
 
-Lupa akun siapa yang nge-posting. Tapi yang jelas kalimatnya membekas di kepala.
+Di Facebook tahun 2022, di antara meme Doge, berita politik, dan takbiran ya balapan, sebuah akun berfoto profil Saber dari Fate Night muncul di beranda saya.
 
-Di kolom komentar, orang-orang rame berkomentar.
-
-“Karena lo wibu.” “Huu, lari ada wibu.”
-
-Nah, tahun 2022. Saya pakai PP anime. Dan saya dihujat. Bukan oleh orang asing. Tapi oleh orang-orang di timeline saya sendiri. Teman. Kenalan. Orang yang saya kenal.
-
----
-
-Saya masih ingat itu sampai sekarang.
-
-Btw, saya ngga tahu kenapa. Kata-katanya tidak kasar. Tapi mungkin karena yang ngejek adalah orang yang saya kenal. Dan bukan cuma satu, Banyak.
-
-Semua timeline saya ikut berisik di komen.
-
-“Apa yang salah dengan saya?”
-
-Saya mulai mempertanyakan apa itu normal, apa saya aneh, dan sebagainya 😭
-
----
+Postingan itu berisi gambar berikut:
 
 ![](/images/kok.webp)
 
-Tapi biar ngga melompat, ceritanya begini.
+Saya ngga tahu siapa yang mengunggah. Ada ribuan orang yang memberi like, react haha, dan react marah.
 
-Tahun 2024. Sekarang.
+Di kolom komentar, orang-orang rame menghujat.
 
-Ketika buka postingan yang sama. Orang yang dulu ngejek. Friendlist yang dulu komen “lari ada wibu”.
-
-Ironinya, sekarang pada pakai PP anime.
-
-Saya lihat di beranda. Ketika ada karakter yang adorable sedikit, komentar penuh “my istri”, “istri guweh”, dan komentar stres lainnya.
-
-Maaf saja ya, akhirnya kalian paham wkwk.
-
-![](/images/bob.jpg)
+“Karena lo wibu.” “Huu, lari ada wibu.”
 
 ---
 
-Lucunya, setelah empat tahun, saya masih belum bisa menemukan jawaban dari pertanyaan itu.
+Entah kenapa, postingan itu membekas di ingatan saya. Saat itu, saya juga sedang memakai foto profil anime.
 
-Kartun kok bisa cantik?
+“Apa yang salah dengan saya?”
+
+Saya mulai mempertanyakan apa itu normal, apa saya aneh, dan lain sebagainya 😭
+
+
+---
+
+Dua tahun kemudian...
+
+Ironisnya, ketika saya kembali membuka Facebook pada 2024, suasananya sudah berbeda. Postingan anime lewat begitu saja tanpa hujatan seperti dulu.
+
+Melainkan komentar stress seperti:
+
+> "my istri", "istri guweh", "kpn yh"
+
+Hujatan yang dulu ramai, kini hampir tak terlihat.
+
+
+![](/images/bob.jpg)
+
+...
+
+---
+
+
+
+Sampai saat ini, saya masih belum mengerti.
+
+"Kartun kok bisa cantik?"
 
 Saya ngga tahu.
 
 Mungkin karena lo wibu :v
 
----
-
 ![](/images/huu.jpg)
-
-Terima kasih sudah membaca, Sampai jumpa di keresahan selanjutnya, semoga.
