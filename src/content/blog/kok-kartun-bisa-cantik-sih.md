@@ -17,9 +17,9 @@ tags:
 
 Pernahkah kamu melihat postingan itu?
 
-Di Facebook tahun 2022, di antara meme Doge, berita politik, dan takbiran ya balapan, sebuah akun berfoto profil Saber dari Fate Night muncul di beranda saya.
+Di Facebook tahun 2022. Di antara meme Doge, berita politik, dan takbiran ya balapan, sebuah akun dengan foto profil Saber dari Fate Night muncul di beranda saya.
 
-Postingan itu berisi gambar berikut:
+Di postingan itu, ada gambar ini:
 
 ![](/images/kok.webp)
 
@@ -33,37 +33,52 @@ Di kolom komentar, orang-orang rame menghujat.
 
 Entah kenapa, postingan itu membekas di ingatan saya. Saat itu, saya juga sedang memakai foto profil anime.
 
+---
+
+"Karena lo Wibu"
+
+Kata-katanya tidak kasar. Akan tetapi, reputasi wibu sangat jelek pada kala itu karena identik dengan nolife dan halu. Sehingga dikatain "wibu" saja sudah seperti terhina.
+
+Nah, karena kala itu saya juga menggunakan pp anime, saya menjadi sedikit overthinking.
+
 “Apa yang salah dengan saya?”
 
-Saya mulai mempertanyakan apa itu normal, apa saya aneh, dan lain sebagainya 😭
-
+Saya mulai mempertanyakan apa itu normal, apa saya aneh, dan lain sebagainya😭
 
 ---
 
 Dua tahun kemudian...
 
-Ironisnya, ketika saya kembali membuka Facebook pada 2024, suasananya sudah berbeda. Postingan anime lewat begitu saja tanpa hujatan seperti dulu.
+Ketika saya kembali membuka Facebook pada 2024, suasananya sudah berbeda. Postingan anime lewat begitu saja tanpa hujatan seperti dulu.
 
-Melainkan komentar stress seperti:
+Melainkan komentar stres seperti:
 
 > "my istri", "istri guweh", "kpn yh"
 
 Hujatan yang dulu ramai, kini hampir tak terlihat.
 
-
 ![](/images/bob.jpg)
+
+Malah sekarang saya sering lihat foto profil anime di mana-mana. 
+
+Profil WA anime. Main game anime. Stiker anime. Bahkan pas Agustusan ada yang masang bendera One Piece.
+
+Entah kapan tepatnya semua itu jadi biasa.
 
 ...
 
 ---
+## "Kartun kok bisa cantik?"
 
+Btw, sampai saat ini pun, saya masih belum begitu paham.
 
+Dua tahun setelah melihat postingan itu, saya masih belum punya jawaban yang memuaskan.
 
-Sampai saat ini, saya masih belum mengerti.
-
-"Kartun kok bisa cantik?"
+Saya juga ngga tahu kenapa seseorang bisa melihat karakter yang jelas-jelas tidak nyata, lalu menganggapnya cantik, keren, atau bahkan punya attachment emosional dengannya.
 
 Saya ngga tahu.
+
+Mungkin...
 
 Mungkin karena lo wibu :v
 
