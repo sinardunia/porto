@@ -14,9 +14,9 @@ tags:
   - personal
 ---
 
-Saya membeli bitcoin setiap awal bulan. Ngga banyak, tapi rutin.
+Saya membeli bitcoin setiap awal bulan.
 
-Bukan karena yakin akan tiba-tiba kaya dengan itu. Tapi karena dunia terasa semakin gila.
+Saya juga ngga yakin bakal kaya dari itu, melihat keadaan sekarang, dunia rasanya semakin gila aja.
 
 Ketidakpastian masa depan, AI, dan MBG 😫
 
@@ -36,13 +36,15 @@ Emas terasa sudah terlampau mahal buat saya. Saham? Blue chip Indo juga ngga bik
 
 Akhirnya saya memilih bitcoin.
 
-Bagi saya, menyimpan bitcoin terasa lebih menenangkan daripada menyimpan uang kertas.
+Meski bitcoin harganya sangat volatil. Bagi saya, menyimpan bitcoin terasa lebih menenangkan daripada menyimpan uang kertas.
 
-Meski bitcoin harganya sangat volatil, saya membuat janji kecil kepada diri sendiri. Mau harga berapapun, saya tetap beli.
+Saya membuat janji kecil kepada diri sendiri. Mau harga berapapun, saya tetap beli.
 
 Konsisten adalah kunci. Satu-satunya hal yang bisa saya kendalikan.
 
-Saya ngga tahu apakah keputusan ini benar. Besok mungkin bisa anjlok lagi. Tapi saya akan tetap beli dan hold...
+Saya ngga tahu apakah keputusan ini benar. 
+
+Besok mungkin bisa anjlok lagi. Tapi saya akan tetap beli dan hold...
 
 ---
 

@@ -33,14 +33,12 @@ Pandemi membuat saya tidak keluar rumah hingga tiga bulan, dan screentime pernah
 
 Tangan saya selalu memegang HP, bahkan saat tidur.
 
-Waktu itu, saya tidak merasa ada yang keliru dengan kebiasaan tersebut.
+Waktu itu, saya tidak merasa ada yang keliru dengan kebiasaan tersebut...
 
 ---
 
 Saya mencoba untuk mengurangi screentime, tetapi gagal terus.  
 Terasa ada yang kurang kalau tanpa HP.
-
-...
 
 ---
 
@@ -62,7 +60,7 @@ Jadi, saya beli :v
 
 Selama saya membaca bukunya,
 
-saya menemukan fakta menarik. Bahwa, sosmed yang dulunya tempat buat sharing, sekarang berubah menjadi industri.
+Saya menemukan fakta menarik. Bahwa, sosmed yang dulunya tempat buat sharing, sekarang berubah menjadi industri.
 
 > *“Orang bisa dianggap **ADA** kalau akun sosmednya aktif, kalau tidak, seolah **hilang dari sejarah**.”*
 
@@ -77,30 +75,6 @@ Di mana kita sudah menganggap sosial media sebagai kenyataan itu sendiri.
 ---
 
 ![](/images/escape.jpeg)
-
----
-
-Saat saya kecanduan, sudah otomatis aja.
-
-Jikalau gabut, langsung buka sosmed. Gatau ngapain.
-
-Kadang colek-colek orang di FB, kirim-kirim stiker ke temen di WhatsApp, nyari foto di Pinterest buat dijadikan foto profil (ganti-ganti wkwk).
-
-Fomo doang, penuh dengan ketidakpentingan...
-
----
-
-## Fenomena FOMO
-
-Pernah ngga? Saat kamu melihat orang lain *“bergerak”* sedikit saja, kepala merasa tertinggal?
-
-- **Takut** tertinggal sesuatu
-- tapi malah meninggalkan **mimpi** kita sendiri
-
-- **Malas** mengerjakan yang penting
-- tapi kelewat **rajin** mengerjakan hal yang tidak berguna
-
-Saya rekomendasikan untuk membacanya sendiri untuk lebih detail...
 
 ---
 
@@ -122,7 +96,7 @@ Menarik...
 
 Kemudian, saya ikut mencoba selama beberapa hari aja.
 
-Saya mengira itu akan mudah, tapi selama tiga hari pertama saya justru sadar, betapa gabutnya hidup saya...
+Selama tiga hari pertama saya menyadari, betapa gabutnya hidup saya...
 
 Tidak ada lagi:
 - **Scroll Facebook** saat bangun tidur
@@ -137,7 +111,7 @@ Tidak ada lagi:
 
 Di situ saya menyadari, ternyata saya punya banyak sekali waktu luang yang bisa dialihkan.
 
-Seperti membaca buku, menyelesaikan tulisan yang gapernah kelar, mengobrol dengan nenek, dan lain sebagainya.
+Seperti membaca buku, menyelesaikan tulisan, mengobrol dengan nenek, dan lain sebagainya.
 
 Setelah day **3++**, rasanya hidup tanpa sosmed tidak seburuk itu...
 

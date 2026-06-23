@@ -12,9 +12,11 @@ tags:
   - personal
 ---
 
-**Ketika malam tiba** dan cemas mulai melanda. Musik jadi pelarian biar tidak overthinking memikirkan hari esok.
+---
 
-Karena itu, saya terjun ke dunia audiophile. Ya, mencoba berburu perangkat audio yang sedikit lebih berkualitas.
+**Ketika malam tiba** dan cemas mulai melanda. Musik jadi pelarian supaya tidak overthinking memikirkan hari esok.
+
+Karena itu, saya terjun ke dunia audiophile, mencoba berburu perangkat audio yang sedikit lebih berkualitas.
 
 Salah satu yang paling sering muncul di forum jual beli adalah **HiBy R3**.
 
@@ -53,19 +55,15 @@ Awalnya disuruh memanaskan casing belakang dengan *hairdryer*.
 
 **Ketika** saya bilang gak punya hairdryer, saya minta alternatif.
 
-1. **Kesalahan pertama.**
-
 ChatGPT menyuruh saya congkel langsung menggunakan alat pembuka LCD HP.
 
-2. **Kesalahan kedua.**
-
-Meskipun percaya diri saya lebih gede dari kemampuan saya 😅, saya mencoba saran tersebut tanpa berpikir panjang.
+Karena terlalu pede, saya langsung coba tanpa berpikir panjang 😅
 
 ---
 
 ***KRAAAK!**
 
-**Retak semua :)**  
+**Kaca belakang retak semua :)**  
 Kaca belakang premium berubah menjadi **puzzle**.
 
 ---
@@ -110,10 +108,6 @@ Ketika emosi sudah di ubun-ubun, baterai kegedean itu saya **paksa masuk**, lalu
 
 Saya ambil solder. Tangan saya gemeter.
 
-Saya berhenti sejenak karena tangan gemetar, kemudian menarik napas panjang, namun akhirnya saya lanjutkan juga.
-
-...
-
 Timah di PCB bertingkah sok asik, bahkan sampai **meleleh ke mana-mana**.
 
 Karena itu, saya sempat **pasrah** juga, soalnya kebayang DAP bakal mati total dan cuma tinggal kenangan.
@@ -132,7 +126,7 @@ Setelah itu, kondisi fisiknya berubah drastis:
 - Bodi belakang **kembung**.
 - Tampilan akhir mirip HP murah yang baterainya **mau meledak**.
 
-Tetapi, musik bisa diputar dengan baik. **Dan itu yang penting.**
+Untungnya, musik masih bisa diputar dengan baik.
 
 ## Kesimpulan
 

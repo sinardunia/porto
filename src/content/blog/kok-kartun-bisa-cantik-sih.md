@@ -70,16 +70,13 @@ Entah kapan tepatnya semua itu jadi biasa.
 ---
 ## "Kartun kok bisa cantik?"
 
-Btw, sampai saat ini pun, saya masih belum begitu paham.
+Saya paham kalau karakter fiksi bisa terlihat cantik atau keren.
 
-Dua tahun setelah melihat postingan itu, saya masih belum punya jawaban yang memuaskan.
+Yang tidak saya pahami adalah kenapa kita bisa merasakan hal itu terhadap sesuatu yang bahkan tidak benar-benar ada 🤔
 
-Saya juga ngga tahu kenapa seseorang bisa melihat karakter yang jelas-jelas tidak nyata, lalu menganggapnya cantik, keren, atau bahkan punya attachment emosional dengannya.
+Mungkin karena cantik aja? Mungkin juga karena biasa dilihat?
 
-Saya ngga tahu.
-
-Mungkin...
+Atau mungkin...
 
 Mungkin karena lo wibu :v
-
 ![](/images/huu.jpg)
