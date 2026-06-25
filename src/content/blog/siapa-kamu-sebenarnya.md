@@ -1,8 +1,9 @@
 ---
-title: Siapa Kamu Sebenarnya?
-slug: " siapa-kamu-sebenarnya"
+title: Apa Itu Identitas?
+slug: apa-itu-identitas
 description: Identitas bukan sesuatu yang kamu temukan, melainkan sesuatu yang
   terus kamu bangun.
+coverImage: /images/starry-sky-attempt-wenzel-hablik-1909-1200x1212-1.jpeg
 pubDatetime: 2026-06-25
 modDatetime: 2026-06-25
 draft: false
@@ -18,55 +19,30 @@ Artikel ini dihasilkan oleh AI untuk proyek membaca 365 hari dengan tujuan melat
 **Daftar Isi**
 
 - [Pertanyaan Paling Dasar](#pertanyaan-paling-dasar)
-
 - [Diri yang Bercerita](#diri-yang-bercerita)
-
 - [Otak Bukan Cermin](#otak-bukan-cermin)
-
 - [Lahirnya Seorang Interpreter](#lahirnya-seorang-interpreter)
-
 - [Eksperimen Belahan Otak](#eksperimen-belahan-otak)
-
 - [Konsekuensi yang Membingungkan](#konsekuensi-yang-membingungkan)
-
 - [Memori Bukan Arsip](#memori-bukan-arsip)
-
 - [Laboratorium Manipulasi Memori](#laboratorium-manipulasi-memori)
-
 - [Masa Lalu yang Cair](#masa-lalu-yang-cair)
-
 - [Sosial dan Cermin](#sosial-dan-cermin)
-
 - [Teater Kehidupan Sehari-hari](#teater-kehidupan-sehari-hari)
-
 - [Diri Ideal dan Seharusnya](#diri-ideal-dan-seharusnya)
-
 - [Jamak, Bukan Tunggal](#jamak-bukan-tunggal)
-
 - [Asal-Usul Konsep Peran](#asal-usul-konsep-peran)
-
 - [Ketika Cerita Bermasalah](#ketika-cerita-bermasalah)
-
 - [Akar dari Pola Pikir](#akar-dari-pola-pikir)
-
 - [Narasi dan Kesehatan](#narasi-dan-kesehatan)
-
 - [Biologi Mengikuti Makna](#biologi-mengikuti-makna)
-
 - [Budaya Membentuk Diri](#budaya-membentuk-diri)
-
 - [Benturan Dua Cerita](#benturan-dua-cerita)
-
 - [Siapa yang Bercerita?](#siapa-yang-bercerita)
-
 - [Ilusi Seorang Pengemudi](#ilusi-seorang-pengemudi)
-
 - [Perspektif Lain](#perspektif-lain)
-
 - [Sanggahan dari Temperamen](#sanggahan-dari-temperamen)
-
 - [Pertanyaan Untuk Dipikirkan](#pertanyaan-untuk-dipikirkan)
-
 - [Referensi dan Bacaan Lanjutan](#referensi-dan-bacaan-lanjutan)
 
 ### Pertanyaan Paling Dasar
@@ -486,19 +462,12 @@ Jika hari ini Anda bisa memilih satu bab dari cerita hidup Anda yang sudah tidak
 ### Referensi dan Bacaan Lanjutan
 
 - **Michael Gazzaniga**, *The Ethical Brain* dan *Who's in Charge? Free Will and the Science of the Brain*. Karya-karyanya membahas eksperimen split-brain dan munculnya interpreter di otak kiri secara mendalam.
-
 - **Erving Goffman**, *The Presentation of Self in Everyday Life*. Buku klasik sosiologi yang memperkenalkan konsep kehidupan sebagai panggung teater dan permainan peran.
-
 - **Carol Dweck**, *Mindset: The New Psychology of Success*. Buku yang membahas perbedaan mendasar antara pola pikir tetap dan pola pikir berkembang dalam membentuk identitas dan pencapaian.
-
 - **Daniel Kahneman**, *Thinking, Fast and Slow*. Menjelaskan dua sistem berpikir dan bagaimana "diri yang mengingat" sangat berbeda dari "diri yang mengalami."
-
 - **Bruce Hood**, *The Self Illusion: How the Social Brain Creates Identity*. Buku yang secara khusus dan populer membahas bagaimana diri adalah konstruksi otak sosial kita.
-
 - **V.S. Ramachandran**, *Phantoms in the Brain*. Menyelidiki bagaimana otak mengkonstruksi realitas, termasuk realitas tubuh sendiri melalui kasus-kasus neurologis yang aneh.
-
 - **Viktor E. Frankl**, *Man's Search for Meaning*. Eksplorasi mengharukan tentang bagaimana pencarian makna adalah kekuatan utama dalam hidup manusia, bahkan di tengah penderitaan ekstrem.
-
 - **Kelly McGonigal**, *The Upside of Stress*. Membahas penelitian tentang bagaimana mengubah narasi tentang stres dapat mengubah respons fisiologis dan kesehatan.
-
 - **Martin Seligman**, *Learned Optimism*. Menjelaskan konsep ketidakberdayaan yang dipelajari dan bagaimana gaya penjelasan kita membentuk realita kita.
+
