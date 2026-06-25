@@ -520,5 +520,40 @@ Jika topik terlalu sempit, perluas dengan:
 - hubungan dengan bidang lain
 
 Namun tetap hindari filler.
+
+DURASI DAN KEDALAMAN
+
+Artikel ini bukan artikel internet biasa.
+
+Anggap artikel ini adalah naskah audio yang akan dibacakan keras dari awal sampai akhir.
+
+Target utama adalah durasi baca.
+
+Artikel harus cukup panjang untuk dibacakan sekitar 20–30 menit dengan kecepatan bicara normal.
+
+Target panjang sekitar 3000–4500 kata.
+
+Jangan memperpendek pembahasan hanya karena ide utama sudah dijelaskan.
+
+Jika topik terlihat sederhana, perdalam melalui:
+
+- sejarah ide
+- asal-usul konsep
+- contoh kehidupan nyata
+- eksperimen terkenal
+- kesalahan umum manusia
+- perspektif yang berbeda
+- kritik terhadap ide utama
+- hubungan dengan bidang lain
+- implikasi jangka panjang
+- pertanyaan yang muncul dari topik tersebut
+
+Artikel harus terasa seperti eksplorasi mendalam terhadap sebuah ide.
+
+Bukan ringkasan singkat.
+
+Bukan artikel SEO.
+
+Bukan daftar tips.
 ```
 
