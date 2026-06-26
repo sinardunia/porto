@@ -3,8 +3,10 @@ import Layout from "@/layouts/Layout.astro";
 import SearchInput from "@/components/shared/SearchInput.astro";
 import PopularTags from "@/components/blog/PopularTags.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
+import AIToggle from "@/components/blog/AIToggle.astro";
 import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
+import { SearchIndex } from "@/lib/search";
 import type { BlogPostSummary } from "@/types/blog";
 import { SITE_URL } from "@/data/config";
 import { AUTHOR } from "@/data/author";
@@ -19,6 +21,7 @@ if (legacyTag) {
 
 // 2. Query & pagination params
 const query = Astro.url.searchParams.get("q")?.trim() || "";
+const showAll = Astro.url.searchParams.get("all") === "true";
 let currentPage = 1;
 const pageParam = Astro.url.searchParams.get("page");
 if (pageParam && /^\d+$/.test(pageParam)) {
@@ -27,7 +30,11 @@ if (pageParam && /^\d+$/.test(pageParam)) {
 }
 const POSTS_PER_PAGE = 10;
 
-// 3. Ambil semua post
+// 3. AI filter param (default: hide AI-generated)
+const aiParam = Astro.url.searchParams.get("ai");
+const showAI = aiParam === "on" ? true : aiParam === "off" ? false : false;
+
+// 4. Ambil semua post
 let allPosts: BlogPostSummary[] = [];
 try {
   allPosts = await getPublishedBlogPostSummaries();
@@ -35,26 +42,26 @@ try {
   allPosts = [];
 }
 
-// 4. Filter berdasarkan query (search)
-let filteredPosts = allPosts;
-if (query) {
-  const lowerQuery = query.toLowerCase();
-  filteredPosts = allPosts.filter(
-    (post) =>
-      post.title.toLowerCase().includes(lowerQuery) ||
-      (post.description && post.description.toLowerCase().includes(lowerQuery)) ||
-      (post.tags && post.tags.some((tag) => tag.toLowerCase().includes(lowerQuery)))
-  );
+// Build search index for efficient client-side filtering
+const searchIndex = new SearchIndex(allPosts);
+
+// Count AI-generated posts
+const aiPostCount = allPosts.filter((post) => post.aiGenerated).length;
+
+// 5. Filter berdasarkan query (search) dan AI-generated menggunakan search index
+let filteredPosts = query ? searchIndex.search(query) : allPosts;
+
+// Filter AI-generated posts if showAI is false
+if (!showAI) {
+  filteredPosts = filteredPosts.filter((post) => !post.aiGenerated);
 }
 
-// 5. Pagination
+// 6. Pagination - for load more, show initial batch unless showAll is true
+const INITIAL_POSTS = 10;
+const initialPosts = showAll ? filteredPosts : filteredPosts.slice(0, INITIAL_POSTS);
+const remainingPosts = showAll ? [] : filteredPosts.slice(INITIAL_POSTS);
 const totalPosts = filteredPosts.length;
-const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
-if (currentPage > totalPages && totalPages > 0) {
-  currentPage = totalPages;
-}
-const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-const paginatedPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+const hasMore = remainingPosts.length > 0;
 
 // 6. Cache Control
 Astro.response.headers.set(
@@ -64,10 +71,10 @@ Astro.response.headers.set(
     : "public, max-age=3600, stale-while-revalidate=86400"
 );
 
-// 7. Canonical URL (manual, untuk dimasukkan ke head)
+// 7. Canonical URL (manual, untuk dimasukkan ke head) - tanpa ai parameter untuk SEO
 const canonicalUrl = query
-  ? `${SITE_URL}/posts?q=${encodeURIComponent(query)}&page=${currentPage}`
-  : `${SITE_URL}/posts${currentPage > 1 ? `?page=${currentPage}` : ""}`;
+  ? `${SITE_URL}/posts?q=${encodeURIComponent(query)}`
+  : `${SITE_URL}/posts`;
 
 // 8. Breadcrumb JSON-LD
 const breadcrumbJsonLd = {
@@ -95,7 +102,7 @@ const webPageJsonLd = {
   },
   mainEntity: {
     "@type": "ItemList",
-    itemListElement: paginatedPosts.map((post, idx) => ({
+    itemListElement: initialPosts.map((post: BlogPostSummary, idx: number) => ({
       "@type": "ListItem",
       position: idx + 1,
       url: `${SITE_URL}/blog/${post.slug}`,
@@ -106,8 +113,8 @@ const webPageJsonLd = {
 const jsonLd = [breadcrumbJsonLd, webPageJsonLd];
 
 const pageTitle = query
-  ? `Hasil pencarian: ${query} (Halaman ${currentPage})`
-  : `Semua Artikel${currentPage > 1 ? ` – Halaman ${currentPage}` : ""}`;
+  ? `Hasil pencarian: ${query}`
+  : "Semua Artikel";
 const pageDescription = query
   ? `Menampilkan ${totalPosts} artikel yang mengandung kata "${query}".`
   : `Kumpulan lengkap tulisan pribadi tentang teknologi, anime, dan hal-hal yang membuat saya penasaran. Total ${totalPosts} artikel.`;
@@ -124,7 +131,10 @@ const pageDescription = query
   
   <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
     <section class="flex flex-col gap-5" aria-label="Pencarian dan filter">
-      <SearchInput value={query} placeholder="Cari artikel..." clearHref="/posts" />
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <SearchInput value={query} placeholder="Cari artikel..." clearHref="/posts" />
+        <AIToggle showAI={showAI} hiddenCount={aiPostCount} />
+      </div>
       <PopularTags posts={allPosts} />
     </section>
 
@@ -134,39 +144,58 @@ const pageDescription = query
       </h1>
       
       {totalPosts === 0 ? (
-        <p class="text-neutral-500 dark:text-neutral-400">Tidak ada artikel yang ditemukan.</p>
+        <div class="py-8">
+          <p class="text-neutral-500 dark:text-neutral-400">
+            {query 
+              ? "Tidak ada artikel yang cocok dengan pencarian Anda." 
+              : !showAI && aiPostCount > 0 && allPosts.length === aiPostCount
+                ? "Semua artikel yang tersedia adalah AI-generated. Nyalakan toggle untuk melihatnya."
+                : "Tidak ada artikel yang ditemukan."
+            }
+          </p>
+          {!showAI && aiPostCount > 0 && allPosts.length === aiPostCount && (
+            <button
+              onclick="window.location.href = window.location.pathname + '?ai=on'"
+              class="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-neutral-100 px-3 py-2 text-xs font-medium text-neutral-700 transition-colors hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+              Tampilkan AI-generated
+            </button>
+          )}
+        </div>
       ) : (
         <>
-          <BlogPostList search="" posts={paginatedPosts} />
+          <BlogPostList search="" posts={initialPosts} />
           
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <nav class="mt-8 flex flex-wrap items-center justify-center gap-2" aria-label="Paginasi artikel">
-              {currentPage > 1 && (
-                <a
-                  href={query ? `/posts?q=${encodeURIComponent(query)}&page=${currentPage - 1}` : `/posts?page=${currentPage - 1}`}
-                  class="inline-flex min-h-[44px] items-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                  data-astro-prefetch="hover"
-                >
-                  ← Sebelumnya
-                </a>
-              )}
-              <span class="text-sm text-neutral-600 dark:text-neutral-400">
-                Halaman {currentPage} dari {totalPages}
-              </span>
-              {currentPage < totalPages && (
-                <a
-                  href={query ? `/posts?q=${encodeURIComponent(query)}&page=${currentPage + 1}` : `/posts?page=${currentPage + 1}`}
-                  class="inline-flex min-h-[44px] items-center rounded-lg border border-neutral-200 px-3 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800"
-                  data-astro-prefetch="hover"
-                >
-                  Selanjutnya →
-                </a>
-              )}
-            </nav>
+          {/* Load More Button */}
+          {hasMore && (
+            <div class="mt-8 flex justify-center">
+              <button
+                id="load-more-btn"
+                type="button"
+                class="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800"
+              >
+                <span>Load More</span>
+                <span class="text-neutral-500 dark:text-neutral-400">({remainingPosts.length} remaining)</span>
+              </button>
+            </div>
           )}
         </>
       )}
     </section>
   </div>
 </Layout>
+
+<script define:vars={{ remainingPosts }}>
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  if (!loadMoreBtn || !remainingPosts || remainingPosts.length === 0) return;
+  
+  loadMoreBtn.addEventListener('click', () => {
+    // Simple approach: reload with all posts parameter
+    const url = new URL(window.location.href);
+    url.searchParams.set('all', 'true');
+    window.location.href = url.toString();
+  });
+</script>

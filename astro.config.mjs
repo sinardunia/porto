@@ -50,6 +50,13 @@ export default defineConfig({
     build: {
       assetsInlineLimit: 4096,
       cssCodeSplit: true,
+      // Optimize build for large content collections
+      chunkSizeWarningLimit: 1000,
     },
+  },
+
+  // Build optimization for large content collections
+  build: {
+    format: "file",
   },
 });

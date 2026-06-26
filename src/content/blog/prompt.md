@@ -4,8 +4,10 @@ slug: prompt
 description: artikel
 pubDatetime: 2026-06-25
 modDatetime: 2026-06-25
-draft: false
+draft: true
 featured: false
+tags:
+  - ai-generated
 ---
 ```
 Buatkan artikel markdown lengkap yang siap dipublikasikan ke Pages CMS dan siap dibacakan langsung tanpa diedit.

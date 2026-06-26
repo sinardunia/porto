@@ -10,6 +10,7 @@ export type BlogPost = {
   modDatetime: string | null;
   draft: boolean;
   featured: boolean;
+  aiGenerated?: boolean;
 };
 
 export type BlogPostSummary = Omit<BlogPost, "content">;

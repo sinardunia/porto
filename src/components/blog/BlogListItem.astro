@@ -58,6 +58,11 @@ const displayTags = post.tags.slice(0, 2);
         <time datetime={post.pubDatetime} title={fullDate} class="hidden sm:inline shrink-0 whitespace-nowrap tabular-nums"
           >{humanized}</time
         >
+        {post.aiGenerated && (
+          <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
+            AI
+          </span>
+        )}
         {
           displayTags.map((tag) => (
             <span class="relative z-20 shrink-0">

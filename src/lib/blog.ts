@@ -1,12 +1,19 @@
 import { getCollection, type CollectionEntry } from "astro:content";
 import type { BlogPost, BlogPostSummary, PostsByYear } from "@/types/blog";
 import { normalizePostTags, tagKey } from "@/lib/tags";
+import { AI_TAGS } from "@/data/config";
 
 type BlogEntry = CollectionEntry<"blog">;
 
 const getSlug = (entry: BlogEntry) => entry.id;
 
 const toIsoString = (date: Date) => date.toISOString();
+
+const isAIGenerated = (tags: string[]): boolean => {
+  if (!tags || tags.length === 0) return false;
+  const normalizedTags = tags.map((t) => t.toLowerCase().trim());
+  return AI_TAGS.some((aiTag) => normalizedTags.includes(aiTag));
+};
 
 const entryToPost = (entry: BlogEntry): BlogPost => ({
   id: entry.id,
@@ -20,6 +27,7 @@ const entryToPost = (entry: BlogEntry): BlogPost => ({
   modDatetime: entry.data.modDatetime ? toIsoString(entry.data.modDatetime) : null,
   draft: entry.data.draft,
   featured: entry.data.featured,
+  aiGenerated: isAIGenerated(normalizePostTags(entry.data.tags)),
 });
 
 const entryToSummary = (entry: BlogEntry): BlogPostSummary => {

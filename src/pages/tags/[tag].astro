@@ -1,6 +1,7 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
+import AIToggle from "@/components/blog/AIToggle.astro";
 import {
   getAllPublishedBlogPostSummaries,
   collectTagCounts,
@@ -9,15 +10,7 @@ import {
 } from "@/lib/blog";
 import { SITE_URL } from "@/data/config";
 
-export const prerender = true;
-
-export async function getStaticPaths() {
-  const posts = await getAllPublishedBlogPostSummaries();
-  const tags = collectTagCounts(posts);
-  return tags.map((tag) => ({
-    params: { tag: tag.slug },
-  }));
-}
+export const prerender = false;
 
 const { tag: tagSlug } = Astro.params;
 
@@ -25,9 +18,21 @@ if (!tagSlug || typeof tagSlug !== "string") {
   return Astro.redirect("/tags");
 }
 
+// AI filter param
+const aiParam = Astro.url.searchParams.get("ai");
+const showAI = aiParam === "on" ? true : aiParam === "off" ? false : false;
+
 const allPosts = await getAllPublishedBlogPostSummaries();
 const tagInfo = findTagBySlug(allPosts, tagSlug);
-const posts = tagInfo ? filterPostsByTag(allPosts, tagSlug) : [];
+let posts = tagInfo ? filterPostsByTag(allPosts, tagSlug) : [];
+
+// Count AI-generated posts in this tag
+const aiPostCount = posts.filter((post) => post.aiGenerated).length;
+
+// Filter AI-generated posts if showAI is false
+if (!showAI) {
+  posts = posts.filter((post) => !post.aiGenerated);
+}
 
 if (!tagInfo) {
   Astro.response.status = 404;
@@ -76,12 +81,17 @@ const breadcrumbJsonLd = tagInfo
               Tag
             </a>
           </nav>
-          <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-            {tagInfo.name}
-          </h1>
-          <p class="mt-2 text-sm tabular-nums text-neutral-500 dark:text-neutral-500">
-            {posts.length} {articleLabel}
-          </p>
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+                {tagInfo.name}
+              </h1>
+              <p class="mt-2 text-sm tabular-nums text-neutral-500 dark:text-neutral-500">
+                {posts.length} {articleLabel}
+              </p>
+            </div>
+            <AIToggle showAI={showAI} hiddenCount={aiPostCount} />
+          </div>
         </header>
 
         <div class="min-w-0">
