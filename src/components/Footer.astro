@@ -1,4 +1,9 @@
 ---
+import { getPublishedBlogPostSummaries } from "@/lib/blog";
+
+// Check if there are any AI-generated posts
+const allPosts = await getPublishedBlogPostSummaries();
+const hasAIPosts = allPosts.some((post) => post.aiGenerated);
 ---
 
 <footer
@@ -23,5 +28,15 @@
       class="inline-flex items-center min-h-[44px] text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors py-1"
       >Disclaimer</a
     >
+    {hasAIPosts && (
+      <>
+        <span aria-hidden="true" class="text-neutral-300 dark:text-neutral-700">·</span>
+        <a
+          href="/ai-generated"
+          class="inline-flex items-center min-h-[44px] text-neutral-500 dark:text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 transition-colors py-1"
+          >AI-Generated</a
+        >
+      </>
+    )}
   </p>
 </footer>

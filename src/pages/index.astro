@@ -38,10 +38,14 @@ if (query) {
   );
 }
 
+// Filter out AI-generated posts from homepage
+const nonAIPosts = allPosts.filter((post) => !post.aiGenerated);
+const filteredNonAIPosts = filteredPosts.filter((post) => !post.aiGenerated);
+
 // Tampilan di homepage: 
-// - jika search, tampilkan semua hasil filter
-// - jika tidak search, tampilkan 2 artikel terbaru
-const displayPosts = query ? filteredPosts : allPosts.slice(0, 2);
+// - jika search, tampilkan semua hasil filter (tanpa AI-generated)
+// - jika tidak search, tampilkan 2 artikel terbaru (tanpa AI-generated)
+const displayPosts = query ? filteredNonAIPosts : nonAIPosts.slice(0, 2);
 
 Astro.response.headers.set(
   "Cache-Control",
@@ -112,7 +116,7 @@ const pageDescription = query
         <>
           <BlogPostList search={query ? "" : undefined} posts={displayPosts} />
           
-          {!query && allPosts.length > 2 && (
+          {!query && nonAIPosts.length > 2 && (
             <a
               href="/posts"
               class="mt-6 inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"

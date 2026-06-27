@@ -1,7 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
-import AIToggle from "@/components/blog/AIToggle.astro";
 import {
   getAllPublishedBlogPostSummaries,
   collectTagCounts,
@@ -18,21 +17,15 @@ if (!tagSlug || typeof tagSlug !== "string") {
   return Astro.redirect("/tags");
 }
 
-// AI filter param
-const aiParam = Astro.url.searchParams.get("ai");
-const showAI = aiParam === "on" ? true : aiParam === "off" ? false : false;
+// Always show AI-generated posts in tag pages
+const showAI = true;
 
 const allPosts = await getAllPublishedBlogPostSummaries();
 const tagInfo = findTagBySlug(allPosts, tagSlug);
 let posts = tagInfo ? filterPostsByTag(allPosts, tagSlug) : [];
 
-// Count AI-generated posts in this tag
+// Count AI-generated posts in this tag (for informational purposes)
 const aiPostCount = posts.filter((post) => post.aiGenerated).length;
-
-// Filter AI-generated posts if showAI is false
-if (!showAI) {
-  posts = posts.filter((post) => !post.aiGenerated);
-}
 
 if (!tagInfo) {
   Astro.response.status = 404;
@@ -81,7 +74,7 @@ const breadcrumbJsonLd = tagInfo
               Tag
             </a>
           </nav>
-          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div class="flex flex-col gap-4">
             <div>
               <h1 class="text-2xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
                 {tagInfo.name}
@@ -90,7 +83,6 @@ const breadcrumbJsonLd = tagInfo
                 {posts.length} {articleLabel}
               </p>
             </div>
-            <AIToggle showAI={showAI} hiddenCount={aiPostCount} />
           </div>
         </header>
 

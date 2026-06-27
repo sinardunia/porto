@@ -1,0 +1,78 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import BlogPostList from "@/components/blog/BlogPostList.astro";
+import { getPublishedBlogPostSummaries } from "@/lib/blog";
+import { SITE_URL } from "@/data/config";
+import { AUTHOR } from "@/data/author";
+import type { BlogPostSummary } from "@/types/blog";
+
+export const prerender = false;
+
+// Get all posts and filter only AI-generated ones
+const allPosts = await getPublishedBlogPostSummaries();
+const aiPosts = allPosts.filter((post) => post.aiGenerated);
+
+// If no AI posts exist, redirect to posts page
+if (aiPosts.length === 0) {
+  return Astro.redirect("/posts", 302);
+}
+
+const pageTitle = "AI-Generated Articles";
+const pageDescription = `Kumpulan ${aiPosts.length} artikel yang dibuat dengan bantuan AI.`;
+
+// Breadcrumb JSON-LD
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Beranda", item: SITE_URL },
+    { "@type": "ListItem", position: 2, name: "AI-Generated", item: `${SITE_URL}/ai-generated` },
+  ],
+};
+
+// JSON-LD untuk WebPage + ItemList
+const webPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: pageTitle,
+  description: pageDescription,
+  url: `${SITE_URL}/ai-generated`,
+  author: {
+    "@type": "Person",
+    name: AUTHOR.name,
+    alternateName: AUTHOR.pseudonym,
+  },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: aiPosts.map((post: BlogPostSummary, idx: number) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      url: `${SITE_URL}/blog/${post.slug}`,
+    })),
+  },
+};
+
+const jsonLd = [breadcrumbJsonLd, webPageJsonLd];
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  jsonLd={jsonLd}
+  noindex={true}
+>
+  <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
+    <section aria-label="AI-Generated Articles">
+      <h1 class="mb-2 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+        AI-Generated Articles
+      </h1>
+      <p class="text-sm text-neutral-500 dark:text-neutral-400">
+        {aiPosts.length} artikel yang dibuat dengan bantuan AI
+      </p>
+    </section>
+
+    <section aria-labelledby="ai-articles-heading" class="min-w-0">
+      <BlogPostList posts={aiPosts} />
+    </section>
+  </div>
+</Layout>

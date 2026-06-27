@@ -11,8 +11,9 @@ const toIsoString = (date: Date) => date.toISOString();
 
 const isAIGenerated = (tags: string[]): boolean => {
   if (!tags || tags.length === 0) return false;
-  const normalizedTags = tags.map((t) => t.toLowerCase().trim());
-  return AI_TAGS.some((aiTag) => normalizedTags.includes(aiTag));
+  // Simple detection: check if any tag contains "ai" (case-insensitive)
+  // This handles "ai-generated", "Ai Generated", "ai", etc.
+  return tags.some((tag) => tag.toLowerCase().includes('ai'));
 };
 
 const entryToPost = (entry: BlogEntry): BlogPost => ({
