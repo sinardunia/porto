@@ -8,11 +8,14 @@ modDatetime: 2026-07-07
 draft: false
 featured: false
 tags:
-  - belajar
+  - Python
+  - Learning
+  - Tech
 ---
 Saya akan menulis untuk kedepannya sebagai active recall dari hasil pembelajaran saya di hari ini;
 
 Hari ini saya belajar:
+
 - Python membaca dari atas ke bawah
 - Print() adalah fungsi bawaan python untuk menampilkan ke layar
 - String adalah teks, tidak bisa dijumlahkan
@@ -20,4 +23,6 @@ Hari ini saya belajar:
 - Apa itu float? float adalah bilangan desimal, lebih detail hasilnya daripada Integer
 - Variabel adalah "wadah" untuk menyimpan nilai, bisa integer, string, maupun float.
 - Variabel bisa "ditimpa" sehingga hasilnya bisa berubah, sesuai dengan konsep python membaca dari atas ke bawah
-- 
+- / adalah simbol pembagian, yang menghasilkan float
+- sedangkan // adalah simbol pembagian, dengan angka bagian akhir "dipotong" sehingga menghasilkan bilangan bulat (integer)
+
