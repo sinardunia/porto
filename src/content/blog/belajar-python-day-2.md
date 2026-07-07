@@ -11,3 +11,23 @@ tags:
   - Python
   - Learning
 ---
+Tulisan ini adalah dokumentasi dari sesi belajar python di hari kedua, dengan tujuan Active Recal (mengingat kembali) apa yang sudah dipelajari di hari ini...
+
+- Input() adalah fungsi bawaan python, yang memungkinkan user memasukan input, akan tetapi fungsi ini hanya mengembalikan string, jika ingin berupa integer atau berupa float, mesti dikonversi terlebih dahulu menggunakan int() dan float()
+- operator overloading, artinya penjumlahan berupa string dapat terjadi, contoh:
+
+```
+
+  print("A" * 5)
+```
+
+   akan menghasilkan output AAAAA sebanyak 5 kali (mengulang string), sedangkan pada angka:
+
+```
+print( 5 * 5)
+```
+
+akan menghasilkan output seperti biasa yaitu 25
+
+- fstring, cara paling bersih untuk menyisipkan variabel ke dalam teks, menggunakan {}. di dalam javascript ini disebut template literal, menggunakan ${}
+
