@@ -7,11 +7,11 @@ const currentPath = Astro.url.pathname;
   id="main-header"
   class="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/50 bg-white/90 backdrop-blur-md dark:border-neutral-800/50 dark:bg-[#0a0a0a]/90 transition-colors"
 >
-  <div class="mx-auto flex h-14 max-w-[800px] items-center justify-between gap-2 px-4 sm:h-16 sm:gap-6 sm:px-6">
-    <nav class="flex items-center gap-1 sm:gap-3" aria-label="Main navigation">
+      <div class="mx-auto flex h-14 max-w-[800px] items-center justify-between gap-1 px-3 sm:h-16 sm:gap-6 sm:px-6">
+    <nav class="flex items-center gap-0.5 sm:gap-3" aria-label="Main navigation">
       <a
         href="/"
-        class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
+        class:list={["whitespace-nowrap flex items-center justify-center rounded-lg px-1.5 py-1 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
         aria-label="Home"
       >
         🏡 Home
@@ -19,7 +19,7 @@ const currentPath = Astro.url.pathname;
       <span class="text-neutral-300 dark:text-neutral-700 text-sm select-none" aria-hidden="true">/</span>
       <a
         href="/about"
-        class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/about" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
+        class:list={["whitespace-nowrap flex items-center justify-center rounded-lg px-1.5 py-1 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/about" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
         aria-label="About"
       >
         About
@@ -27,7 +27,7 @@ const currentPath = Astro.url.pathname;
       <span class="text-neutral-300 dark:text-neutral-700 text-sm select-none" aria-hidden="true">/</span>
       <a
         href="/contact"
-        class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/contact" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
+        class:list={["whitespace-nowrap flex items-center justify-center rounded-lg px-1.5 py-1 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/contact" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
         aria-label="Contact"
       >
         Contact
