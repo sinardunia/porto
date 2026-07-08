@@ -14,8 +14,9 @@ const currentPath = Astro.url.pathname;
         class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
         aria-label="Home"
       >
-        Home
+        🏡 Home
       </a>
+      <span class="text-neutral-300 dark:text-neutral-700 text-sm select-none" aria-hidden="true">/</span>
       <a
         href="/about"
         class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/about" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
@@ -23,6 +24,7 @@ const currentPath = Astro.url.pathname;
       >
         About
       </a>
+      <span class="text-neutral-300 dark:text-neutral-700 text-sm select-none" aria-hidden="true">/</span>
       <a
         href="/contact"
         class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/contact" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
