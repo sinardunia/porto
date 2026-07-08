@@ -35,7 +35,6 @@ kode tersebut menghasilkan output selesai, dan print "banyak" tidak dijalankan. 
 (kalau tidak), jika kondisi if tidak terpenuhi, maka else akan dieksekusi. contoh:
 
 ```
-```
 ayam = 20
 
 if ayam > 20:
@@ -44,8 +43,12 @@ else:
  print("sedikit"
 
 print("selesai")
+
 ```
-```
+
+
+
+
 
 outputnya akan menghasilkan "sedikit" dan "selesai", kenapa?  karena kondisi if tidak terpenuhi, oleh karena itu baris else dieksekusi.
 
