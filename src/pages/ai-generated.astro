@@ -12,9 +12,8 @@ export const prerender = false;
 const allPosts = await getPublishedBlogPostSummaries();
 const aiPosts = allPosts.filter((post) => post.aiGenerated);
 
-// If no AI posts exist, redirect to posts page
 if (aiPosts.length === 0) {
-  return Astro.redirect("/posts", 302);
+  return Astro.redirect("/", 302);
 }
 
 const pageTitle = "AI-Generated Articles";

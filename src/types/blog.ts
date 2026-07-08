@@ -13,7 +13,10 @@ export type BlogPost = {
   aiGenerated?: boolean;
 };
 
-export type BlogPostSummary = Omit<BlogPost, "content">;
+export type BlogPostSummary = Omit<BlogPost, "content"> & {
+  readTime?: number;
+  preview?: string;
+};
 
 export type TagCount = {
   name: string;

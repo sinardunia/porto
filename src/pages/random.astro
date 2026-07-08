@@ -1,0 +1,16 @@
+---
+import { getPublishedBlogPostSummaries } from "@/lib/blog";
+
+export const prerender = false;
+
+const allPosts = await getPublishedBlogPostSummaries();
+const nonAIPosts = allPosts.filter((p) => !p.aiGenerated);
+const pool = nonAIPosts.length > 0 ? nonAIPosts : allPosts;
+
+if (pool.length === 0) {
+  return Astro.redirect("/", 302);
+}
+
+const random = pool[Math.floor(Math.random() * pool.length)];
+return Astro.redirect(`/blog/${random.slug}`, 302);
+---

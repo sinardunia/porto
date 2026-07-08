@@ -3,7 +3,8 @@ import Layout from "@/layouts/Layout.astro";
 import SearchInput from "@/components/shared/SearchInput.astro";
 import PopularTags from "@/components/blog/PopularTags.astro";
 import BlogPostList from "@/components/blog/BlogPostList.astro";
-import { getPublishedBlogPostSummaries } from "@/lib/blog";
+import Pagination from "@/components/blog/Pagination.astro";
+import { getPublishedBlogPostSummaries, collectTagCounts } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
 import type { BlogPostSummary } from "@/types/blog";
 import { SITE_URL } from "@/data/config";
@@ -19,6 +20,15 @@ if (legacyTag) {
 const query = Astro.url.searchParams.get("q")?.trim() || "";
 const clearHref = "/";
 
+const POSTS_PER_PAGE = 10;
+
+let currentPage = 1;
+const pageParam = Astro.url.searchParams.get("page");
+if (pageParam && /^\d+$/.test(pageParam)) {
+  currentPage = parseInt(pageParam, 10);
+  if (currentPage < 1) currentPage = 1;
+}
+
 let allPosts: BlogPostSummary[] = [];
 try {
   allPosts = await getPublishedBlogPostSummaries();
@@ -26,11 +36,22 @@ try {
   allPosts = [];
 }
 
-// Filter semua post jika ada search
-let filteredPosts = allPosts;
+const allTagCounts = collectTagCounts(allPosts);
+const allTagNames = allTagCounts.map((t) => t.name);
+
+if (query) {
+  const matchedTag = allTagCounts.find((t) => t.name.toLowerCase() === query.toLowerCase());
+  if (matchedTag) {
+    return Astro.redirect(`/tags/${matchedTag.slug}`, 302);
+  }
+}
+
+const nonAIPosts = allPosts.filter((post) => !post.aiGenerated);
+
+let filteredPosts = nonAIPosts;
 if (query) {
   const lowerQuery = query.toLowerCase();
-  filteredPosts = allPosts.filter(
+  filteredPosts = nonAIPosts.filter(
     (post) =>
       post.title.toLowerCase().includes(lowerQuery) ||
       (post.description && post.description.toLowerCase().includes(lowerQuery)) ||
@@ -38,14 +59,13 @@ if (query) {
   );
 }
 
-// Filter out AI-generated posts from homepage
-const nonAIPosts = allPosts.filter((post) => !post.aiGenerated);
-const filteredNonAIPosts = filteredPosts.filter((post) => !post.aiGenerated);
+const totalPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+if (totalPages === 0) currentPage = 1;
 
-// Tampilan di homepage: 
-// - jika search, tampilkan semua hasil filter (tanpa AI-generated)
-// - jika tidak search, tampilkan 2 artikel terbaru (tanpa AI-generated)
-const displayPosts = query ? filteredNonAIPosts : nonAIPosts.slice(0, 2);
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const displayPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
 Astro.response.headers.set(
   "Cache-Control",
@@ -96,37 +116,29 @@ const pageDescription = query
   title={pageTitle}
   description={pageDescription}
   jsonLd={jsonLd}
+  tagNames={allTagNames}
 >
-  <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
-    <section aria-labelledby="articles-heading" class="min-w-0">
-      <h1 id="articles-heading" class="mb-6 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-        {query ? `Hasil pencarian: "${query}"` : "Artikel Terbaru"}
-      </h1>
-      
-      <section class="flex flex-col gap-5" aria-label="Pencarian dan filter">
-        <SearchInput value={query} placeholder="Cari artikel..." clearHref={clearHref} />
+  <div class="flex w-full min-w-0 flex-col pb-12">
+    <div class="hidden sm:block">
+      <SearchInput value={query} placeholder="Cari tag... (python, belajar, anime)" clearHref={clearHref} tagData={allTagCounts} />
+      <div class="mt-3">
         <PopularTags posts={allPosts} />
-      </section>
-      
-      {displayPosts.length === 0 ? (
-        <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
-          {query ? "Tidak ada artikel yang cocok dengan pencarian." : "Belum ada artikel."}
-        </p>
-      ) : (
-        <>
-          <BlogPostList search={query ? "" : undefined} posts={displayPosts} />
-          
-          {!query && nonAIPosts.length > 2 && (
-            <a
-              href="/posts"
-              class="mt-6 inline-flex min-h-[44px] items-center text-sm text-neutral-600 underline-offset-2 hover:underline dark:text-neutral-400"
-              data-astro-prefetch="hover"
-            >
-              Lihat semua artikel →
-            </a>
-          )}
-        </>
-      )}
-    </section>
+      </div>
+    </div>
+
+    <div class="sm:hidden">
+      <PopularTags posts={allPosts} />
+    </div>
+
+    {totalPosts === 0 ? (
+      <p class="mt-8 text-sm text-neutral-600 dark:text-neutral-400">
+        {query ? "Tidak ada artikel yang cocok dengan pencarian." : "Belum ada artikel."}
+      </p>
+    ) : (
+      <>
+        <BlogPostList posts={displayPosts} />
+        <Pagination currentPage={currentPage} totalPages={totalPages} searchQuery={query} />
+      </>
+    )}
   </div>
 </Layout>

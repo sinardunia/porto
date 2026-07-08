@@ -20,14 +20,6 @@ const matchesItem = (item: HTMLElement, q: string) => {
   return haystack.includes(q);
 };
 
-const updateClearButton = (form: HTMLFormElement, input: HTMLInputElement) => {
-  const clearBtn = form.querySelector<HTMLButtonElement>("[data-search-clear]");
-  if (!clearBtn) return;
-  const hasQuery = input.value.trim().length > 0;
-  clearBtn.hidden = !hasQuery;
-  clearBtn.tabIndex = hasQuery ? 0 : -1;
-};
-
 const resetListVisibility = (list: HTMLElement) => {
   list.querySelectorAll<HTMLElement>("[data-blog-item]").forEach((item) => {
     item.hidden = false;
@@ -83,21 +75,12 @@ const bindSearchForm = (form: HTMLFormElement, list: HTMLElement) => {
   const navigate = (url: string) => {
     history.pushState({}, "", url);
     applyFilters(list);
-    updateClearButton(form, input);
   };
 
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     navigate(buildUrl(input.value.trim()));
   });
-
-  form.querySelector<HTMLButtonElement>("[data-search-clear]")?.addEventListener("click", () => {
-    input.value = "";
-    input.focus();
-    navigate(buildUrl(""));
-  });
-
-  input.addEventListener("input", () => updateClearButton(form, input));
 
   input.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
@@ -111,8 +94,6 @@ const bindSearchForm = (form: HTMLFormElement, list: HTMLElement) => {
       navigate(buildUrl(input.value.trim()));
     }
   });
-
-  updateClearButton(form, input);
 };
 
 const syncFromUrl = () => {
@@ -124,7 +105,6 @@ const syncFromUrl = () => {
   const params = getParams();
   input.value = params.get("q")?.trim() || "";
   applyFilters(list);
-  updateClearButton(form, input);
 };
 
 const init = () => {

@@ -32,7 +32,12 @@ const entryToPost = (entry: BlogEntry): BlogPost => ({
 });
 
 const entryToSummary = (entry: BlogEntry): BlogPostSummary => {
-  const { content: _content, ...summary } = entryToPost(entry);
+  const post = entryToPost(entry);
+  const { content: _content, ...summary } = post;
+  summary.readTime = post.content ? estimateReadTime(post.content) : 0;
+  summary.preview = post.content
+    ? post.content.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim().slice(0, 120) + "…"
+    : undefined;
   return summary;
 };
 
@@ -180,7 +185,7 @@ export function getRelatedPosts(
     .filter((w) => w.length > 3 && !stopWords.has(w));
 
   const scored = allPosts
-    .filter((p) => p.slug !== currentSlug)
+    .filter((p) => p.slug !== currentSlug && !p.aiGenerated)
     .map((p) => {
       const postTags = p.tags.map((t) => t.toLowerCase().trim()).filter(Boolean);
       const tagOverlap =
@@ -219,4 +224,12 @@ export function getRelatedPosts(
   const finalResults = strongMatches.length >= limit ? strongMatches : scored;
 
   return finalResults.slice(0, limit).map((s) => s.post);
+}
+
+export function toTitleCase(str: string): string {
+  return str.replace(/\b\w+\b/g, (word) => {
+    if (word === word.toUpperCase() && word.length > 1) return word;
+    if (word !== word.toLowerCase()) return word;
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
 }

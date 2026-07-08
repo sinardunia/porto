@@ -1,58 +1,123 @@
 ---
 import DarkModeToggle from "./DarkModeToggle.astro";
+const currentPath = Astro.url.pathname;
 ---
 
 <header
   id="main-header"
   class="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/50 bg-white/90 backdrop-blur-md dark:border-neutral-800/50 dark:bg-[#0a0a0a]/90 transition-colors"
 >
-  <div class="mx-auto flex h-14 max-w-[720px] items-center justify-between gap-4 px-4 sm:h-16 sm:gap-6 sm:px-6">
-   <a
-      href="/"
-      class="group flex items-center no-typewriter truncate text-neutral-900 transition-all duration-200 hover:text-neutral-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-100 dark:hover:text-neutral-300 dark:focus-visible:ring-neutral-600"
-    >
-      <!-- Ikon Home (mobile) -->
-      <svg
-        class="sm:hidden h-5 w-5"
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
+  <div class="mx-auto flex h-14 max-w-[800px] items-center justify-between gap-2 px-4 sm:h-16 sm:gap-6 sm:px-6">
+    <nav class="flex items-center gap-1 sm:gap-3" aria-label="Main navigation">
+      <a
+        href="/"
+        class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
+        aria-label="Home"
       >
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-        <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-      <!-- Teks Home (desktop) -->
-      <span class="hidden sm:inline text-[14px] font-medium">Home</span>
-    </a>
-    <nav class="flex items-center gap-1.5 sm:gap-3" aria-label="Main navigation">
+        Home
+      </a>
       <a
         href="/about"
-        class="flex items-center justify-center rounded-lg p-2 text-neutral-500 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:rounded-md sm:px-3 sm:py-1.5"
+        class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/about" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
         aria-label="About"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sm:hidden"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span class="hidden sm:inline text-[14px] font-medium">About</span>
+        About
       </a>
       <a
         href="/contact"
-        class="flex items-center justify-center rounded-lg p-2 text-neutral-500 transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:rounded-md sm:px-3 sm:py-1.5"
+        class:list={["flex items-center justify-center rounded-lg px-2 py-1.5 text-sm font-medium transition-all duration-200 hover:bg-neutral-100 hover:text-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 dark:focus-visible:ring-neutral-600 sm:px-3 sm:py-1.5 sm:text-[14px]", currentPath === "/contact" ? "bg-neutral-100 text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"]}
         aria-label="Contact"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sm:hidden"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        <span class="hidden sm:inline text-[14px] font-medium">Contact</span>
+        Contact
       </a>
-      <div class="flex items-center">
-        <DarkModeToggle />
-      </div>
     </nav>
+    <div class="flex items-center gap-1">
+      <button
+        id="mobile-search-btn"
+        type="button"
+        class="flex items-center justify-center rounded-lg p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 sm:hidden"
+        aria-label="Cari artikel"
+        aria-expanded="false"
+      >
+        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+      <DarkModeToggle />
+    </div>
   </div>
 </header>
 
 <div class="h-14 w-full sm:h-16" aria-hidden="true"></div>
+
+<script>
+  const btn = document.getElementById("mobile-search-btn");
+  const overlay = document.getElementById("mobile-search-overlay");
+
+  let lastFocused: HTMLElement | null = null;
+
+  function getFocusable(el: HTMLElement): HTMLElement[] {
+    return Array.from(
+      el.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+  }
+
+  function openSearch() {
+    if (overlay) {
+      lastFocused = document.activeElement as HTMLElement;
+      overlay.classList.remove("hidden");
+      const input = overlay.querySelector<HTMLInputElement>("input[name='q']");
+      setTimeout(() => input?.focus(), 100);
+    } else if (window.innerWidth >= 640) {
+      const input = document.getElementById("blog-search");
+      if (input) {
+        input.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => input.focus(), 300);
+      } else {
+        window.location.href = "/";
+      }
+    }
+  }
+
+  function closeSearch() {
+    if (overlay) {
+      overlay.classList.add("hidden");
+      lastFocused?.focus();
+      lastFocused = null;
+    }
+  }
+
+  if (btn) {
+    btn.addEventListener("click", openSearch);
+  }
+
+  if (overlay) {
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay || e.target.closest("[data-close-mobile-search]")) {
+        closeSearch();
+      }
+    });
+
+    overlay.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        closeSearch();
+        return;
+      }
+      if (e.key === "Tab") {
+        const focusable = getFocusable(overlay);
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  }
+</script>

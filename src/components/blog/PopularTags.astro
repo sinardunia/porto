@@ -12,22 +12,21 @@ const tags = getPopularTags(posts, 5);
 
 {tags.length > 0 && (
   <nav aria-label="Popular tags" class="w-full min-w-0">
-    <div class="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-      <ul class="flex min-w-0 flex-1 flex-wrap gap-1.5 sm:gap-2">
+    <div class="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:justify-between">
+      <ul class="flex min-w-0 flex-wrap items-center gap-1.5">
         {tags.map(({ name, slug, count }, index) => (
           <li
             class:list={[
-              index >= 4 && index < 6 && "hidden md:block",
-              index >= 6 && "hidden lg:block",
+              index >= 3 && "hidden sm:block",
             ]}
           >
-            <TagPill name={name} slug={slug} count={count} showCount={false} />
+            <TagPill name={name} slug={slug} count={count} showCount={true} />
           </li>
         ))}
       </ul>
       <a
         href="/tags"
-        class="shrink-0 self-end text-xs text-neutral-500 underline-offset-2 transition-colors hover:text-neutral-800 hover:underline dark:text-neutral-500 dark:hover:text-neutral-300 sm:self-center"
+        class="mt-2 shrink-0 self-start text-xs text-neutral-500 underline-offset-2 transition-colors hover:text-neutral-800 hover:underline dark:text-neutral-500 dark:hover:text-neutral-300 sm:mt-0"
         data-astro-prefetch="hover"
       >
         View All Tags →

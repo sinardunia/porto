@@ -1,0 +1,80 @@
+---
+export interface Props {
+  currentPage: number;
+  totalPages: number;
+  searchQuery?: string;
+}
+
+const { currentPage, totalPages, searchQuery = "" } = Astro.props;
+
+function buildUrl(page: number): string {
+  const params = new URLSearchParams();
+  if (searchQuery) params.set("q", searchQuery);
+  if (page > 1) params.set("page", String(page));
+  const qs = params.toString();
+  return qs ? `/?${qs}` : "/";
+}
+---
+
+{
+  totalPages > 1 && (
+    <nav class="mt-10 flex items-center justify-center gap-1" aria-label="Paginasi artikel">
+      {
+        currentPage > 1 ? (
+          <a
+            href={buildUrl(currentPage - 1)}
+            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-sm text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            aria-label="Halaman sebelumnya"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </a>
+        ) : (
+          <span class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-sm text-neutral-300 dark:text-neutral-700" aria-hidden="true">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </span>
+        )
+      }
+
+      {
+        Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          <a
+            href={buildUrl(page)}
+            aria-current={page === currentPage ? "page" : undefined}
+            class={`inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+              page === currentPage
+                ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                : "text-neutral-600 hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            }`}
+            aria-label={`Halaman ${page}`}
+          >
+            {page}
+          </a>
+        ))
+      }
+
+      {
+        currentPage < totalPages ? (
+          <a
+            href={buildUrl(currentPage + 1)}
+            class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-sm text-neutral-600 transition-colors hover:bg-neutral-100 dark:text-neutral-400 dark:hover:bg-neutral-800"
+            aria-label="Halaman selanjutnya"
+          >
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        ) : (
+          <span class="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-sm text-neutral-300 dark:text-neutral-700" aria-hidden="true">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        )
+      }
+    </nav>
+  )
+}

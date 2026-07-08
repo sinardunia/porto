@@ -1,10 +1,8 @@
 ---
 import CoverImage from "./CoverImage.astro";
 import ThumbnailFrame from "./ThumbnailFrame.astro";
-import TagPill from "./TagPill.astro";
 import type { BlogPostSummary } from "@/types/blog";
-import { humanizeTimestamp, safeLocaleDate } from "@/lib/blog";
-import { tagToSlug } from "@/lib/tags";
+import { humanizeTimestamp, safeLocaleDate, toTitleCase } from "@/lib/blog";
 
 type Props = {
   post: BlogPostSummary;
@@ -17,29 +15,37 @@ const fullDate = safeLocaleDate(post.pubDatetime, "id-ID", {
   month: "long",
   year: "numeric",
 });
-const shortDate = safeLocaleDate(post.pubDatetime, "id-ID", { day: "numeric", month: "short" });
-const displayTags = post.tags.slice(0, 2);
 ---
 
-<article class="group relative py-5 sm:py-6">
-  <div class="relative flex items-start gap-3 sm:gap-4">
+<article class="group/article relative py-5 sm:py-6">
+  <div class="relative flex items-start gap-3 sm:gap-5">
     <ThumbnailFrame size="lg">
       <CoverImage
         src={post.coverImage}
         alt=""
-        width={80}
-        height={80}
-        sizes="(max-width: 640px) 64px, 80px"
+        width={96}
+        height={96}
+        sizes="(max-width: 640px) 80px, 96px"
         loading="lazy"
         class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
       />
     </ThumbnailFrame>
 
     <div class="min-w-0 flex-1 pt-0.5">
+      {
+        post.tags.length > 0 && (
+          <div class="mb-1 flex flex-wrap items-center gap-x-2 text-[13px] text-neutral-500 dark:text-neutral-500">
+            {post.tags.slice(0, 2).map((tag) => (
+              <span>{tag}</span>
+            ))}
+          </div>
+        )
+      }
+
       <h3
         class="text-[15px] font-semibold leading-snug text-neutral-900 transition-colors group-hover:text-neutral-600 dark:text-neutral-100 dark:group-hover:text-neutral-300 sm:text-base"
       >
-        {post.title}
+        {toTitleCase(post.title)}
       </h3>
 
       {
@@ -51,25 +57,20 @@ const displayTags = post.tags.slice(0, 2);
       }
 
       <div
-        class="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-neutral-500 dark:text-neutral-400 sm:gap-x-3 sm:gap-y-2"
-        style="min-width: 0; max-width: 100%;"
+        class="mt-2 flex flex-wrap items-center gap-x-1.5 text-xs text-neutral-500 dark:text-neutral-400"
       >
-        <time datetime={post.pubDatetime} title={fullDate} class="sm:hidden shrink-0 whitespace-nowrap tabular-nums">{shortDate}</time>
-        <time datetime={post.pubDatetime} title={fullDate} class="hidden sm:inline shrink-0 whitespace-nowrap tabular-nums"
-          >{humanized}</time
-        >
+        <time datetime={post.pubDatetime} title={fullDate} class="shrink-0 whitespace-nowrap tabular-nums">{humanized}</time>
+        {post.readTime && (
+          <>
+            <span aria-hidden="true">•</span>
+            <span class="shrink-0 whitespace-nowrap">{post.readTime} menit baca</span>
+          </>
+        )}
         {post.aiGenerated && (
           <span class="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
             AI
           </span>
         )}
-        {
-          displayTags.map((tag) => (
-            <span class="relative z-20 shrink-0">
-              <TagPill name={tag} slug={tagToSlug(tag)} />
-            </span>
-          ))
-        }
       </div>
     </div>
   </div>
@@ -77,9 +78,9 @@ const displayTags = post.tags.slice(0, 2);
   <a
     href={`/blog/${post.slug}`}
     class="no-typewriter absolute inset-0 z-10 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-400 dark:focus-visible:outline-neutral-500"
-    aria-label={post.title}
+    aria-label={toTitleCase(post.title)}
     data-astro-prefetch="hover"
   >
-    <span class="sr-only">{post.title}</span>
+    <span class="sr-only">{toTitleCase(post.title)}</span>
   </a>
 </article>

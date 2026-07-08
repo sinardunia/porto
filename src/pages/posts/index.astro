@@ -1,183 +1,24 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import SearchInput from "@/components/shared/SearchInput.astro";
-import PopularTags from "@/components/blog/PopularTags.astro";
-import BlogPostList from "@/components/blog/BlogPostList.astro";
-import { getPublishedBlogPostSummaries } from "@/lib/blog";
 import { tagToSlug } from "@/lib/tags";
-import { SearchIndex } from "@/lib/search";
-import type { BlogPostSummary } from "@/types/blog";
-import { SITE_URL } from "@/data/config";
-import { AUTHOR } from "@/data/author";
 
 export const prerender = false;
 
-// 1. Handle legacy tag redirect
 const legacyTag = Astro.url.searchParams.get("tag")?.trim();
 if (legacyTag) {
   return Astro.redirect(`/tags/${tagToSlug(legacyTag)}`, 301);
 }
 
-// 2. Query & pagination params
 const query = Astro.url.searchParams.get("q")?.trim() || "";
-const showAll = Astro.url.searchParams.get("all") === "true";
-let currentPage = 1;
-const pageParam = Astro.url.searchParams.get("page");
-if (pageParam && /^\d+$/.test(pageParam)) {
-  currentPage = parseInt(pageParam, 10);
-  if (currentPage < 1) currentPage = 1;
-}
-const POSTS_PER_PAGE = 10;
+const page = Astro.url.searchParams.get("page")?.trim() || "";
 
-// 3. Always filter out AI-generated posts from main listing
-const showAI = false;
+let redirectUrl = "/";
+const params = new URLSearchParams();
+if (query) params.set("q", query);
+if (page && /^\d+$/.test(page) && parseInt(page, 10) > 1) params.set("page", page);
+const qs = params.toString();
+if (qs) redirectUrl += `?${qs}`;
 
-// 4. Ambil semua post
-let allPosts: BlogPostSummary[] = [];
-try {
-  allPosts = await getPublishedBlogPostSummaries();
-} catch {
-  allPosts = [];
-}
-
-// Build search index for efficient client-side filtering
-const searchIndex = new SearchIndex(allPosts);
-
-// Count AI-generated posts for footer link
-const aiPostCount = allPosts.filter((post) => post.aiGenerated).length;
-
-// 5. Filter berdasarkan query (search) dan AI-generated menggunakan search index
-let filteredPosts = query ? searchIndex.search(query) : allPosts;
-
-// Always filter out AI-generated posts from main listing
-filteredPosts = filteredPosts.filter((post) => !post.aiGenerated);
-
-// 6. Pagination - for load more, show initial batch unless showAll is true
-const INITIAL_POSTS = 10;
-const initialPosts = showAll ? filteredPosts : filteredPosts.slice(0, INITIAL_POSTS);
-const remainingPosts = showAll ? [] : filteredPosts.slice(INITIAL_POSTS);
-const totalPosts = filteredPosts.length;
-const hasMore = remainingPosts.length > 0;
-
-// 6. Cache Control
-Astro.response.headers.set(
-  "Cache-Control",
-  query
-    ? "public, max-age=30, stale-while-revalidate=300"
-    : "public, max-age=3600, stale-while-revalidate=86400"
-);
-
-// 7. Canonical URL (manual, untuk dimasukkan ke head) - tanpa ai parameter untuk SEO
-const canonicalUrl = query
-  ? `${SITE_URL}/posts?q=${encodeURIComponent(query)}`
-  : `${SITE_URL}/posts`;
-
-// 8. Breadcrumb JSON-LD
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    { "@type": "ListItem", position: 1, name: "Beranda", item: SITE_URL },
-    { "@type": "ListItem", position: 2, name: "Semua Artikel", item: `${SITE_URL}/posts` },
-  ],
-};
-
-// 9. JSON-LD untuk WebPage + ItemList
-const webPageJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: query ? `Hasil pencarian: ${query}` : "Semua Artikel",
-  description: query
-    ? `Artikel yang mengandung kata "${query}"`
-    : "Kumpulan lengkap tulisan tentang teknologi, anime, dan hal-hal yang membuat saya penasaran.",
-  url: canonicalUrl,
-  author: {
-    "@type": "Person",
-    name: AUTHOR.name,
-    alternateName: AUTHOR.pseudonym,
-  },
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: initialPosts.map((post: BlogPostSummary, idx: number) => ({
-      "@type": "ListItem",
-      position: idx + 1,
-      url: `${SITE_URL}/blog/${post.slug}`,
-    })),
-  },
-};
-
-const jsonLd = [breadcrumbJsonLd, webPageJsonLd];
-
-const pageTitle = query
-  ? `Hasil pencarian: ${query}`
-  : "Semua Artikel";
-const pageDescription = query
-  ? `Menampilkan ${totalPosts} artikel yang mengandung kata "${query}".`
-  : `Kumpulan lengkap tulisan pribadi tentang teknologi, anime, dan hal-hal yang membuat saya penasaran. Total ${totalPosts} artikel.`;
+return Astro.redirect(redirectUrl, 301);
 ---
 
-<Layout
-  title={pageTitle}
-  description={pageDescription}
-  jsonLd={jsonLd}
-  noindex={!!query}
->
-  <!-- Tambahkan canonical link manual -->
-  <link rel="canonical" href={canonicalUrl} />
-  
-  <div class="flex w-full min-w-0 flex-col gap-8 pb-12">
-    <section class="flex flex-col gap-5" aria-label="Pencarian dan filter">
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <SearchInput value={query} placeholder="Cari artikel..." clearHref="/posts" />
-      </div>
-      <PopularTags posts={allPosts} />
-    </section>
-
-    <section aria-labelledby="articles-heading" class="min-w-0">
-      <h1 id="articles-heading" class="mb-6 text-lg font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-        {query ? `Hasil pencarian: "${query}"` : "Semua Artikel"}
-      </h1>
-      
-      {totalPosts === 0 ? (
-        <div class="py-8">
-          <p class="text-neutral-500 dark:text-neutral-400">
-            {query 
-              ? "Tidak ada artikel yang cocok dengan pencarian Anda." 
-              : "Tidak ada artikel yang ditemukan."
-            }
-          </p>
-        </div>
-      ) : (
-        <>
-          <BlogPostList search="" posts={initialPosts} />
-          
-          {/* Load More Button */}
-          {hasMore && (
-            <div class="mt-8 flex justify-center">
-              <button
-                id="load-more-btn"
-                type="button"
-                class="inline-flex min-h-[44px] items-center gap-2 rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-100 dark:border-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-800"
-              >
-                <span>Load More</span>
-                <span class="text-neutral-500 dark:text-neutral-400">({remainingPosts.length} remaining)</span>
-              </button>
-            </div>
-          )}
-        </>
-      )}
-    </section>
-  </div>
-</Layout>
-
-<script define:vars={{ remainingPosts }}>
-  const loadMoreBtn = document.getElementById('load-more-btn');
-  if (!loadMoreBtn || !remainingPosts || remainingPosts.length === 0) return;
-  
-  loadMoreBtn.addEventListener('click', () => {
-    // Simple approach: reload with all posts parameter
-    const url = new URL(window.location.href);
-    url.searchParams.set('all', 'true');
-    window.location.href = url.toString();
-  });
-</script>
+<!-- Redirecting to homepage -->

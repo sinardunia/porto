@@ -42,7 +42,7 @@ const visibleSlugs = new Set(posts.map((p) => p.slug));
 
 <div
   id="blog-post-list"
-  class="flex min-h-[40vh] min-w-0 flex-col gap-10"
+  class="flex min-w-0 flex-col gap-10 pt-3"
   role="region"
   aria-live="polite"
   aria-busy="false"
@@ -73,7 +73,7 @@ const visibleSlugs = new Set(posts.map((p) => p.slug));
             hidden={!yearPosts.some((p) => visibleSlugs.has(p.slug))}
             class="mb-10 last:mb-0 min-w-0"
           >
-            <h2 class="mb-6 mt-6 text-sm font-semibold tabular-nums text-neutral-500 dark:text-neutral-400">
+            <h2 class="mb-3 text-xs font-semibold uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
               {year}
             </h2>
             <div class="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-800/80 min-w-0">
