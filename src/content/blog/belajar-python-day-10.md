@@ -17,7 +17,7 @@ kenapa string? kenapa baru belajar ini di day 10?
 
 karena, string tidak semudah beda dengan integer. di dalam string, kita bisa "memanipulasinya" dengan membuatnya kapital, lower, atau bahkan menambahkannya.
 
-memahami string ini penting untuk kedepannya, jika kita ingin mengambil request dari api, dan lain sebagainya.
+memahami string ini penting untuk kedepannya, jika kita ingin mengambil response dari api, dan lain sebagainya.
 
 ### Slicing
 
@@ -26,8 +26,8 @@ di dalam string, kita bisa men-slice, atau memotongnya menjadi beberapa bagian.
 contoh:
 
 ```
-list = ['wahaha']
-print(list[:3]
+list = "wahaha"
+print(list[:3])
 ```
 
 artinya, kita mengambil huruf ketiga awalannya saja. outputnya menjadi:
@@ -43,15 +43,14 @@ menggabungkan string atau mengubahnya. contoh:
 ```
 teks = "  Halo DUNIA!  "
 
-# Menggabungkan tiga metode secara berurutan
-dibersihkan = teks.strip().lower().replace("!", ".") cetak(dibersihkan) 
-
+dibersihkan = teks.strip().lower().replace("!", ".")
+print(dibersihkan)
 ```
 
 output:
 
 ```
-"hello world."
+halo dunia
 ```
 
 method chaining ini dapat bermanfaat saat kita menerima input dari user yang asal-asalan, dan kita ingin merapikannya. entah itu untuk disimpan di database, atau menampilkannya dengan rapih di UI.
