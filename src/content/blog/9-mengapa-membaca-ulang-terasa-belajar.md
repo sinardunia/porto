@@ -1,5 +1,5 @@
 ---
-title: Mengapa Membaca Ulang Terasa Belajar #9
+title: Mengapa Membaca Ulang Terasa Belajar | 9
 slug: 9-mengapa-membaca-ulang-terasa-belajar
 description: Membaca terasa seperti belajar. Mengingat terasa seperti menguji. Kenyataannya justru sebaliknya.
 coverImage: /images/starry-sky-attempt-wenzel-hablik-1909-1200x1212-1.jpeg
