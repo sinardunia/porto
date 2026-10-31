@@ -1,5 +1,5 @@
 ---
-title: Mengapa Anda Lupa di Tengah Kalimat #10
+title: Mengapa Anda Lupa di Tengah Kalimat | 10
 slug: 10-mengapa-anda-lupa-di-tengah-kalimat
 description: Kepala Anda punya meja kecil yang hanya muat empat hal. Sebagian besar kesulitan membaca berasal dari tidak menghormati batas itu.
 coverImage: /images/starry-sky-attempt-wenzel-hablik-1909-1200x1212-1.jpeg
