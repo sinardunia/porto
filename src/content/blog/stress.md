@@ -1,5 +1,5 @@
 ---
-title: #8 — Mengapa Stres Membuat Anda Lupa
+title: Mengapa Stres Membuat Anda Lupa #8 
 slug: 8-mengapa-stres-membuat-anda-lupa
 description: Stres kronis bukan hanya perasaan, melainkan kaskade hormonal yang mengubah struktur otak yang Anda butuhkan untuk mengingat dan menahan diri.
 coverImage: /images/starry-sky-attempt-wenzel-hablik-1909-1200x1212-1.jpeg
