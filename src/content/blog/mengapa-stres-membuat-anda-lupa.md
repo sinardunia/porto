@@ -23,25 +23,15 @@ Pernahkah Anda menghadapi ujian atau presentasi, lalu lupa hal yang sebenarnya s
 **Daftar Isi**
 
 - [Bukan Sekadar Perasaan](#bukan-sekadar-perasaan)
-
 - [Dua Wajah Stres](#dua-wajah-stres)
-
 - [Kaskade yang Dimulai di Otak](#kaskade-yang-dimulai-di-otak)
-
 - [Hippokampus yang Menyusut](#hippokampus-yang-menyusut)
-
 - [Prefrontal yang Kehilangan Kendali](#prefrontal-yang-kehilangan-kendali)
-
 - [Amigdala yang Membesar](#amigdala-yang-membesar)
-
 - [Lingkaran yang Mengunci Diri](#lingkaran-yang-mengunci-diri)
-
 - [Apa yang Tidak Kita Ketahui](#apa-yang-tidak-kita-ketahui)
-
 - [Yang Bisa Dilakukan](#yang-bisa-dilakukan)
-
 - [Sintesis](#sintesis)
-
 - [Referensi dan Bacaan Lanjutan](#referensi-dan-bacaan-lanjutan)
 
 ### Bukan Sekadar Perasaan
@@ -137,29 +127,21 @@ Sepanjang artikel ini, saya telah berusaha untuk membedakan apa yang cukup mapan
 **Yang cukup mapan:**
 
 - Stres kronis melibatkan elevasi kortisol yang berkepanjangan melalui sumbu HPA.
-
 - Hipokampus, prefrontal, dan amigdala memiliki kepadatan reseptor kortisol yang tinggi dan sangat sensitif terhadap stres.
-
 - Pada hewan, stres kronis menyebabkan perubahan struktural yang terukur di ketiga wilayah ini.
-
 - Pada manusia, stres kronis berkorelasi dengan penurunan volume hipokampus dan gangguan fungsi prefrontal, meskipun arah kausalitasnya sulit dipastikan.
 
 **Yang masih diperdebatkan atau belum jelas:**
 
 - Seberapa besar efek stres kronis pada manusia, dan seberapa banyak variasi antar individu.
-
 - Seberapa cepat perubahan struktural terjadi, dan seberapa cepat dapat dipulihkan.
-
 - Apakah perubahan volume hipokampus yang terlihat pada studi pencitraan benar-benar mencerminkan atrofi dendrit, atau ada penjelasan lain (misalnya perubahan pada jaringan lain, atau perbedaan yang sudah ada sebelumnya).
-
 - Seberapa besar peran faktor genetik dalam kerentanan terhadap efek stres.
-
 - Apakah ada ambang stres di bawah mana efek struktural tidak terjadi, atau apakah efeknya kumulatif tanpa ambang yang jelas.
 
 **Yang saya tidak tahu:**
 
 - Apakah perubahan yang terlihat pada tikus dapat digeneralisasi sepenuhnya ke manusia. Otak tikus dan otak manusia berbeda dalam banyak hal, termasuk skala, organisasi, dan kompleksitas.
-
 - Apakah temuan tentang volume hipokampus pada PTSD dan depresi berlaku untuk stres kronis "biasa" yang tidak mencapai ambang gangguan klinis.
 
 Saya menyatakan ketidakpastian ini bukan untuk melemahkan argumen, tetapi karena kejujuran tentang apa yang diketahui dan tidak diketahui adalah bagian dari pemahaman yang baik. Anda tidak perlu percaya bahwa stres kronis menghancurkan otak Anda untuk memahami bahwa stres kronis memiliki efek nyata pada ingatan dan pengendalian diri. Efek itu nyata, terukur, dan cukup kuat untuk dijadikan alasan untuk memperhatikan.
@@ -189,23 +171,14 @@ Untuk proyek ini, implikasinya konkret. Jika Anda ingin belajar dengan baik, And
 ### Referensi dan Bacaan Lanjutan
 
 - Lupien, S. J., de Leon, M., de Santi, S., Convit, A., Hauger, R., & Meaney, M. J. (1998). Cortisol levels during human aging predict hippocampal atrophy and memory deficits. *Nature Neuroscience*, 1(1), 69–73. *[keyakinan: tinggi untuk keberadaan paper dan temuan umum; ukuran sampel kecil dan desain observasional]*
-
 - McEwen, B. S. (1998). Protective and damaging effects of stress mediators. *New England Journal of Medicine*, 338(3), 171–179. *[keyakinan: tinggi]*
-
 - McEwen, B. S., & Morrison, J. H. (2013). The brain on stress: Vulnerability and plasticity of the prefrontal cortex over the life course. *Neuron*, 79(1), 16–29. *[keyakinan: tinggi untuk keberadaan paper; detail spesifik perlu verifikasi]*
-
 - Arnsten, A. F. T. (2009). Stress signalling pathways that impair prefrontal cortex structure and function. *Nature Reviews Neuroscience*, 10(6), 410–422. *[keyakinan: tinggi]*
-
 - Sapolsky, R. M., Romero, L. M., & Munck, A. U. (2000). How do glucocorticoids influence stress responses? Integrating permissive, suppressive, stimulatory, and preparative actions. *Endocrine Reviews*, 21(1), 55–89. *[keyakinan: tinggi]*
-
 - Lupien, S. J., McEwen, B. S., Gunnar, M. R., & Heim, C. (2009). Effects of stress throughout the lifespan on the brain, behaviour and cognition. *Nature Reviews Neuroscience*, 10(6), 434–445. *[keyakinan: tinggi]*
-
 - de Kloet, E. R., Joëls, M., & Holsboer, F. (2005). Stress and the brain: From adaptation to disease. *Nature Reviews Neuroscience*, 6(6), 463–475. *[keyakinan: tinggi]*
-
 - Sandi, C., & Pinelo-Nava, M. T. (2007). Stress and memory: Behavioral effects and neurobiological mechanisms. *Neural Plasticity*, 2007, 78970. *[keyakinan: sedang — paper ini ada, tetapi saya tidak yakin tentang detail spesifiknya]*
-
 - Joëls, M., Pu, Z., Wiegert, O., Oitzl, M. S., & Krugers, H. J. (2006). Learning under stress: How does it work? *Trends in Cognitive Sciences*, 10(4), 152–158. *[keyakinan: sedang]*
-
 - Sapolsky, R. M. (2004). *Why Zebras Don't Get Ulcers*. Holt Paperbacks. (Buku populer yang bagus sebagai pengantar; beberapa klaimnya lebih kuat daripada bukti yang tersedia, terutama tentang generalisasi dari hewan ke manusia.)
 
 **Catatan:** Sebagian besar sitasi di atas berasal dari ingatan saya, bukan dari verifikasi langsung dalam percakapan ini. Saya tidak dapat membuka paper asli untuk memeriksa detail spesifik. Penanda keyakinan menunjukkan seberapa yakin saya bahwa paper itu ada dan temuannya seperti yang saya sebutkan. Pembaca yang ingin memverifikasi harus memeriksa sumber asli.
