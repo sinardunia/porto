@@ -1,7 +1,7 @@
 ---
 title: Mengapa Anda Bisa Lulus Ujian tetapi Tidak Bisa Menerapkan | 13
 slug: 13-mengapa-anda-bisa-lulus-ujian-tetapi-tidak-bisa-menerapkan
-description: Seorang anak belajar berenang di kolam. Bisa. Bisa menyelam, bisa mengapung, bisa berenang cepat. Kemudian ayahnya membawanya ke pantai. Anak itu masuk ke air. Ia panik. Ia tidak bisa berenang. Padahal gerakannya sama. Padahal airnya sama. Tapi otaknya tidak mengenali bahwa ini juga berenang.
+description: Seorang anak belajar berenang di kolam. Setiap minggu, ia berlatih. Setelah setahun, ia bisa berenang dengan lancar. Suatu hari, ayahnya membawanya ke pantai. Anak itu masuk ke air. Ia panik. Ia tidak bisa berenang. Padahal gerakannya sama. Padahal airnya sama. Tapi otaknya tidak mengenali bahwa ini juga berenang.
 coverImage: /images/starry-sky-attempt-wenzel-hablik-1909-1200x1212-1.jpeg
 pubDatetime: 2026-11-02
 modDatetime: 2026-11-02
@@ -19,16 +19,18 @@ Seorang anak belajar berenang di kolam. Setiap minggu, ia berlatih. Menyelam, me
 
 Suatu hari, ayahnya membawanya ke pantai. Anak itu masuk ke air. Ia panik. Ia tidak bisa berenang. Padahal gerakannya sama. Padahal airnya sama. Tapi ia tidak mengenali bahwa ini juga berenang.
 
+#belajar #transfer #memori #edukasi #selfimprovement
+
 *Artikel ini dihasilkan oleh AI untuk proyek membaca 365 hari. Melatih fokus, membaca, berpikir, dan konsistensi.*
 
 **Daftar Isi**
 
 - [Anak yang Bisa Berenang di Kolam](#anak-yang-bisa-berenang-di-kolam)
-- [Kenapa Otak Menyimpan Konteks](#kenapa-otak-menyimpan-konteks)
-- [Transfer](#transfer)
+- [Fenomena yang Sudah Lama Diketahui](#fenomena-yang-sudah-lama-diketahui)
+- [Konteks Menempel pada Ingatan](#konteks-menempel-pada-ingatan)
 - [Permukaan dan Isi](#permukaan-dan-isi)
-- [Kenapa Variasi Konteks Penting](#kenapa-variasi-konteks-penting)
 - [Bukti dari Laboratorium](#bukti-dari-laboratorium)
+- [Apa yang Tidak Diketahui](#apa-yang-tidak-diketahui)
 - [Kenapa Ini Sangat Penting untuk Proyek Ini](#kenapa-ini-sangat-penting-untuk-proyek-ini)
 - [Satu Perubahan untuk Minggu Ini](#satu-perubahan-untuk-minggu-ini)
 - [Penutup](#penutup)
@@ -38,83 +40,97 @@ Suatu hari, ayahnya membawanya ke pantai. Anak itu masuk ke air. Ia panik. Ia ti
 
 Anak itu tidak bodoh. Ia bukan tidak bisa berenang. Ia justru sangat bisa berenang di kolam. Ia bisa mengalahkan teman-temannya dalam lomba renang.
 
-Tetapi di laut, tubuhnya bereaksi berbeda. Air terasa asin. Kaki tidak menyentuh dasar. Ombak bergerak. Ada suara yang tidak dikenal. Semua perbedaan ini — yang sebenarnya tidak mengubah cara berenang — membuat otaknya berkata: "ini bukan berenang."
+Tetapi di laut, tubuhnya bereaksi berbeda. Air terasa asin. Kaki tidak menyentuh dasar. Ombak bergerak. Ada suara yang tidak dikenal. Semua perbedaan ini — yang sebenarnya tidak mengubah cara berenang — membuatnya tidak bisa memakai keterampilannya.
 
-Dan ketika otak berkata "ini bukan berenang", keterampilan berenangnya tidak aktif. Ia harus belajar lagi dari nol.
+Ini bukan tentang anak itu. Ini tentang fenomena yang sudah lama diketahui dalam psikologi: kemampuan yang dikuasai di satu situasi sering tidak terbawa ke situasi lain, meskipun secara logis seharusnya bisa.
 
-Ini bukan tentang anak itu. Ini tentang semua orang. Ini tentang cara otak menyimpan pengetahuan. Dan ini tentang salah satu fenomena paling penting, paling sering diabaikan, dan paling sering membuat kita menyalahkan diri sendiri: **transfer**.
+Kisah berenang ini adalah ilustrasi, bukan penjelasan. Ia menggambarkan fenomena. Tetapi ia tidak menjelaskan mekanismenya. Mekanismenya lebih rumit, dan sebagian masih diperdebatkan. Mari kita lihat apa yang sebenarnya diketahui.
 
-### Kenapa Otak Menyimpan Konteks
-
-Ketika Anda belajar sesuatu, otak tidak menyimpannya sebagai fakta yang berdiri sendiri. Ia menyimpannya bersama konteksnya.
-
-Bayangkan ingatan sebagai file. Di dalam file ada isi — misalnya, cara menggerakkan kaki saat berenang. Tetapi di luar file ada label. Label itu berisi: di mana ini terjadi, kapan, dengan siapa, dalam suasana apa.
-
-Otak menyimpan file dengan label. Ketika Anda ingin mengingat sesuatu, otak tidak mencari di semua file. Ia mencari file yang labelnya cocok dengan situasi Anda sekarang.
-
-Di kolam, label file berisi: "kolam renang, dengan pelatih, air tawar, terang, ada orang tua di pinggir." Situasi cocok. File terbuka. Keterampilan berenang aktif.
-
-Di laut, label file itu tidak cocok dengan situasi: "pantai, dengan ayah, air asin, ombak, pasir." Situasi tidak cocok. File tidak terbuka. Keterampilan tidak aktif.
-
-Ini bukan bug. Ini fitur. Kalau otak membuka semua file setiap saat, Anda akan lumpuh karena terlalu banyak informasi yang tidak relevan masuk ke kesadaran. Anda perlu sistem yang membuka file yang relevan.
-
-Masalahnya, sistem ini terlalu ketat. Ia membuka file berdasarkan kemiripan permukaan, bukan berdasarkan isi yang sama. Anak itu melihat laut dan tidak melihat "tempat berenang". Ia melihat sesuatu yang baru.
-
-### Transfer
+### Fenomena yang Sudah Lama Diketahui
 
 Kemampuan menggunakan apa yang Anda pelajari di satu situasi di situasi lain punya nama. Namanya transfer.
 
-Transfer adalah jembatan antara belajar dan menggunakan. Tanpa transfer, belajar tidak berguna. Anda bisa tahu segalanya tetapi tidak bisa memakai apa pun.
+Transfer adalah jembatan antara belajar dan menggunakan. Tanpa transfer, belajar tidak berguna untuk hal-hal di luar konteks di mana Anda belajar.
 
-Kata "transfer" mungkin terdengar teknis. Tapi pengalamannya sangat sehari-hari. Ini adalah momen ketika Anda menyadari bahwa "oh, ini sama seperti yang saya pelajari dulu". Ini adalah momen ketika sesuatu yang tadinya hanya ada di satu konteks melompat ke konteks lain.
+Kadang transfer terjadi otomatis. Anda belajar mengemudi mobil manual di satu mobil. Lalu Anda naik mobil manual yang berbeda. Anda bisa, meskipun tombolnya berbeda tempat. Otak Anda mengenali bahwa ini masih mengemudi mobil manual, hanya detailnya yang berbeda.
 
-Kadang transfer terjadi secara otomatis. Anda belajar mengemudi mobil manual. Lalu Anda naik mobil manual yang berbeda. Anda langsung bisa, meskipun tombolnya berbeda tempat. Otak Anda mengenali bahwa ini masih "mengemudi mobil manual", hanya detailnya berbeda.
+Kadang transfer gagal total. Anak berenang di kolam, tidak bisa berenang di laut. Ini bukan karena ia lupa cara berenang. Ini karena sesuatu tentang konteks baru membuat keterampilannya tidak aktif.
 
-Kadang transfer gagal total. Anak berenang di kolam, tidak bisa berenang di laut. Ini bukan karena ia lupa cara berenang. Ini karena ia tidak mengenali bahwa yang di depannya adalah tempat untuk berenang.
+Yang menarik: transfer bukan hanya soal keterampilan fisik. Ini juga terjadi pada pengetahuan. Anda bisa memahami sebuah prinsip dalam satu buku, lalu tidak bisa menerapkannya pada situasi di mana prinsip yang sama berlaku. Anda bisa lulus ujian tentang cara membuat keputusan yang baik, lalu membuat keputusan buruk di minggu yang sama.
+
+Fenomena ini sudah dipelajari sejak awal abad ke-20. Penelitian klasik oleh Edward Thorndike pada 1901 tentang bagaimana pelajar memindahkan kemampuan dari satu tugas ke tugas lain sudah menunjukkan bahwa transfer jauh lebih jarang terjadi daripada yang diharapkan. Sejak itu, ratusan studi telah mengonfirmasi bahwa transfer adalah pengecualian, bukan aturan.
+
+### Konteks Menempel pada Ingatan
+
+Untuk memahami mengapa transfer sering gagal, kita perlu memahami satu hal tentang ingatan manusia: konteks menempel padanya.
+
+Ketika Anda mempelajari sesuatu, otak Anda tidak menyimpan fakta itu sebagai entri yang berdiri sendiri. Ia menyimpannya bersama sejumlah informasi lain tentang situasi saat itu. Di mana Anda berada. Apa yang sedang Anda lakukan. Bagaimana suasana hati Anda. Siapa yang ada di sekitar Anda.
+
+Fenomena ini disebut *encoding specificity*. Istilahnya teknis, tapi idenya sederhana. Apa yang bisa Anda ingat bergantung pada seberapa cocok situasi saat mengingat dengan situasi saat belajar.
+
+Salah satu demonstrasi paling bersih dari fenomena ini dilakukan oleh dua psikolog, Duncan Godden dan Alan Baddeley, pada tahun 1975. Mereka menguji penyelam. Sebagian penyelam belajar daftar kata di darat. Sebagian belajar daftar kata di bawah air. Kemudian, mereka diuji dalam salah satu dari dua kondisi: di darat atau di bawah air.
+
+Hasilnya jelas. Penyelam yang belajar di darat mengingat lebih banyak kata ketika diuji di darat. Penyelam yang belajar di bawah air mengingat lebih banyak kata ketika diuji di bawah air. Kecocokan konteks membantu. Ketidakcocokan konteks mengganggu.
+
+Ini bukan karena penyelam yang belajar di bawah air lebih pintar. Ini bukan karena penyelam yang belajar di darat lebih bodoh. Ini karena konteks belajar menjadi bagian dari apa yang tersimpan, dan konteks saat mengingat harus cocok agar ingatan bisa diakses.
+
+Sekarang, kembali ke anak berenang di kolam. Di kolam, ia belajar menggerakkan kaki, mengatur napas, mengapung. Semua ini tersimpan bersama konteks: air tawar, dasar kolam, pelatih di pinggir, tidak ada ombak. Di laut, konteksnya berbeda. Ingatannya tidak terpicu. Keterampilannya tidak aktif.
+
+Ini bukan penjelasan lengkap. Ini satu mekanisme yang diketahui berperan. Masih ada mekanisme lain yang juga berperan, dan kita akan membahasnya di bagian berikutnya.
 
 ### Permukaan dan Isi
 
-Untuk memahami mengapa transfer kadang berhasil dan kadang gagal, kita perlu membedakan dua hal.
+Sekarang mari kita bicara tentang jenis informasi yang cenderung dilihat otak ketika memutuskan apakah dua situasi itu "sama".
 
-Yang pertama adalah **permukaan**. Ini adalah ciri-ciri yang terlihat: warna, bentuk, konteks, situasi. Laut dan kolam punya permukaan yang sangat berbeda. Air asin vs tawar. Ombak vs tenang. Pasir vs ubin.
+Kita bisa membedakan dua lapis dari sesuatu: permukaan dan isi.
 
-Yang kedua adalah **isi**. Ini adalah pola di balik permukaan. Di balik perbedaan laut dan kolam, ada pola yang sama: tubuh mengapung di air, gerakan yang sama membuat tubuh bergerak maju, napas yang sama menjaga Anda tetap hidup.
+Permukaan adalah ciri-ciri yang terlihat: warna, bentuk, konteks, situasi. Laut dan kolam punya permukaan yang sangat berbeda. Air asin vs tawar. Ombak vs tenang. Pasir vs ubin.
 
-Otak cenderung melihat permukaan. Ia cepat menangkap perbedaan warna, tekstur, konteks. Ia lambat menangkap kesamaan isi.
+Isi adalah pola di balik permukaan. Di balik perbedaan laut dan kolam, ada pola yang sama: tubuh mengapung di air, gerakan yang sama membuat tubuh bergerak maju, napas yang sama menjaga Anda tetap hidup.
 
-Itu sebabnya anak itu gagal transfer. Ia melihat perbedaan permukaan dan tidak melihat kesamaan isi. Ia melihat laut sebagai kategori yang berbeda dari kolam, bukan sebagai variasi dari kategori yang sama.
+Otak cenderung cepat menangkap perbedaan permukaan. Ia lambat menangkap kesamaan isi. Ini bukan karena otak cacat. Ini karena permukaan adalah informasi yang lebih mudah diakses, lebih cepat diproses, dan dalam banyak situasi lebih penting untuk bertahan hidup.
+
+Tetapi dalam belajar, kecenderungan ini menjadi masalah. Anda mempelajari prinsip dalam satu konteks. Otak menyimpannya dengan label konteks itu. Ketika Anda menghadapi konteks yang berbeda secara permukaan, otak tidak mengenali bahwa isinya sama.
 
 Transfer terjadi ketika Anda bisa melihat isi di balik permukaan. Itu keterampilan. Itu tidak otomatis. Itu dilatih.
 
-### Kenapa Variasi Konteks Penting
-
-Kalau masalahnya adalah otak menyimpan konteks dengan terlalu ketat, bagaimana cara melonggarkan ikatan itu?
-
-Jawabannya: dengan belajar di banyak konteks.
-
-Kalau Anda hanya belajar berenang di kolam, maka otak Anda menyimpan "berenang" sebagai "hal yang dilakukan di kolam". Kalau Anda belajar berenang di kolam, di danau, di sungai, di laut, maka otak Anda menyimpan "berenang" sebagai "hal yang dilakukan di air". Kategori meluas.
-
-Semakin banyak konteks di mana Anda belajar sesuatu, semakin sulit bagi otak untuk mengikat pengetahuan itu ke satu konteks. Ia jadi lebih mudah dibawa ke mana-mana.
-
-Ini bukan hanya tentang berenang. Ini tentang semua yang Anda pelajari.
-
-Kalau Anda hanya membaca tentang kebiasaan di satu buku, Anda akan mengingat kebiasaan sebagai "hal yang dibahas di buku itu". Kalau Anda membaca tentang kebiasaan di buku, artikel, podcast, percakapan, dan pengalaman pribadi, Anda akan mengingat kebiasaan sebagai prinsip yang muncul di banyak tempat. Ia lebih mudah Anda bawa ke situasi baru.
-
 ### Bukti dari Laboratorium
 
-Ini sudah diuji berkali-kali, dan hasilnya konsisten.
+Salah satu eksperimen paling terkenal tentang transfer dilakukan pada tahun 1980 oleh Mary Gick dan Keith Holyoak.
 
-Salah satu eksperimen paling awal tentang transfer dilakukan pada tahun 1980-an. Dua peneliti, Mary Gick dan Keith Holyoak, memberi mahasiswa sebuah cerita tentang seorang jenderal yang ingin merebut benteng. Jalan langsung ke benteng dijaga. Jadi jenderal membagi pasukannya menjadi kelompok kecil, mengirim mereka lewat jalan yang berbeda, dan menyerang dari banyak arah sekaligus.
+Mereka memberi mahasiswa sebuah cerita tentang seorang jenderal yang ingin merebut benteng. Jalan langsung ke benteng dijaga oleh pasukan yang besar. Setiap jalan kecil juga dijaga. Jenderal tidak bisa mengirim seluruh pasukannya lewat satu jalan — terlalu mudah dihentikan. Jadi ia membagi pasukannya menjadi kelompok kecil. Setiap kelompok mengambil jalan yang berbeda. Mereka menyerang secara bersamaan dari banyak arah. Benteng jatuh.
 
-Kemudian mahasiswa diberi masalah lain: seorang dokter yang ingin menghancurkan tumor di perut pasien tanpa merusak jaringan sehat. Sinar yang cukup kuat untuk menghancurkan tumor akan merusak jaringan sehat. Sinar yang lemah tidak akan merusak jaringan, tetapi juga tidak akan menghancurkan tumor.
+Kemudian mahasiswa diberi masalah lain. Seorang dokter ingin menghancurkan tumor di perut pasien tanpa merusak jaringan sehat. Sinar yang cukup kuat untuk menghancurkan tumor akan merusak jaringan sehat. Sinar yang lemah tidak akan merusak jaringan, tetapi juga tidak akan menghancurkan tumor. Apa yang harus dilakukan dokter?
 
-Solusinya adalah yang sama dengan cerita jenderal: kirim sinar lemah dari banyak arah sekaligus, sehingga di titik pertemuannya, kekuatannya cukup untuk menghancurkan tumor.
+Solusinya sama dengan cerita jenderal. Kirim sinar lemah dari banyak arah sekaligus. Di titik pertemuannya, kekuatannya cukup untuk menghancurkan tumor, sementara jaringan sehat di sekitarnya hanya terkena sinar lemah.
 
-Tetapi banyak mahasiswa tidak menyelesaikannya. Padahal mereka baru saja membaca cerita jenderal. Padahal mereka bisa melihat bahwa kedua masalah itu memiliki isi yang sama.
+Yang penting adalah apa yang terjadi ketika mahasiswa mencoba menyelesaikan masalah dokter setelah membaca cerita jenderal.
 
-Ketika ditanya, kebanyakan dari mereka tidak menyadari bahwa cerita jenderal bisa dipakai untuk masalah dokter. Mereka menganggap kedua cerita itu berbeda. Permukaan berbeda — jenderal vs dokter, benteng vs tumor, tentara vs sinar — membuat otak mereka tidak melihat isinya yang sama.
+Ketika mereka hanya diberi cerita tanpa petunjuk, tingkat keberhasilan menyelesaikan masalah dokter rendah. Sebagian besar mahasiswa tidak menyadari bahwa cerita jenderal bisa dipakai untuk masalah dokter. Mereka membaca cerita itu sebagai cerita tentang perang, bukan tentang strategi memecah kekuatan. Permukaan berbeda — jenderal vs dokter, benteng vs tumor, tentara vs sinar — membuat mereka tidak melihat isi yang sama.
 
-Ini bukan karena mereka bodoh. Ini karena otak memang cenderung melihat permukaan.
+Ketika para peneliti memberi petunjuk — "cerita jenderal yang tadi mungkin membantu" — tingkat keberhasilan naik drastis. Mahasiswa yang tadinya tidak bisa, sekarang bisa, hanya karena diingatkan bahwa ada hubungan.
+
+Ini adalah demonstrasi yang bersih dari fenomena yang sedang kita bicarakan. Transfer itu mungkin, tapi tidak otomatis. Ia butuh pengenalan, dan pengenalan bisa gagal meskipun informasinya ada.
+
+Ini juga menunjukkan sesuatu yang penting: mahasiswa tidak kekurangan pengetahuan. Mereka baru saja membaca cerita itu. Yang mereka kekurangan adalah koneksi. Koneksi antara cerita dan masalah tidak dibuat secara otomatis.
+
+Sejak studi ini, banyak peneliti lain telah menguji transfer dalam berbagai bentuk. Hasilnya bervariasi. Dalam beberapa kondisi, tingkat transfer lebih tinggi dari yang ditemukan Gick dan Holyoak. Dalam kondisi lain, lebih rendah. Yang konsisten adalah polanya: transfer tanpa petunjuk lebih sulit daripada yang kita bayangkan, dan mudah terganggu oleh perbedaan permukaan.
+
+### Apa yang Tidak Diketahui
+
+Saya harus jujur tentang batas dari apa yang diketahui.
+
+**Yang cukup kuat:** Fenomena encoding specificity — bahwa konteks saat belajar mempengaruhi apa yang bisa diingat di konteks lain — adalah salah satu temuan paling kokoh dalam psikologi kognitif. Studi Godden dan Baddeley tentang penyelam, serta banyak replikasi, mendukungnya.
+
+**Yang cukup kuat:** Transfer tanpa petunjuk sering gagal dalam eksperimen laboratorium. Ini telah direplikasi berkali-kali dalam berbagai bentuk.
+
+**Yang tidak diketahui:** Seberapa sering transfer gagal dalam kehidupan nyata. Eksperimen laboratorium sering menggunakan tugas yang sempit dan waktu yang singkat. Di dunia nyata, orang memiliki lebih banyak waktu, lebih banyak kesempatan untuk mengenali koneksi, dan lebih banyak konteks yang sudah mereka kenal. Tingkat transfer di dunia nyata mungkin lebih tinggi dari yang ditemukan di laboratorium.
+
+**Yang tidak diketahui:** Apakah melatih di banyak konteks benar-benar membantu. Ini klaim yang masuk akal, dan ada beberapa bukti yang mendukungnya (terutama dalam penelitian tentang latihan keterampilan motorik), tetapi efeknya tidak sekuat yang sering diklaim dalam buku-buku populer. Variasi konteks bisa membantu, tetapi bisa juga membingungkan, tergantung pada tingkat keahlian dan jenis materi. Untuk pemula, belajar di satu konteks dulu mungkin lebih baik sebelum mencoba variasi.
+
+**Yang tidak diketahui:** Mekanisme pasti dari kegagalan transfer. Encoding specificity adalah satu mekanisme yang berperan. Tapi bukan satu-satunya. Ada juga peran dari bagaimana otak mengkategorikan informasi, bagaimana perhatian mengarahkan pemrosesan, dan bagaimana memori bekerja pada tingkat jaringan saraf. Pemahaman kita masih berkembang.
+
+Saya sebutkan ini bukan untuk melemahkan argumen. Saya sebutkan ini karena kalau saya menyembunyikannya, saya akan memberi Anda kesan bahwa ini bidang yang sudah selesai, padahal bukan. Transfer adalah salah satu area paling aktif diteliti dalam psikologi kognitif, dan beberapa pertanyaan mendasar masih terbuka.
 
 ### Kenapa Ini Sangat Penting untuk Proyek Ini
 
@@ -130,9 +146,7 @@ Ini bukan karena Anda lupa. Ini karena otak Anda menyimpan pengetahuan tentang t
 
 Proyek ini memiliki risiko yang sama dengan anak yang belajar berenang di kolam. Anda membaca 365 artikel di satu konteks — duduk, malam hari, dengan layar. Keterampilan Anda di konteks itu akan sangat kuat. Tetapi apakah keterampilan itu bisa Anda bawa ke konteks lain — percakapan, pekerjaan, keputusan — itu bukan otomatis.
 
-Untuk membuat transfer terjadi, Anda perlu melakukan sesuatu yang tidak biasa dilakukan orang saat membaca: secara sadar mencari di mana prinsip ini berlaku di hidup Anda.
-
-Bukan setelah selesai membaca, tapi saat membaca.
+Untuk membuat transfer terjadi, Anda perlu melakukan sesuatu yang tidak biasa dilakukan orang saat membaca: secara sadar mencari di mana prinsip ini berlaku di hidup Anda. Bukan setelah selesai membaca, tapi saat membaca.
 
 ### Satu Perubahan untuk Minggu Ini
 
@@ -142,9 +156,13 @@ Saya tidak akan memberi daftar tips. Satu perubahan.
 
 Bukan situasi umum. Bukan situasi abstrak. Satu situasi spesifik. Sesuatu yang sudah terjadi, atau yang akan terjadi minggu ini.
 
-Misalnya, setelah membaca #11 tentang pengulangan berjarak, Anda berpikir: "Oh, ini berlaku untuk cara saya belajar nama pelanggan baru. Saya selalu lupa nama mereka minggu berikutnya karena saya hanya mengulanginya sekali di hari pertama."
+Misalnya, setelah membaca #11 tentang pengulangan berjarak, Anda berpikir: "Oh, ini berlaku untuk cara saya belajar nama pelanggan baru. Saya selalu lupa nama mereka minggu berikutnya karena saya hanya mengulanginya sekali di hari pertama. Mungkin saya perlu mengingat nama mereka lagi besok, lalu minggu depan."
 
-Atau setelah membaca #12 tentang latihan campur, Anda berpikir: "Oh, ini berlaku untuk cara saya mengerjakan tugas. Saya selalu mengerjakan satu proyek sampai selesai, lalu pindah ke proyek berikutnya. Mungkin itu sebabnya saya kesulitan berpindah konteks saat rapat."
+Atau setelah membaca #12 tentang latihan campur, Anda berpikir: "Oh, ini berlaku untuk cara saya berlatih soal. Saya selalu mengerjakan semua soal jenis A dulu, lalu jenis B, lalu jenis C. Mungkin lebih baik dicampur agar saya terlatih mengenali jenis soal sebelum mengerjakannya."
+
+Atau setelah membaca artikel hari ini tentang transfer, Anda berpikir: "Oh, ini menjelaskan mengapa saya bisa mengerjakan soal ujian tentang topik tertentu tetapi tidak bisa menerapkan konsep yang sama saat menghadapi masalah di pekerjaan. Saya belajar topik itu di konteks kelas, dan saya tidak pernah berlatih menerapkannya di konteks kerja."
+
+Perhatikan bahwa ketiga contoh ini berbeda. Yang pertama tentang pengulangan berjarak, yang kedua tentang latihan campur, yang ketiga tentang transfer itu sendiri. Masing-masing menghubungkan prinsip yang berbeda dengan situasi yang berbeda. Ini bukan karena ketiganya saling terkait — mereka memang berbeda. Ini karena setiap artikel menghasilkan koneksi yang berbeda, dan tugas Anda adalah menemukan koneksi yang tepat untuk setiap artikel.
 
 Membuat koneksi spesifik ini memakan waktu tiga puluh detik. Tetapi koneksi itulah yang menempelkan ide ke hidup Anda. Tanpa koneksi, ide hanya menempel di artikel. Dengan koneksi, ide menempel di pengalaman.
 
@@ -160,13 +178,9 @@ Anda tidak gagal kalau Anda bisa mengerjakan soal ujian tetapi tidak bisa menera
 
 ### Referensi
 
+- Godden, D. R., & Baddeley, A. D. (1975). Context-dependent memory in two natural environments: On land and underwater. *British Journal of Psychology*, 66(3), 325–331.
 - Gick, M. L., & Holyoak, K. J. (1980). Analogical problem solving. *Cognitive Psychology*, 12(3), 306–355.
+- Thorndike, E. L., & Woodworth, R. S. (1901). The influence of improvement in one mental function upon the efficiency of other functions. *Psychological Review*, 8(3), 247–261.
 - Barnett, S. M., & Ceci, S. J. (2002). When and where do we apply what we learn? A taxonomy for far transfer. *Psychological Bulletin*, 128(4), 612–637.
-- National Research Council. (2000). *How People Learn: Brain, Mind, Experience, and School*. National Academy Press. (Bab tentang transfer memberikan tinjauan yang baik, meskipun contoh-contohnya mungkin sudah tampak usang; prinsipnya tetap relevan.)
 
-**Catatan:** Studi Gick dan Holyoak (1980) adalah salah satu studi klasik tentang transfer dan saya cukup yakin tentang keberadaan dan temuannya. Namun, saya tidak dapat memverifikasi detail spesifiknya dalam sesi ini, dan hasil studi ini telah direplikasi dengan variasi yang cukup besar — tingkat keberhasilan transfer yang mereka temukan bisa berbeda tergantung pada desain eksperimen. Yang paling penting dari studi ini bukan angka pastinya, tetapi pola umumnya: orang cenderung gagal transfer ketika permukaan situasi berbeda, meskipun isinya sama.
-
----
-
-**Hashtag YouTube:**
-#belajar #transfer #memori #edukasi #selfimprovement
+**Catatan:** Studi Godden & Baddeley (1975) tentang penyelam adalah salah satu studi klasik tentang encoding specificity dan temuannya cukup kokoh. Studi Gick & Holyoak (1980) juga klasik, tetapi tingkat transfer yang mereka temukan telah bervariasi dalam replikasi tergantung desain eksperimen. Saya tidak mencantumkan angka persisnya karena saya tidak dapat memverifikasi dalam sesi ini. Yang paling penting dari studi ini bukan angkanya, tetapi pola umumnya: transfer tanpa petunjuk sering gagal, dan pengenalan adalah bagian dari masalahnya.
