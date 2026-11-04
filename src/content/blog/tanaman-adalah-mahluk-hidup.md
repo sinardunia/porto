@@ -57,7 +57,7 @@ Saat tanaman memenuhi syarat dari ketiga hal tadi; Yaitu air, udara, dan matahar
 
 Hasil dari fotosintesis tadi akan menghasilkan gula.
 
-### Gula? 
+### Gula?
 
 Gula di sini bukan gula yang bikin manusia obesitas ya Sob:)
 
@@ -79,7 +79,7 @@ Tapi apakah berhenti bertumbuh? Tentu saja tidak ya Sob.
 
 ---
 
-### Pupuk 
+### Pupuk
 
 Ngomongin tanaman, tidak lengkap jika tanpa pupuk. 
 
