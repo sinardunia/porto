@@ -52,7 +52,7 @@ Yang membuat orang menjadi lebih baik bukan pengalaman. Yang membuat orang menja
 
 Anders Ericsson menghabiskan sebagian besar kariernya mempelajari orang-orang yang sangat ahli dalam bidangnya. Pemain biola, pemain catur, atlet, ahli bedah, pianis. Ia ingin tahu apa yang membuat mereka berbeda.
 
-Salah satu studinya yang paling terkenal, dilakukan bersama Ralf Krampe dan Clemens Tesch-Römer pada tahun 1993, meneliti pemain biola di Akademi Musik Berlin. Para peneliti membagi pemain menjadi tiga kelompok berdasarkan penilaian guru-guru mereka: pemain terbaik (yang dianggap calon solois dunia), pemain baik (yang dianggap calon pemain orkestra profesional), dan pemain yang cukup baik (yang dianggap calon guru musik).
+Salah satu studinya yang paling terkenal, dilakukan bersama Ralf Krampe dan Clemens Tesch-Römer pada tahun 1993, meneliti pemain biola di Akademi Musik Berlin. Para peneliti membagi pemain menjadi tiga kelompok berdasarkan penilaian guru-guru mereka: pemain terbaik yang dianggap calon solois dunia, pemain baik yang dianggap calon pemain orkestra profesional, dan pemain yang cukup baik yang dianggap calon guru musik.
 
 Lalu mereka mewawancarai para pemain tentang bagaimana mereka berlatih, dan berapa banyak waktu yang mereka habiskan untuk berlatih sepanjang hidup mereka.
 
@@ -64,9 +64,9 @@ Angka sepuluh ribu jam ini kemudian menjadi terkenal. Sayangnya, angka itu menja
 
 Karena ada temuan ketiga, yang jarang dibicarakan, dan justru yang paling penting.
 
-Ketiga kelompok tidak hanya berbeda dalam jumlah jam. Mereka berbeda dalam **cara** berlatih. Pemain terbaik berlatih dengan cara yang berbeda dari yang lain. Mereka tidak sekadar berlatih lebih lama. Mereka berlatih dengan cara yang lebih sulit, lebih melelahkan, dan lebih tidak nyaman.
+Ketiga kelompok tidak hanya berbeda dalam jumlah jam. Mereka berbeda dalam cara berlatih. Pemain terbaik berlatih dengan cara yang berbeda dari yang lain. Mereka tidak sekadar berlatih lebih lama. Mereka berlatih dengan cara yang lebih sulit, lebih melelahkan, dan lebih tidak nyaman.
 
-Ericsson menyebut cara ini sebagai deliberate practice. Dalam bahasa Indonesia, istilah itu bisa diterjemahkan sebagai latihan yang disengaja. Tapi terjemahan itu kehilangan satu kata yang penting: **deliberate** berarti sengaja, terencana, dan dengan tujuan yang jelas. Bukan sekadar latihan. Bukan sekadar pengulangan.
+Ericsson menyebut cara ini sebagai deliberate practice. Dalam bahasa Indonesia, istilah itu bisa diterjemahkan sebagai latihan yang disengaja. Tapi terjemahan itu kehilangan satu kata yang penting: deliberate berarti sengaja, terencana, dan dengan tujuan yang jelas. Bukan sekadar latihan. Bukan sekadar pengulangan.
 
 ### Kenapa Latihan Biasa Tidak Bekerja
 
@@ -84,7 +84,7 @@ Pertama, otak kita menghindari ketidaknyamanan. Ketika kita berlatih, kita cende
 
 Kedua, kita tidak punya umpan balik yang jujur. Ketika kita bermain gitar sendirian, tidak ada yang memberi tahu kita bahwa kita memainkan nada yang salah. Kita mungkin menyadarinya, mungkin tidak. Tanpa umpan balik dari luar, kita tidak tahu di mana kita masih salah. Kita hanya mengulang.
 
-Ketiga, kita tidak punya tujuan yang spesifik. Kita berlatih "bermain gitar" secara umum. Kita tidak berlatih "memperbaiki transisi dari akor C ke akor G yang selalu tersendat." Tanpa tujuan yang spesifik, latihan kita tersebar. Tidak ada yang diperbaiki secara mendalam.
+Ketiga, kita tidak punya tujuan yang spesifik. Kita berlatih bermain gitar secara umum. Kita tidak berlatih memperbaiki transisi dari akor C ke akor G yang selalu tersendat. Tanpa tujuan yang spesifik, latihan kita tersebar. Tidak ada yang diperbaiki secara mendalam.
 
 Ketiga hal ini menjelaskan mengapa dua puluh tahun pengalaman bisa tidak menghasilkan keahlian. Anda menghabiskan dua puluh tahun menghindari ketidaknyamanan, tanpa umpan balik, tanpa tujuan spesifik. Anda hanya mengulang.
 
@@ -94,7 +94,7 @@ Dari penelitian Ericsson dan banyak peneliti setelahnya, kita bisa menarik tiga 
 
 **Syarat pertama: tujuan yang spesifik dan sempit.**
 
-Bukan "saya ingin menjadi pemain gitar yang lebih baik." Tapi "saya ingin bisa memainkan transisi dari akor C ke akor G tanpa jeda, dalam tempo yang sama dengan rekaman aslinya."
+Bukan saya ingin menjadi pemain gitar yang lebih baik. Tapi saya ingin bisa memainkan transisi dari akor C ke akor G tanpa jeda, dalam tempo yang sama dengan rekaman aslinya.
 
 Tujuan yang sempit memaksa Anda untuk fokus pada satu hal. Anda tidak bisa memperbaiki sepuluh hal sekaligus. Anda hanya bisa memperbaiki satu hal pada satu waktu. Dan ketika satu hal sudah dikuasai, Anda pindah ke hal berikutnya.
 
@@ -102,7 +102,7 @@ Tujuan yang sempit memaksa Anda untuk fokus pada satu hal. Anda tidak bisa mempe
 
 Anda perlu tahu, segera setelah Anda melakukan sesuatu, apakah Anda melakukannya dengan benar. Tanpa umpan balik, Anda tidak tahu apakah Anda sedang memperbaiki atau memperburuk.
 
-Umpan balik bisa datang dari berbagai sumber. Seorang guru. Seorang teman. Sebuah rekaman. Sebuah alat ukur. Sebuah tes. Yang penting adalah umpan balik itu datang dari luar kepala Anda, karena kepala Anda tidak bisa dipercaya untuk menilai dirinya sendiri — seperti yang kita bahas di #15 tentang metakognisi.
+Umpan balik bisa datang dari berbagai sumber. Seorang guru. Seorang teman. Sebuah rekaman. Sebuah alat ukur. Sebuah tes. Yang penting adalah umpan balik itu datang dari luar kepala Anda, karena kepala Anda tidak bisa dipercaya untuk menilai dirinya sendiri, seperti yang kita bahas di #15 tentang metakognisi.
 
 **Syarat ketiga: fokus pada kelemahan, bukan kekuatan.**
 
@@ -124,9 +124,9 @@ Ericsson dan rekan-rekannya menemukan bahwa pemain terbaik tidak hanya berlatih 
 
 Pemain terbaik berlatih dalam sesi yang lebih pendek, biasanya sekitar satu jam, dengan istirahat di antaranya. Mereka tidak berlatih berjam-jam tanpa henti. Mereka berlatih dengan intensitas tinggi untuk waktu yang singkat, lalu beristirahat untuk memulihkan konsentrasi.
 
-Pemain terbaik berlatih pada waktu-waktu tertentu, biasanya di pagi hari, ketika mereka masih segar. Mereka tidak berlatih saat lelah, karena latihan saat lelah tidak menghasilkan perbaikan — hanya pengulangan.
+Pemain terbaik berlatih pada waktu-waktu tertentu, biasanya di pagi hari, ketika mereka masih segar. Mereka tidak berlatih saat lelah, karena latihan saat lelah tidak menghasilkan perbaikan, hanya pengulangan.
 
-Pemain terbaik berlatih dengan tujuan yang sangat spesifik. Mereka tidak hanya "bermain musik." Mereka mengidentifikasi bagian-bagian yang sulit, lalu berlatih bagian itu berulang kali, perlahan, sampai bisa. Mereka tidak melanjutkan ke bagian berikutnya sampai bagian itu benar.
+Pemain terbaik berlatih dengan tujuan yang sangat spesifik. Mereka tidak hanya bermain musik. Mereka mengidentifikasi bagian-bagian yang sulit, lalu berlatih bagian itu berulang kali, perlahan, sampai bisa. Mereka tidak melanjutkan ke bagian berikutnya sampai bagian itu benar.
 
 Pemain terbaik punya guru yang memberi mereka umpan balik. Mereka tidak berlatih sendirian tanpa arah. Mereka punya seseorang yang bisa memberi tahu mereka di mana mereka masih salah.
 
@@ -186,7 +186,7 @@ Beberapa cara menerapkannya:
 
 **Identifikasi bagian tersulit dari keterampilan itu.** Bukan bagian yang paling menyenangkan. Bagian yang paling membuat Anda ingin menghindar.
 
-**Buat tujuan yang spesifik dan sempit.** Bukan "saya ingin lebih baik dalam X." Tapi "saya ingin bisa melakukan Y dalam kondisi Z." Semakin spesifik, semakin baik.
+**Buat tujuan yang spesifik dan sempit.** Bukan saya ingin lebih baik dalam X. Tapi saya ingin bisa melakukan Y dalam kondisi Z. Semakin spesifik, semakin baik.
 
 **Cari umpan balik yang jujur.** Dari guru, teman, rekaman, atau alat ukur. Sesuatu yang memberi tahu Anda, segera setelah Anda mencoba, apakah Anda benar atau salah.
 
@@ -202,7 +202,7 @@ Beberapa cara menerapkannya:
 
 Pemain biola terbaik di Akademi Berlin tidak berlatih lebih lama dari yang lain. Mereka berlatih dengan cara yang berbeda. Mereka bekerja pada apa yang belum bisa, bukan apa yang sudah bisa. Mereka gagal berulang kali, mendapat umpan balik, mencoba lagi. Mereka tidak menghindari ketidaknyamanan. Mereka mencarinya.
 
-Anda tidak perlu menjadi pemain biola. Anda tidak perlu berlatih sepuluh ribu jam. Tapi jika Anda ingin menjadi lebih baik dalam sesuatu — apa pun itu — prinsipnya sama. Jangan berlatih untuk merasa kompeten. Berlatihlah untuk menjadi kompeten.
+Anda tidak perlu menjadi pemain biola. Anda tidak perlu berlatih sepuluh ribu jam. Tapi jika Anda ingin menjadi lebih baik dalam sesuatu, apa pun itu, prinsipnya sama. Jangan berlatih untuk merasa kompeten. Berlatihlah untuk menjadi kompeten.
 
 ### Referensi
 
@@ -210,4 +210,4 @@ Anda tidak perlu menjadi pemain biola. Anda tidak perlu berlatih sepuluh ribu ja
 - Macnamara, B. N., Hambrick, D. Z., & Oswald, F. L. (2014). Deliberate practice and performance in music, games, sports, education, and professions: A meta-analysis. *Psychological Science*, 25(8), 1608–1618.
 - Ericsson, K. A., & Harwell, K. W. (2019). Deliberate practice and proposed limits on the effects of practice on the acquisition of expert performance: Why the original definition matters and recommendations for future research. *Frontiers in Psychology*, 10, 2396.
 
-**Catatan:** Angka "sepuluh ribu jam" yang sering dikutip dari studi Ericsson adalah penyederhanaan yang berlebihan. Ericsson sendiri berulang kali menekankan bahwa angka itu bukan angka ajaib, dan bahwa yang lebih penting adalah cara berlatih, bukan jumlah jam. Meta-analisis Macnamara dkk. menunjukkan bahwa peran latihan yang disengaja lebih kecil dari yang sering diklaim, meskipun tetap signifikan. Perdebatan tentang seberapa besar perannya masih berlangsung.
+**Catatan:** Angka sepuluh ribu jam yang sering dikutip dari studi Ericsson adalah penyederhanaan yang berlebihan. Ericsson sendiri berulang kali menekankan bahwa angka itu bukan angka ajaib, dan bahwa yang lebih penting adalah cara berlatih, bukan jumlah jam. Meta-analisis Macnamara dkk. menunjukkan bahwa peran latihan yang disengaja lebih kecil dari yang sering diklaim, meskipun tetap signifikan. Perdebatan tentang seberapa besar perannya masih berlangsung.
