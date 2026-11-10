@@ -1,7 +1,7 @@
 ---
-title: Pengalaman Tidak Membuat Anda Lebih Baik | 16
+title: 'Pengalaman Tidak Membuat Anda Lebih Baik | 16'
 slug: 16-pengalaman-tidak-membuat-anda-lebih-baik
-description: Pada awal 1990-an, seorang psikolog bernama Anders Ericsson dan rekan-rekannya datang ke Akademi Musik Berlin. Mereka ingin tahu satu hal: apa yang membedakan pemain biola terbaik dari yang biasa. Jawabannya bukan bakat. Bukan juga jumlah jam latihan. Jawabannya adalah cara mereka berlatih. Dan cara itu sangat tidak nyaman sehingga kebanyakan orang menghindarinya seumur hidup.
+description: 'Pada awal 1990-an, seorang psikolog bernama Anders Ericsson dan rekan-rekannya datang ke Akademi Musik Berlin. Mereka ingin tahu satu hal, apa yang membedakan pemain biola terbaik dari yang biasa. Jawabannya bukan bakat. Bukan juga jumlah jam latihan. Jawabannya adalah cara mereka berlatih. Dan cara itu sangat tidak nyaman sehingga kebanyakan orang menghindarinya seumur hidup.'
 coverImage: /images/starry-sky-attempt-wenzel-hablik-1909-1200x1212-1.jpeg
 pubDatetime: 2026-11-10
 modDatetime: 2026-11-10
