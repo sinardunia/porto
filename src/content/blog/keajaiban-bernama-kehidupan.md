@@ -8,6 +8,8 @@ pubDatetime: 2026-11-05
 modDatetime: 2026-11-05
 draft: false
 featured: false
+tags:
+  - Refleksi
 ---
 Dunia tidak didesain untuk menyerah. Tidak ada yang namanya menyerah jika napas nyawa masih di kerongkongan. Apakah benar?
 
@@ -37,6 +39,6 @@ Ayah bertemu ibu. Jika 1 menit saja kesempatan ayah Anda tidak diambil untuk men
 
 Kakek buyut yang bertahan hidup dari bencana alam, perang, wabah, kelaparan, dan masih banyak lagi.
 
-> Coba tanya AI mana pun, peluang kita lahir adalah 1 banding \(10^{268.500}\). Angka ini jauh melebihi seluruh jumlah atom yang ada di tata surya kita.
+> Coba tanya AI mana pun, peluang kita lahir adalah 1 banding 10^{268.500}. Angka ini jauh melebihi seluruh jumlah atom yang ada di tata surya kita.
 
 Sederhana saja, nikmati hidup ini. Kita tahu ini adalah ujian, dan hidup adalah penderitaan. Kita juga tahu bahwa ini tidak akan selamanya. Semuanya akan memiliki akhir-nya.
