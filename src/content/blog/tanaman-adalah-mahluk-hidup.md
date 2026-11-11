@@ -9,6 +9,8 @@ pubDatetime: 2026-11-05
 modDatetime: 2026-11-05
 draft: false
 featured: false
+tags:
+  - tanaman
 ---
 ### Tanaman adalah mahluk hidup
 
